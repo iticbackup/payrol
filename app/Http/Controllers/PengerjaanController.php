@@ -944,14 +944,15 @@ class PengerjaanController extends Controller
                                                         'operator_karyawan.nik as nik',
                                                         'pengerjaan.operator_karyawan_id as id_operator_karyawan'
                                                     ])
+                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
                                                     ->where('tanggal_pengerjaan',$tanggal)
                                                     // ->where('kode_pengerjaan',$kode_pengerjaan)
                                                     // ->where('pengerjaan.operator_karyawan_id','operator_karyawan.id')
                                                     ->where('operator_karyawan.jenis_operator_id',1)
                                                     ->where('operator_karyawan.jenis_operator_detail_id',1)
                                                     ->where('operator_karyawan.jenis_operator_detail_pekerjaan_id',1)
-                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
         
@@ -1764,14 +1765,15 @@ class PengerjaanController extends Controller
                                                         'operator_karyawan.nik as nik',
                                                         'pengerjaan.operator_karyawan_id as id_operator_karyawan'
                                                     ])
+                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
                                                     ->where('tanggal_pengerjaan',$tanggal)
                                                     // ->where('kode_pengerjaan',$kode_pengerjaan)
                                                     // ->where('pengerjaan.operator_karyawan_id','operator_karyawan.id')
                                                     ->where('operator_karyawan.jenis_operator_id',1)
                                                     ->where('operator_karyawan.jenis_operator_detail_id',1)
                                                     ->where('operator_karyawan.jenis_operator_detail_pekerjaan_id',2)
-                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
         
@@ -2565,14 +2567,15 @@ class PengerjaanController extends Controller
                                                         'operator_karyawan.nik as nik',
                                                         'pengerjaan.operator_karyawan_id as id_operator_karyawan'
                                                     ])
+                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
                                                     ->where('tanggal_pengerjaan',$tanggal)
                                                     // ->where('kode_pengerjaan',$kode_pengerjaan)
                                                     // ->where('pengerjaan.operator_karyawan_id','operator_karyawan.id')
                                                     ->where('operator_karyawan.jenis_operator_id',1)
                                                     ->where('operator_karyawan.jenis_operator_detail_id',1)
                                                     ->where('operator_karyawan.jenis_operator_detail_pekerjaan_id',3)
-                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
         
@@ -3377,14 +3380,15 @@ class PengerjaanController extends Controller
                                                         'operator_karyawan.nik as nik',
                                                         'pengerjaan.operator_karyawan_id as id_operator_karyawan'
                                                     ])
+                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
                                                     ->where('tanggal_pengerjaan',$tanggal)
                                                     // ->where('kode_pengerjaan',$kode_pengerjaan)
                                                     // ->where('pengerjaan.operator_karyawan_id','operator_karyawan.id')
                                                     ->where('operator_karyawan.jenis_operator_id',1)
                                                     ->where('operator_karyawan.jenis_operator_detail_id',1)
                                                     ->where('operator_karyawan.jenis_operator_detail_pekerjaan_id',4)
-                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
         
@@ -4186,6 +4190,8 @@ class PengerjaanController extends Controller
                                                         'operator_karyawan.nik as nik',
                                                         'pengerjaan.operator_karyawan_id as id_operator_karyawan'
                                                     ])
+                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
                                                     ->where('tanggal_pengerjaan',$tanggal)
                                                     // ->where('kode_pengerjaan',$kode_pengerjaan)
                                                     // ->where('pengerjaan.operator_karyawan_id','operator_karyawan.id')
@@ -4193,8 +4199,7 @@ class PengerjaanController extends Controller
                                                     ->where('operator_karyawan.jenis_operator_detail_id',2)
                                                     ->where('operator_karyawan.jenis_operator_detail_pekerjaan_id',5)
                                                     ->where('operator_karyawan.status','Y')
-                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
         
@@ -4962,14 +4967,15 @@ class PengerjaanController extends Controller
                                                         'operator_karyawan.nik as nik',
                                                         'pengerjaan.operator_karyawan_id as id_operator_karyawan'
                                                     ])
+                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
                                                     ->where('tanggal_pengerjaan',$tanggal)
                                                     // ->where('kode_pengerjaan',$kode_pengerjaan)
                                                     // ->where('pengerjaan.operator_karyawan_id','operator_karyawan.id')
                                                     ->where('operator_karyawan.jenis_operator_id',1)
                                                     ->where('operator_karyawan.jenis_operator_detail_id',2)
                                                     ->where('operator_karyawan.jenis_operator_detail_pekerjaan_id',6)
-                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
         
@@ -5730,14 +5736,15 @@ class PengerjaanController extends Controller
                                                         'operator_karyawan.nik as nik',
                                                         'pengerjaan.operator_karyawan_id as id_operator_karyawan'
                                                     ])
+                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
                                                     ->where('tanggal_pengerjaan',$tanggal)
                                                     // ->where('kode_pengerjaan',$kode_pengerjaan)
                                                     // ->where('pengerjaan.operator_karyawan_id','operator_karyawan.id')
                                                     ->where('operator_karyawan.jenis_operator_id',1)
                                                     ->where('operator_karyawan.jenis_operator_detail_id',2)
                                                     ->where('operator_karyawan.jenis_operator_detail_pekerjaan_id',6)
-                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
         
@@ -6507,6 +6514,8 @@ class PengerjaanController extends Controller
                                                         'operator_karyawan.nik as nik',
                                                         'pengerjaan.operator_karyawan_id as id_operator_karyawan'
                                                     ])
+                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
                                                     ->where('tanggal_pengerjaan',$tanggal)
                                                     // ->where('kode_pengerjaan',$kode_pengerjaan)
                                                     // ->where('pengerjaan.operator_karyawan_id','operator_karyawan.id')
@@ -6514,8 +6523,7 @@ class PengerjaanController extends Controller
                                                     ->where('operator_karyawan.jenis_operator_detail_id',3)
                                                     ->where('operator_karyawan.jenis_operator_detail_pekerjaan_id',8)
                                                     ->where('operator_karyawan.status','Y')
-                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
         
@@ -7314,6 +7322,8 @@ class PengerjaanController extends Controller
                                                         'operator_karyawan.nik as nik',
                                                         'pengerjaan.operator_karyawan_id as id_operator_karyawan'
                                                     ])
+                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
                                                     ->where('tanggal_pengerjaan',$tanggal)
                                                     // ->where('kode_pengerjaan',$kode_pengerjaan)
                                                     // ->where('pengerjaan.operator_karyawan_id','operator_karyawan.id')
@@ -7321,8 +7331,7 @@ class PengerjaanController extends Controller
                                                     ->where('operator_karyawan.jenis_operator_detail_id',3)
                                                     ->where('operator_karyawan.jenis_operator_detail_pekerjaan_id',9)
                                                     ->where('operator_karyawan.status','Y')
-                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
         
@@ -8123,6 +8132,8 @@ class PengerjaanController extends Controller
                                                         'operator_karyawan.nik as nik',
                                                         'pengerjaan.operator_karyawan_id as id_operator_karyawan'
                                                     ])
+                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
                                                     ->where('tanggal_pengerjaan',$tanggal)
                                                     // ->where('kode_pengerjaan',$kode_pengerjaan)
                                                     // ->where('pengerjaan.operator_karyawan_id','operator_karyawan.id')
@@ -8130,8 +8141,7 @@ class PengerjaanController extends Controller
                                                     ->where('operator_karyawan.jenis_operator_detail_id',3)
                                                     ->where('operator_karyawan.jenis_operator_detail_pekerjaan_id',11)
                                                     ->where('operator_karyawan.status','Y')
-                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan.operator_karyawan_id')
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
         
