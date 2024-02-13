@@ -38,17 +38,54 @@
                 <div class="card-body">
                     <button type="button" class="btn btn-info mb-2" onclick="reload()"><i class="fas fa-undo"></i> Refresh
                         Table</button>
-                    <table id="datatables" class="table table-bordered dt-responsive nowrap"
-                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                        <thead>
-                            <tr>
-                                <th>Kode Pengerjaan</th>
-                                <th>Periode Penggajian</th>
-                                <th>Status</th>
-                                <th>Jenis Pekerja</th>
-                            </tr>
-                        </thead>
-                    </table>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title">Hasil Kerja Packing</div>
+                            <table id="datatables2" class="table table-bordered dt-responsive nowrap"
+                                style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Kode Pengerjaan</th>
+                                        <th>Periode Penggajian</th>
+                                        <th>Status</th>
+                                        <th>Jenis Pekerja</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title">Hasil Kerja Harian</div>
+                            <table id="datatables" class="table table-bordered dt-responsive nowrap"
+                                style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Kode Pengerjaan</th>
+                                        <th>Periode Penggajian</th>
+                                        <th>Status</th>
+                                        <th>Jenis Pekerja</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title">Hasil Kerja Supir</div>
+                            <table id="datatables3" class="table table-bordered dt-responsive nowrap"
+                                style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Kode Pengerjaan</th>
+                                        <th>Periode Penggajian</th>
+                                        <th>Status</th>
+                                        <th>Jenis Pekerja</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -81,13 +118,8 @@
         var table = $('#datatables').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('hasil_kerja') }}",
-            columns: [
-                // {
-                //     data: 'id',
-                //     name: 'id'
-                // },
-                {
+            ajax: "{{ route('pengerjaan.b_hasil_kerja_harian') }}",
+            columns: [{
                     data: 'kode_pengerjaan',
                     name: 'kode_pengerjaan'
                 },
@@ -95,10 +127,6 @@
                     data: 'tanggal_pengerjaan',
                     name: 'tanggal_pengerjaan'
                 },
-                // {
-                //     data: 'tanggal',
-                //     name: 'tanggal'
-                // },
                 {
                     data: 'status',
                     name: 'status'
@@ -107,17 +135,68 @@
                     data: 'jenis_kerja',
                     name: 'jenis_kerja'
                 },
-                // {
-                //     data: 'action',
-                //     name: 'action',
-                //     orderable: false,
-                //     searchable: false
-                // },
+            ],
+            order: [
+                [0, 'desc']
+            ]
+        });
+
+        var table2 = $('#datatables2').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('pengerjaan.b_hasil_kerja_packing') }}",
+            columns: [{
+                    data: 'kode_pengerjaan',
+                    name: 'kode_pengerjaan'
+                },
+                {
+                    data: 'tanggal_pengerjaan',
+                    name: 'tanggal_pengerjaan'
+                },
+                {
+                    data: 'status',
+                    name: 'status'
+                },
+                {
+                    data: 'jenis_kerja',
+                    name: 'jenis_kerja'
+                },
+            ],
+            order: [
+                [0, 'desc']
+            ]
+        });
+
+        var table3 = $('#datatables3').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('pengerjaan.b_hasil_kerja_supir') }}",
+            columns: [{
+                    data: 'kode_pengerjaan',
+                    name: 'kode_pengerjaan'
+                },
+                {
+                    data: 'tanggal_pengerjaan',
+                    name: 'tanggal_pengerjaan'
+                },
+                {
+                    data: 'status',
+                    name: 'status'
+                },
+                {
+                    data: 'jenis_kerja',
+                    name: 'jenis_kerja'
+                },
+            ],
+            order: [
+                [0, 'desc']
             ]
         });
 
         function reload() {
             table.ajax.reload();
+            table2.ajax.reload();
+            table3.ajax.reload();
         }
     </script>
 @endsection

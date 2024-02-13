@@ -580,6 +580,192 @@ class PengerjaanController extends Controller
         return view('backend.pengerjaan.index');
     }
 
+    public function b_hasil_kerja_packing(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = NewDataPengerjaan::where('kode_pengerjaan','LIKE','%PB_%')->where('status','n')->get();
+            return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('status', function($row){
+                        if($row->status == 'y'){
+                            return '<span class="badge bg-primary">Berjalan</span>';
+                        }elseif($row->status == 'n'){
+                            return '<span class="badge bg-success">Selesai</span>';
+                        }
+                    })
+                    ->addColumn('tanggal_pengerjaan', function($row){
+                        $explode_tanggal_pengerjaans = explode("#",$row->tanggal);
+                        foreach ($explode_tanggal_pengerjaans as $key => $explode_tanggal_pengerjaan) {
+                            if ($key != 0) {
+                                $hasil_tanggal_pengerjaan[] = Carbon::parse($explode_tanggal_pengerjaan)->isoFormat('D MMMM');
+                            }
+                        }
+                        return $hasil_tanggal_pengerjaan;
+                    })
+                    ->addColumn('jenis_kerja', function($row){
+                        $explode_jenis_operator = explode('_',$row->kode_pengerjaan);
+                        $jenis_operator = JenisOperator::where('kode_operator',$explode_jenis_operator[0])->first();
+                        $jenis_operator_details = JenisOperatorDetail::where('jenis_operator_id',$jenis_operator->id)->where('status','y')->get();
+                        $btn_jenis_operator = '';
+                        $btn_jenis_operator = $btn_jenis_operator.='<div class="button-items">';
+                        foreach ($jenis_operator_details as $key => $jenis_operator_detail) {
+                            if ($jenis_operator_detail->jenis_operator_id == 1) {
+                                $jenis_operator_detail_pengerjaans = JenisOperatorDetailPengerjaan::where('jenis_operator_detail_id',$jenis_operator_detail->id)->get();
+                                $btn_jenis_operator.='<div class="btn-group">';
+                                $btn_jenis_operator.='<a href="'.route('pengerjaan.karyawan',['kode_pengerjaan' => $jenis_operator->kode_operator,'id' => $jenis_operator_detail->id, 'kode_payrol' => $row->kode_pengerjaan]).'" class="btn btn-outline-primary me-0">'.'Karyawan '.$jenis_operator_detail->jenis_posisi.'</a>';
+                                $btn_jenis_operator.='<a type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <span class="sr-only">Toggle Dropdown</span> <i class="mdi mdi-chevron-down"></i>
+                                                    </a>';
+                                $btn_jenis_operator.='<div class="dropdown-menu" style="">';
+                                foreach ($jenis_operator_detail_pengerjaans as $jenis_operator_detail_pengerjaan) {
+                                    $jenis_operator = $jenis_operator_detail_pengerjaan->jenis_operator_detail->jenis_operator;
+                                    $btn_jenis_operator.='<a class="dropdown-item" href='.route($jenis_operator_detail_pengerjaan->link,['id' => $jenis_operator_detail_pengerjaan->jenis_operator_detail_id, 'kode_pengerjaan' => $row->kode_pengerjaan]).' target="_blank">'.$jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan.'</a>';
+                                }
+                                $btn_jenis_operator.='</div>';
+    
+                                $btn_jenis_operator.='</div>';
+                            }elseif($jenis_operator_detail->jenis_operator_id == 2){
+                                $jenis_operator_detail_pengerjaans = JenisOperatorDetailPengerjaan::where('jenis_operator_detail_id',4)->get();
+                                foreach ($jenis_operator_detail_pengerjaans as $jenis_operator_detail_pengerjaan) {
+                                    // $new_data_pengerjaan = NewDataPengerjaan::where('kode_pengerjaan','LIKE','%'.$jenis_operator->kode_operator.'%')->first();
+                                    $btn_jenis_operator.='<a href='.route($jenis_operator_detail_pengerjaan->link,['id' => $jenis_operator_detail_pengerjaan->jenis_operator_detail_id, 'kode_pengerjaan' => $row->kode_pengerjaan]).' class="btn btn-outline-primary" target="_blank">'.$jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan.'</a>';
+                                }
+                            }elseif($jenis_operator_detail->jenis_operator_id == 3){
+                                $btn_jenis_operator.='<a href='.route("hasil_kerja.supir_rit",['kode_pengerjaan' => $row->kode_pengerjaan]).' class="btn btn-outline-primary" target="_blank">'.$jenis_operator_detail->jenis_posisi.'</a>';
+                            }
+                        }
+                        $btn_jenis_operator = $btn_jenis_operator.='</div>';
+                        return $btn_jenis_operator;
+                    })
+                    ->rawColumns(['status','jenis_kerja'])
+                    ->make(true);
+        }
+    }
+
+    public function b_hasil_kerja_harian(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = NewDataPengerjaan::where('kode_pengerjaan','LIKE','%PH_%')->where('status','n')->get();
+            return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('status', function($row){
+                        if($row->status == 'y'){
+                            return '<span class="badge bg-primary">Berjalan</span>';
+                        }elseif($row->status == 'n'){
+                            return '<span class="badge bg-success">Selesai</span>';
+                        }
+                    })
+                    ->addColumn('tanggal_pengerjaan', function($row){
+                        $explode_tanggal_pengerjaans = explode("#",$row->tanggal);
+                        foreach ($explode_tanggal_pengerjaans as $key => $explode_tanggal_pengerjaan) {
+                            if ($key != 0) {
+                                $hasil_tanggal_pengerjaan[] = Carbon::parse($explode_tanggal_pengerjaan)->isoFormat('D MMMM');
+                            }
+                        }
+                        return $hasil_tanggal_pengerjaan;
+                    })
+                    ->addColumn('jenis_kerja', function($row){
+                        $explode_jenis_operator = explode('_',$row->kode_pengerjaan);
+                        $jenis_operator = JenisOperator::where('kode_operator',$explode_jenis_operator[0])->first();
+                        $jenis_operator_details = JenisOperatorDetail::where('jenis_operator_id',$jenis_operator->id)->where('status','y')->get();
+                        $btn_jenis_operator = '';
+                        $btn_jenis_operator = $btn_jenis_operator.='<div class="button-items">';
+                        foreach ($jenis_operator_details as $key => $jenis_operator_detail) {
+                            if ($jenis_operator_detail->jenis_operator_id == 1) {
+                                $jenis_operator_detail_pengerjaans = JenisOperatorDetailPengerjaan::where('jenis_operator_detail_id',$jenis_operator_detail->id)->get();
+                                $btn_jenis_operator.='<div class="btn-group">';
+                                $btn_jenis_operator.='<a href="'.route('pengerjaan.karyawan',['kode_pengerjaan' => $jenis_operator->kode_operator,'id' => $jenis_operator_detail->id, 'kode_payrol' => $row->kode_pengerjaan]).'" class="btn btn-outline-primary me-0">'.'Karyawan '.$jenis_operator_detail->jenis_posisi.'</a>';
+                                $btn_jenis_operator.='<a type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <span class="sr-only">Toggle Dropdown</span> <i class="mdi mdi-chevron-down"></i>
+                                                    </a>';
+                                $btn_jenis_operator.='<div class="dropdown-menu" style="">';
+                                foreach ($jenis_operator_detail_pengerjaans as $jenis_operator_detail_pengerjaan) {
+                                    $jenis_operator = $jenis_operator_detail_pengerjaan->jenis_operator_detail->jenis_operator;
+                                    $btn_jenis_operator.='<a class="dropdown-item" href='.route($jenis_operator_detail_pengerjaan->link,['id' => $jenis_operator_detail_pengerjaan->jenis_operator_detail_id, 'kode_pengerjaan' => $row->kode_pengerjaan]).' target="_blank">'.$jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan.'</a>';
+                                }
+                                $btn_jenis_operator.='</div>';
+    
+                                $btn_jenis_operator.='</div>';
+                            }elseif($jenis_operator_detail->jenis_operator_id == 2){
+                                $jenis_operator_detail_pengerjaans = JenisOperatorDetailPengerjaan::where('jenis_operator_detail_id',4)->get();
+                                foreach ($jenis_operator_detail_pengerjaans as $jenis_operator_detail_pengerjaan) {
+                                    // $new_data_pengerjaan = NewDataPengerjaan::where('kode_pengerjaan','LIKE','%'.$jenis_operator->kode_operator.'%')->first();
+                                    $btn_jenis_operator.='<a href='.route($jenis_operator_detail_pengerjaan->link,['id' => $jenis_operator_detail_pengerjaan->jenis_operator_detail_id, 'kode_pengerjaan' => $row->kode_pengerjaan]).' class="btn btn-outline-primary" target="_blank">'.$jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan.'</a>';
+                                }
+                            }elseif($jenis_operator_detail->jenis_operator_id == 3){
+                                $btn_jenis_operator.='<a href='.route("hasil_kerja.supir_rit",['kode_pengerjaan' => $row->kode_pengerjaan]).' class="btn btn-outline-primary" target="_blank">'.$jenis_operator_detail->jenis_posisi.'</a>';
+                            }
+                        }
+                        $btn_jenis_operator = $btn_jenis_operator.='</div>';
+                        return $btn_jenis_operator;
+                    })
+                    ->rawColumns(['status','jenis_kerja'])
+                    ->make(true);
+        }
+    }
+
+    public function b_hasil_kerja_supir(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = NewDataPengerjaan::where('kode_pengerjaan','LIKE','%PS_%')->where('status','n')->get();
+            return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('status', function($row){
+                        if($row->status == 'y'){
+                            return '<span class="badge bg-primary">Berjalan</span>';
+                        }elseif($row->status == 'n'){
+                            return '<span class="badge bg-success">Selesai</span>';
+                        }
+                    })
+                    ->addColumn('tanggal_pengerjaan', function($row){
+                        $explode_tanggal_pengerjaans = explode("#",$row->tanggal);
+                        foreach ($explode_tanggal_pengerjaans as $key => $explode_tanggal_pengerjaan) {
+                            if ($key != 0) {
+                                $hasil_tanggal_pengerjaan[] = Carbon::parse($explode_tanggal_pengerjaan)->isoFormat('D MMMM');
+                            }
+                        }
+                        return $hasil_tanggal_pengerjaan;
+                    })
+                    ->addColumn('jenis_kerja', function($row){
+                        $explode_jenis_operator = explode('_',$row->kode_pengerjaan);
+                        $jenis_operator = JenisOperator::where('kode_operator',$explode_jenis_operator[0])->first();
+                        $jenis_operator_details = JenisOperatorDetail::where('jenis_operator_id',$jenis_operator->id)->where('status','y')->get();
+                        $btn_jenis_operator = '';
+                        $btn_jenis_operator = $btn_jenis_operator.='<div class="button-items">';
+                        foreach ($jenis_operator_details as $key => $jenis_operator_detail) {
+                            if ($jenis_operator_detail->jenis_operator_id == 1) {
+                                $jenis_operator_detail_pengerjaans = JenisOperatorDetailPengerjaan::where('jenis_operator_detail_id',$jenis_operator_detail->id)->get();
+                                $btn_jenis_operator.='<div class="btn-group">';
+                                $btn_jenis_operator.='<a href="'.route('pengerjaan.karyawan',['kode_pengerjaan' => $jenis_operator->kode_operator,'id' => $jenis_operator_detail->id, 'kode_payrol' => $row->kode_pengerjaan]).'" class="btn btn-outline-primary me-0">'.'Karyawan '.$jenis_operator_detail->jenis_posisi.'</a>';
+                                $btn_jenis_operator.='<a type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <span class="sr-only">Toggle Dropdown</span> <i class="mdi mdi-chevron-down"></i>
+                                                    </a>';
+                                $btn_jenis_operator.='<div class="dropdown-menu" style="">';
+                                foreach ($jenis_operator_detail_pengerjaans as $jenis_operator_detail_pengerjaan) {
+                                    $jenis_operator = $jenis_operator_detail_pengerjaan->jenis_operator_detail->jenis_operator;
+                                    $btn_jenis_operator.='<a class="dropdown-item" href='.route($jenis_operator_detail_pengerjaan->link,['id' => $jenis_operator_detail_pengerjaan->jenis_operator_detail_id, 'kode_pengerjaan' => $row->kode_pengerjaan]).' target="_blank">'.$jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan.'</a>';
+                                }
+                                $btn_jenis_operator.='</div>';
+    
+                                $btn_jenis_operator.='</div>';
+                            }elseif($jenis_operator_detail->jenis_operator_id == 2){
+                                $jenis_operator_detail_pengerjaans = JenisOperatorDetailPengerjaan::where('jenis_operator_detail_id',4)->get();
+                                foreach ($jenis_operator_detail_pengerjaans as $jenis_operator_detail_pengerjaan) {
+                                    // $new_data_pengerjaan = NewDataPengerjaan::where('kode_pengerjaan','LIKE','%'.$jenis_operator->kode_operator.'%')->first();
+                                    $btn_jenis_operator.='<a href='.route($jenis_operator_detail_pengerjaan->link,['id' => $jenis_operator_detail_pengerjaan->jenis_operator_detail_id, 'kode_pengerjaan' => $row->kode_pengerjaan]).' class="btn btn-outline-primary" target="_blank">'.$jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan.'</a>';
+                                }
+                            }elseif($jenis_operator_detail->jenis_operator_id == 3){
+                                $btn_jenis_operator.='<a href='.route("hasil_kerja.supir_rit",['kode_pengerjaan' => $row->kode_pengerjaan]).' class="btn btn-outline-primary" target="_blank">'.$jenis_operator_detail->jenis_posisi.'</a>';
+                            }
+                        }
+                        $btn_jenis_operator = $btn_jenis_operator.='</div>';
+                        return $btn_jenis_operator;
+                    })
+                    ->rawColumns(['status','jenis_kerja'])
+                    ->make(true);
+        }
+    }
+
     public function hasil_kerja_packing($id, $kode_pengerjaan)
     {
         if($id == 1){
@@ -720,12 +906,13 @@ class PengerjaanController extends Controller
                                                     'pengerjaan.total_jam_kerja_4 as total_jam_kerja_4',
                                                     'pengerjaan.total_jam_kerja_5 as total_jam_kerja_5',
                                                     ])
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
                                                     ->where('jenis_operator_id',1)
                                                     ->where('jenis_operator_detail_id',1)
                                                     ->where('jenis_operator_detail_pekerjaan_id',1)
                                                     ->where('pengerjaan.tanggal_pengerjaan',$tanggal)
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
-                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     // ->with('biodata_karyawan')
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
@@ -1539,12 +1726,13 @@ class PengerjaanController extends Controller
                                                     'pengerjaan.total_jam_kerja_4 as total_jam_kerja_4',
                                                     'pengerjaan.total_jam_kerja_5 as total_jam_kerja_5',
                                                     ])
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
                                                     ->where('jenis_operator_id',1)
                                                     ->where('jenis_operator_detail_id',1)
                                                     ->where('jenis_operator_detail_pekerjaan_id',2)
                                                     ->where('pengerjaan.tanggal_pengerjaan',$tanggal)
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
-                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     // ->with('biodata_karyawan')
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
@@ -2339,12 +2527,13 @@ class PengerjaanController extends Controller
                                                     'pengerjaan.total_jam_kerja_4 as total_jam_kerja_4',
                                                     'pengerjaan.total_jam_kerja_5 as total_jam_kerja_5',
                                                     ])
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
                                                     ->where('jenis_operator_id',1)
                                                     ->where('jenis_operator_detail_id',1)
                                                     ->where('jenis_operator_detail_pekerjaan_id',3)
                                                     ->where('pengerjaan.tanggal_pengerjaan',$tanggal)
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
-                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     // ->with('biodata_karyawan')
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
@@ -3150,12 +3339,13 @@ class PengerjaanController extends Controller
                                                     'pengerjaan.total_jam_kerja_4 as total_jam_kerja_4',
                                                     'pengerjaan.total_jam_kerja_5 as total_jam_kerja_5',
                                                     ])
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
                                                     ->where('jenis_operator_id',1)
                                                     ->where('jenis_operator_detail_id',1)
                                                     ->where('jenis_operator_detail_pekerjaan_id',4)
                                                     ->where('pengerjaan.tanggal_pengerjaan',$tanggal)
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
-                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     // ->with('biodata_karyawan')
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
@@ -3957,13 +4147,14 @@ class PengerjaanController extends Controller
                                                     'pengerjaan.total_jam_kerja_4 as total_jam_kerja_4',
                                                     'pengerjaan.total_jam_kerja_5 as total_jam_kerja_5',
                                                     ])
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
                                                     ->where('jenis_operator_id',1)
                                                     ->where('jenis_operator_detail_id',2)
                                                     ->where('jenis_operator_detail_pekerjaan_id',5)
                                                     ->where('pengerjaan.tanggal_pengerjaan',$tanggal)
                                                     ->where('operator_karyawan.status','Y')
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
-                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     // ->with('biodata_karyawan')
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
@@ -4733,12 +4924,13 @@ class PengerjaanController extends Controller
                                                     'pengerjaan.total_jam_kerja_4 as total_jam_kerja_4',
                                                     'pengerjaan.total_jam_kerja_5 as total_jam_kerja_5',
                                                     ])
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
                                                     ->where('jenis_operator_id',1)
                                                     ->where('jenis_operator_detail_id',2)
                                                     ->where('jenis_operator_detail_pekerjaan_id',6)
                                                     ->where('pengerjaan.tanggal_pengerjaan',$tanggal)
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
-                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     // ->with('biodata_karyawan')
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
@@ -5500,12 +5692,13 @@ class PengerjaanController extends Controller
                                                     'pengerjaan.hasil_kerja_4 as hasil_kerja_4',
                                                     'pengerjaan.hasil_kerja_5 as hasil_kerja_5',
                                                     ])
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
                                                     ->where('jenis_operator_id',1)
                                                     ->where('jenis_operator_detail_id',2)
                                                     ->where('jenis_operator_detail_pekerjaan_id',7)
                                                     ->where('pengerjaan.tanggal_pengerjaan',$tanggal)
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
-                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     // ->with('biodata_karyawan')
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
@@ -6275,13 +6468,14 @@ class PengerjaanController extends Controller
                                                     'pengerjaan.total_jam_kerja_4 as total_jam_kerja_4',
                                                     'pengerjaan.total_jam_kerja_5 as total_jam_kerja_5',
                                                     ])
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
                                                     ->where('jenis_operator_id',1)
                                                     ->where('jenis_operator_detail_id',3)
                                                     ->where('jenis_operator_detail_pekerjaan_id',8)
                                                     ->where('pengerjaan.tanggal_pengerjaan',$tanggal)
                                                     ->where('operator_karyawan.status','Y')
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
-                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     // ->with('biodata_karyawan')
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
@@ -7081,13 +7275,14 @@ class PengerjaanController extends Controller
                                                     'pengerjaan.total_jam_kerja_4 as total_jam_kerja_4',
                                                     'pengerjaan.total_jam_kerja_5 as total_jam_kerja_5',
                                                     ])
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
                                                     ->where('jenis_operator_id',1)
                                                     ->where('jenis_operator_detail_id',3)
                                                     ->where('jenis_operator_detail_pekerjaan_id',9)
                                                     ->where('pengerjaan.tanggal_pengerjaan',$tanggal)
                                                     ->where('operator_karyawan.status','Y')
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
-                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     // ->with('biodata_karyawan')
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
@@ -7889,13 +8084,14 @@ class PengerjaanController extends Controller
                                                     'pengerjaan.total_jam_kerja_4 as total_jam_kerja_4',
                                                     'pengerjaan.total_jam_kerja_5 as total_jam_kerja_5',
                                                     ])
+                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
                                                     ->where('jenis_operator_id',1)
                                                     ->where('jenis_operator_detail_id',3)
                                                     ->where('jenis_operator_detail_pekerjaan_id',11)
                                                     ->where('pengerjaan.tanggal_pengerjaan',$tanggal)
                                                     ->where('operator_karyawan.status','Y')
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
-                                                    ->rightJoin('pengerjaan','pengerjaan.operator_karyawan_id','=','operator_karyawan.id')
+                                                    ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     // ->with('biodata_karyawan')
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();

@@ -42,6 +42,9 @@ Route::group(['middleware' => 'auth'], function () {
         
         Route::prefix('hasil_kerja')->group(function () {
             Route::get('/', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja'])->name('pengerjaan.hasil_kerja');
+            Route::get('b_packing', [App\Http\Controllers\PengerjaanController::class, 'b_hasil_kerja_packing'])->name('pengerjaan.b_hasil_kerja_packing');
+            Route::get('b_harian', [App\Http\Controllers\PengerjaanController::class, 'b_hasil_kerja_harian'])->name('pengerjaan.b_hasil_kerja_harian');
+            Route::get('b_supir', [App\Http\Controllers\PengerjaanController::class, 'b_hasil_kerja_supir'])->name('pengerjaan.b_hasil_kerja_supir');
             // Route::get('create', [App\Http\Controllers\OperatorKaryawanController::class, 'create'])->name('operator_karyawan.create');
 
             Route::prefix('packing_lokal')->group(function () {
