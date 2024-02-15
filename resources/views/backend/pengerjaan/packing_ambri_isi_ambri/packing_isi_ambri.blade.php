@@ -330,7 +330,8 @@
                                                 }
                                             }
     
-                                            $hasil_upah = ($hasil_kerja_1*$lembur_1)+($hasil_kerja_2*$lembur_2)+($hasil_kerja_3*$lembur_3)+($hasil_kerja_4*$lembur_4)+($hasil_kerja_5*$lembur_5);
+                                            $hasil_upah = round(($hasil_kerja_1*$lembur_1)+($hasil_kerja_2*$lembur_2)+($hasil_kerja_3*$lembur_3)+($hasil_kerja_4*$lembur_4)+($hasil_kerja_5*$lembur_5));
+                                            // $hasil_upah = ($hasil_kerja_1*$lembur_1)+($hasil_kerja_2*$lembur_2)+($hasil_kerja_3*$lembur_3)+($hasil_kerja_4*$lembur_4)+($hasil_kerja_5*$lembur_5);
                                             // dd($hasil_upah);
                                             array_push($upah,$hasil_upah);
                                             // dd($upah);
@@ -378,6 +379,7 @@
                                         <?php 
                                             $total_upah = array_sum($upah);
                                             array_push($total_all_upah,$total_upah);
+                                            // dd($total_all_upah);
     
                                             if(empty($pengerjaan->uang_makan)){
                                                 $uang_makan = 0;
@@ -390,7 +392,11 @@
                                             // }else{
                                             //     $tunjangan_kerja = number_format($pengerjaan->tunjangan_kerja,0,',','.');
                                             // }
-                                            $tunjangan_kerja = 0;
+                                            if(empty($pengerjaan->tunjangan_kerja)){
+                                                $tunjangan_kerja = 0;
+                                            }else{
+                                                $tunjangan_kerja = $pengerjaan->tunjangan_kerja;
+                                            }
     
                                             if(empty($pengerjaan->tunjangan_kehadiran)){
                                                 $tunjangan_kehadiran = 0;
@@ -735,9 +741,9 @@
                                     <td style="text-align: right; font-weight: bold">
                                         {{ number_format(array_sum($total_all_gaji_diterima),0,',','.') }}
                                     </td>
-                                    {{-- @php
-                                        dd(array_sum($total));
-                                    @endphp --}}
+                                    @php
+                                        // dd($total_all_upah);
+                                    @endphp
                                     {{-- <td></td>
                                     <td></td>
                                     <td></td>

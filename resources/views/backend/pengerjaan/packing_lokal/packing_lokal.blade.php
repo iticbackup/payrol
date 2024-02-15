@@ -329,7 +329,7 @@
                                                 }
                                             }
     
-                                            $hasil_upah = ($hasil_kerja_1*$lembur_1)+($hasil_kerja_2*$lembur_2)+($hasil_kerja_3*$lembur_3)+($hasil_kerja_4*$lembur_4)+($hasil_kerja_5*$lembur_5);
+                                            $hasil_upah = round(($hasil_kerja_1*$lembur_1)+($hasil_kerja_2*$lembur_2)+($hasil_kerja_3*$lembur_3)+($hasil_kerja_4*$lembur_4)+($hasil_kerja_5*$lembur_5));
                                             // dd($hasil_upah);
                                             array_push($upah,$hasil_upah);
                                             // dd($upah);

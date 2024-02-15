@@ -379,7 +379,8 @@
                                 }
                                 // $hasil_upah = $total_hasil_kerja * $lembur;
                                 // dd($total_hasil_kerja);
-                                $hasil_upah = $total_hasil_kerja;
+                                $hasil_upah = round($total_hasil_kerja);
+                                // $hasil_upah = $total_hasil_kerja;
                                 array_push($upah_hasil_kerja, $hasil_upah);
                                 // array_push($total_hasil_kerjas_1,$hasil_kerja);
                                 // dd($total_hasil_kerjas_1);
