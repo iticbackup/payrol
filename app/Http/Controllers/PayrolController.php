@@ -3072,7 +3072,7 @@ class PayrolController extends Controller
 
             $pdf->SetFont('Arial','',8);
             $pdf->Cell(12,5,'Plus','L',0,'L'); 
-            $pdf->Cell(45,5,"",'',0,'L');
+            $pdf->Cell(45,5,"(".$row1_ket_plus_1.")",'',0,'L');
             $pdf->Cell(3,5,'Rp','',0,'L');
             $pdf->Cell(35,5,number_format($row1_plus_1,0,',','.'),'R',0,'R');
 
@@ -3080,14 +3080,14 @@ class PayrolController extends Controller
 
             $pdf->SetFont('Arial','',8);
             $pdf->Cell(12,5,'Plus','L',0,'L'); 
-            $pdf->Cell(45,5,"",'',0,'L');
+            $pdf->Cell(45,5,"(".$row2_ket_plus_1.")",'',0,'L');
             $pdf->Cell(3,5,'Rp','',0,'L');
             $pdf->Cell(35,5,number_format($row2_plus_1,0,',','.'),'R',0,'R');
             $pdf->ln(3);
 
             $pdf->SetFont('Arial','',8);
             $pdf->Cell(12,5,'','L',0,'L'); 
-            $pdf->Cell(45,5,"",'',0,'L');
+            $pdf->Cell(45,5,"(".$row1_ket_plus_2.")",'',0,'L');
             $pdf->Cell(3,5,'Rp','',0,'L');
             $pdf->Cell(35,5,number_format($row1_plus_2,0,',','.'),'R',0,'R');
 
@@ -3095,14 +3095,14 @@ class PayrolController extends Controller
 
             $pdf->SetFont('Arial','',8);
             $pdf->Cell(12,5,'','L',0,'L'); 
-            $pdf->Cell(45,5,"",'',0,'L');
+            $pdf->Cell(45,5,"(".$row2_ket_plus_2.")",'',0,'L');
             $pdf->Cell(3,5,'Rp','',0,'L');
             $pdf->Cell(35,5,number_format($row2_plus_2,0,',','.'),'R',0,'R');
             $pdf->ln(3);
 
             $pdf->SetFont('Arial','',8);
             $pdf->Cell(12,5,'','L',0,'L'); 
-            $pdf->Cell(45,5,"",'',0,'L');
+            $pdf->Cell(45,5,"(".$row1_ket_plus_3.")",'',0,'L');
             $pdf->Cell(3,5,'Rp','',0,'L');
             $pdf->Cell(35,5,number_format($row1_plus_3,0,',','.'),'R',0,'R');
 
@@ -3110,7 +3110,7 @@ class PayrolController extends Controller
 
             $pdf->SetFont('Arial','',8);
             $pdf->Cell(12,5,'','L',0,'L'); 
-            $pdf->Cell(45,5,"",'',0,'L');
+            $pdf->Cell(45,5,"(".$row2_ket_plus_3.")",'',0,'L');
             $pdf->Cell(3,5,'Rp','',0,'L');
             $pdf->Cell(35,5,number_format($row2_plus_3,0,',','.'),'R',0,'R');
             $pdf->ln(3);
