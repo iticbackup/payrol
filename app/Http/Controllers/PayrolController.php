@@ -3012,7 +3012,7 @@ class PayrolController extends Controller
 
             $pdf->SetFont('Arial','',8);
             $pdf->Cell(35,5,'GAJI','L',0,'L'); 
-            $pdf->Cell(22,5,''.' HARI','',0,'L');
+            $pdf->Cell(22,5,$a.' HARI','',0,'L');
             $pdf->Cell(3,5,'Rp','',0,'L');
             $pdf->Cell(35,5,number_format(array_sum($row1_total_upah_hasil_kerja),0,',','.'),'R',0,'R');
             
