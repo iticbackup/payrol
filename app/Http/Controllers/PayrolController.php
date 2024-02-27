@@ -10392,15 +10392,15 @@ class PayrolController extends Controller
             $pdf->Cell(35,5,number_format($row2_total_upah_diterima,0,',','.'),'BR',0,'R');
             $pdf->ln(3);
 
-            // $no=$no+1;
-            // if ($no%2==0)
-            // {
-            //     $page=round($no/2);
-            //     $pdf->ln(3);
-            //     $pdf->SetFont('Arial','',7);
-            //     $pdf->Cell(35,5,"- page $page -",'',0,''); 
-            //     $pdf->ln(12);
-            // }
+            $no=$no+1;
+            if ($no%2==0)
+            {
+                $page=round($no/2);
+                $pdf->ln(3);
+                $pdf->SetFont('Arial','',7);
+                $pdf->Cell(35,5,"- page $page -",'',0,''); 
+                $pdf->ln(12);
+            }
             $pdf->ln(8);
         }
 
