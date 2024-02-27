@@ -9910,7 +9910,8 @@ class PayrolController extends Controller
                     $row_daily1_dpb = 0;
                     $row_daily1_jenis_umk = '-';
                 }else{
-                    $row_daily1_tanggal_pengerjaan = $row_daily_1[$i]->tanggal_pengerjaan;
+                    // $row_daily1_tanggal_pengerjaan = $row_daily_1[$i]->tanggal_pengerjaan;
+                    $row_daily1_tanggal_pengerjaan = Carbon::create($row_daily_1[$i]->tanggal_pengerjaan)->isoFormat('D MMM');
                     $row_daily1_explode_hasil_kerja_1 = explode("|",$row_daily_1[$i]->hasil_kerja_1);
                     $row_daily1_umk_rit = RitUMK::where('id',$row_daily1_explode_hasil_kerja_1[0])->first();
                     if (empty($row_daily1_umk_rit)) {
@@ -9945,7 +9946,7 @@ class PayrolController extends Controller
                     $row_daily2_dpb = 0;
                     $row_daily2_jenis_umk = '-';
                 }else{
-                    $row_daily2_tanggal_pengerjaan = $row_daily_2[$i]->tanggal_pengerjaan;
+                    $row_daily2_tanggal_pengerjaan = Carbon::create($row_daily_2[$i]->tanggal_pengerjaan)->isoFormat('D MMM');
                     $row_daily2_explode_hasil_kerja_1 = explode("|",$row_daily_2[$i]->hasil_kerja_1);
                     $row_daily2_umk_rit = RitUMK::where('id',$row_daily2_explode_hasil_kerja_1[0])->first();
                     if (empty($row_daily2_umk_rit)) {
@@ -9973,14 +9974,14 @@ class PayrolController extends Controller
                 // dd($row_daily2_hasil_kerja_1);
                 ### LINE 4 ###
                 $pdf->SetFont('Arial','',9);
-                $pdf->Cell(20,5,Carbon::parse($row_daily1_tanggal_pengerjaan)->isoFormat('D MMM'),'L',0,'C'); 
+                $pdf->Cell(20,5,$row_daily1_tanggal_pengerjaan,'L',0,'C'); 
                 $pdf->Cell(53,5,'DPB','LR',0,'L');
                 $pdf->Cell(22,5,number_format($row_daily1_dpb,0,',','.'),'R',0,'R');
                 
                 $pdf->Cell(2,5,'','LF',0,'L');
                 
                 $pdf->SetFont('Arial','',9);
-                $pdf->Cell(20,5,Carbon::parse($row_daily2_tanggal_pengerjaan)->isoFormat('D MMM'),'L',0,'C'); 
+                $pdf->Cell(20,5,$row_daily2_tanggal_pengerjaan,'L',0,'C'); 
                 $pdf->Cell(53,5,'DPB','LR',0,'L');
                 $pdf->Cell(22,5,number_format($row_daily2_dpb,0,',','.'),'R',0,'R');
                 $pdf->ln(4);
