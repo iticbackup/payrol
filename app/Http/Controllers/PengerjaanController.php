@@ -260,7 +260,7 @@ class PengerjaanController extends Controller
                         $input_ph['operator_harian_karyawan_id'] = $operator_karyawan_harian->id;
                         $input_ph['upah_dasar'] = $operator_karyawan_harian->upah_dasar;
                         $input_ph['hari_kerja'] = $operator_karyawan_harian->hari_kerja;
-                        $input_ph['hasil_kerja'] = implode($hasil_kerja_harian);
+                        // $input_ph['hasil_kerja'] = implode($hasil_kerja_harian);
                         // $input_ph['hasil_kerja'] = '0|0|0|0|0|0|';
                         $pengerjaan_harian_weekly->create($input_ph);
                     }else{
@@ -270,7 +270,7 @@ class PengerjaanController extends Controller
                         $input_ph['operator_harian_karyawan_id'] = $operator_karyawan_harian->id;
                         $input_ph['upah_dasar'] = $operator_karyawan_harian->upah_dasar;
                         $input_ph['hari_kerja'] = $operator_karyawan_harian->hari_kerja;
-                        $input_ph['hasil_kerja'] = implode($hasil_kerja_harian);
+                        // $input_ph['hasil_kerja'] = implode($hasil_kerja_harian);
                         // $input_ph['hasil_kerja'] = '0|0|0|0|0|0|';
                         $pengerjaan_harian_weeklys->create($input_ph);
                     }
@@ -9165,7 +9165,7 @@ class PengerjaanController extends Controller
 
         $data['total_potongan_tk']=$total_potongan_tk;
 
-
+        // dd($data);
         // $exp_tanggal = array_filter(explode("#",$data['new_data_pengerjaan']['tanggal']));
         // $a = count($exp_tanggal);
         // $a=$a-2;

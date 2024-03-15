@@ -394,6 +394,8 @@
                                                         // echo json_encode($menit_kerja);
                                                         // var_dump($jam_kerja_seharusnya);
                                                         // dd($exp_menit);
+
+                                                        // ok
                                                         if (empty($karyawan_harian->hasil_kerja)) {
                                                             $post_jam_kerja = $jam_kerja / $jam_kerja_seharusnya;
                                                         } else {
@@ -401,8 +403,14 @@
                                                             $explode_isi_jam_kerja = explode('|', $karyawan_harian->hasil_kerja);
                                                             $post_jam_kerja = $explode_isi_jam_kerja[$array_b];
                                                         }
+                                                        // end ok
+
+                                                        // $post_jam_kerja = $jam_kerja / $jam_kerja_seharusnya;
+
+                                                        // $post_jam_kerja = $jam_kerja / $jam_kerja_seharusnya;
                                                         // dd($post_jam_kerja);
                                                     } else {
+                                                        // ok
                                                         if (empty($karyawan_harian->hasil_kerja)) {
                                                             $jam_kerja = 0;
                                                             $menit_kerja = 0;
@@ -416,9 +424,9 @@
                                                             $menit_kerja = 0;
                                                             $array_b = $b - 1;
                                                             $explode_isi_jam_kerja = explode('|', $karyawan_harian->hasil_kerja);
-                                                            // dd($explode_isi_jam_kerja);
                                                             $post_jam_kerja = $explode_isi_jam_kerja[$array_b];
                                                         }
+                                                        // end ok
                                                         // dd($post_jam_kerja);
                                                     }
 
