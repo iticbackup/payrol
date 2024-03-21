@@ -47,6 +47,7 @@
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>NIK</th>
                                 <th>Nama Karyawan</th>
                                 <th>RIT Posisi</th>
@@ -94,6 +95,10 @@
             serverSide: true,
             ajax: "{{ route('operator_karyawan_supir_rit') }}",
             columns: [
+                {
+                    data: 'id',
+                    name: 'id'
+                },
                 {
                     data: 'nik',
                     name: 'nik'

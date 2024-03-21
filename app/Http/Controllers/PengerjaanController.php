@@ -495,6 +495,12 @@ class PengerjaanController extends Controller
                 }
             }
         }
+
+        return response()->json([
+            'success' => true,
+            'message_title' => 'Berhasil',
+            'message_content' => 'Data Berhasil Ditambah'
+        ]);
     }
 
     public function hasil_kerja(Request $request)

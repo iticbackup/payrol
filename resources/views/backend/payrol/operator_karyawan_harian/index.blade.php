@@ -46,6 +46,7 @@
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>NIK</th>
                                 <th>Nama Karyawan</th>
                                 <th>Jenis Operator</th>
@@ -92,10 +93,10 @@
             serverSide: true,
             ajax: "{{ route('operator_karyawan_harian') }}",
             columns: [
-                // {
-                //     data: 'id',
-                //     name: 'id'
-                // },
+                {
+                    data: 'id',
+                    name: 'id'
+                },
                 {
                     data: 'nik',
                     name: 'nik'

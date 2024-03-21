@@ -84,13 +84,14 @@
                                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                         <thead>
                                             <tr>
-                                                <th colspan="4" class="text-center">Pegawai
+                                                <th colspan="5" class="text-center">Pegawai
                                                     {{ $jenis_operator_detail_pekerjaan->jenis_posisi_pekerjaan }}</th>
                                             </tr>
                                             <tr>
                                                 <th class="text-center">No</th>
                                                 <th class="text-center">NIK</th>
                                                 <th class="text-center">Nama</th>
+                                                <th class="text-center">Status Karyawan</th>
                                                 <th class="text-center"><input type="checkbox"
                                                         {{ $new_data_pengerjaan->status == 'n' ? 'disabled' : null }}
                                                         name="toggle"
@@ -111,6 +112,7 @@
                                                     <td class="text-center">{{ $key + 1 }}</td>
                                                     <td class="text-center">{{ $karyawan_operator->nik }}</td>
                                                     <td class="text-left">{{ $biodata_karyawan->nama }}</td>
+                                                    <td class="text-center">{{ $karyawan_operator->status == 'Y' ? 'Aktif' : 'Tidak Aktif' }}</td>
                                                     <td>
                                                         @if ($new_data_pengerjaan->status == 'n')
                                                             <input type="checkbox" disabled checked class="form-check-input"
