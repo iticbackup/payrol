@@ -4233,9 +4233,11 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_1){
                     $lembur_1 = '1-y';
                     $hasil_lembur_1 = '1.5';
+                    $total_upah_lembur_1 = $hasil_kerja_1*1.5;
                 }else{
                     $lembur_1 = '1-n';
                     $hasil_lembur_1 = '1';
+                    $total_upah_lembur_1 = $hasil_kerja_1*0;
                 }
 
                 if($request->total_jam_1[$key]){
@@ -4250,7 +4252,10 @@ class PengerjaanController extends Controller
                 $hasil_lembur_1 = '1';
                 $total_jam_1 = '0';
                 $hasil_kerja_1 = 0;
+                $total_upah_lembur_1 = '0';
             }
+
+            $total_hasil_lembur_1 = $total_upah_lembur_1;
 
             // dd($hasil_pengerjaan_1);
             
@@ -4273,9 +4278,11 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_2){
                     $lembur_2 = '2-y';
                     $hasil_lembur_2 = '1.5';
+                    $total_upah_lembur_2 = $hasil_kerja_2*1.5;
                 }else{
                     $lembur_2 = '2-n';
                     $hasil_lembur_2 = '1';
+                    $total_upah_lembur_2 = $hasil_kerja_2*0;
                 }
 
                 if($request->total_jam_2[$key]){
@@ -4290,7 +4297,10 @@ class PengerjaanController extends Controller
                 $hasil_lembur_2 = '1';
                 $total_jam_2 = '0';
                 $hasil_kerja_2 = 0;
+                $total_upah_lembur_2 = '0';
             }
+
+            $total_hasil_lembur_2 = $total_upah_lembur_2;
 
             if ($request->umk_borongan_lokal_kerja_3) {
                 $umk_borongan_lokal_3 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing')
@@ -4311,9 +4321,11 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_3){
                     $lembur_3 = '3-y';
                     $hasil_lembur_3 = '1.5';
+                    $total_upah_lembur_3 = $hasil_kerja_3*1.5;
                 }else{
                     $lembur_3 = '3-n';
                     $hasil_lembur_3 = '1';
+                    $total_upah_lembur_3 = $hasil_kerja_3*0;
                 }
 
                 if($request->total_jam_3[$key]){
@@ -4328,7 +4340,10 @@ class PengerjaanController extends Controller
                 $hasil_lembur_3 = '1';
                 $total_jam_3 = '0';
                 $hasil_kerja_3 = 0;
+                $total_upah_lembur_3 = '0';
             }
+
+            $total_hasil_lembur_3 = $total_upah_lembur_3;
 
             if ($request->umk_borongan_lokal_kerja_4) {
                 $umk_borongan_lokal_4 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing')
@@ -4349,9 +4364,11 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_4){
                     $lembur_4 = '4-y';
                     $hasil_lembur_4 = '1.5';
+                    $total_upah_lembur_4 = $hasil_kerja_4*1.5;
                 }else{
                     $lembur_4 = '4-n';
                     $hasil_lembur_4 = '1';
+                    $total_upah_lembur_4 = $hasil_kerja_4*0;
                 }
 
                 if($request->total_jam_4[$key]){
@@ -4366,7 +4383,10 @@ class PengerjaanController extends Controller
                 $hasil_lembur_4 = '1';
                 $total_jam_4 = '0';
                 $hasil_kerja_4 = 0;
+                $total_upah_lembur_4 = '0';
             }
+
+            $total_hasil_lembur_4 = $total_upah_lembur_4;
 
             if ($request->umk_borongan_lokal_kerja_5) {
                 $umk_borongan_lokal_5 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing')
@@ -4387,9 +4407,11 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_5){
                     $lembur_5 = '5-y';
                     $hasil_lembur_5 = '1.5';
+                    $total_upah_lembur_5 = $hasil_kerja_5*1.5;
                 }else{
                     $lembur_5 = '5-n';
                     $hasil_lembur_5 = '1';
+                    $total_upah_lembur_5 = $hasil_kerja_5*0;
                 }
 
                 if($request->total_jam_5[$key]){
@@ -4404,17 +4426,23 @@ class PengerjaanController extends Controller
                 $hasil_lembur_5 = '1';
                 $total_jam_5 = '0';
                 $hasil_kerja_5 = 0;
+                $total_upah_lembur_5 = '0';
             }
+
+            $total_hasil_lembur_5 = $total_upah_lembur_5;
 
             $lemburs = '|'.$lembur_1.'|'.$lembur_2.'|'.$lembur_3.'|'.$lembur_4.'|'.$lembur_5;
             $hasil_upah_dasar = $hasil_kerja_1+$hasil_kerja_2+$hasil_kerja_3+$hasil_kerja_4+$hasil_kerja_5;
             // dd($hasil_upah_dasar);
+            $penjumlahan_lembur = round($total_hasil_lembur_1+$total_hasil_lembur_2+$total_hasil_lembur_3+$total_hasil_lembur_4+$total_hasil_lembur_5);
+
             $karyawan_pengerjaan->update([
                 'hasil_kerja_1' => $hasil_pengerjaan_1,
                 'hasil_kerja_2' => $hasil_pengerjaan_2,
                 'hasil_kerja_3' => $hasil_pengerjaan_3,
                 'hasil_kerja_4' => $hasil_pengerjaan_4,
                 'hasil_kerja_5' => $hasil_pengerjaan_5,
+                'uang_lembur' => $penjumlahan_lembur,
                 'lembur' => $lemburs,
                 'total_jam_kerja_1' => $total_jam_1,
                 'total_jam_kerja_2' => $total_jam_2,
@@ -5009,9 +5037,11 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_1){
                     $lembur_1 = '1-y';
                     $hasil_lembur_1 = '1.5';
+                    $total_upah_lembur_1 = $hasil_kerja_1*1.5;
                 }else{
                     $lembur_1 = '1-n';
                     $hasil_lembur_1 = '1';
+                    $total_upah_lembur_1 = $hasil_kerja_1*0;
                 }
 
                 if($request->total_jam_1[$key]){
@@ -5026,7 +5056,10 @@ class PengerjaanController extends Controller
                 $hasil_lembur_1 = '1';
                 $total_jam_1 = '0';
                 $hasil_kerja_1 = 0;
+                $total_upah_lembur_1 = '0';
             }
+
+            $total_hasil_lembur_1 = $total_upah_lembur_1;
 
             // dd($hasil_pengerjaan_1);
             
@@ -5049,9 +5082,11 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_2){
                     $lembur_2 = '2-y';
                     $hasil_lembur_2 = '1.5';
+                    $total_upah_lembur_2 = $hasil_kerja_2*1.5;
                 }else{
                     $lembur_2 = '2-n';
                     $hasil_lembur_2 = '1';
+                    $total_upah_lembur_2 = $hasil_kerja_2*0;
                 }
 
                 if($request->total_jam_2[$key]){
@@ -5066,7 +5101,10 @@ class PengerjaanController extends Controller
                 $hasil_lembur_2 = '1';
                 $total_jam_2 = '0';
                 $hasil_kerja_2 = 0;
+                $total_upah_lembur_2 = '0';
             }
+
+            $total_hasil_lembur_2 = $total_upah_lembur_2;
 
             if ($request->umk_borongan_lokal_kerja_3) {
                 $umk_borongan_lokal_3 = UMKBoronganEkspor::select('id','jenis_produk','umk_kemas')
@@ -5087,9 +5125,11 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_3){
                     $lembur_3 = '3-y';
                     $hasil_lembur_3 = '1.5';
+                    $total_upah_lembur_3 = $hasil_kerja_3*1.5;
                 }else{
                     $lembur_3 = '3-n';
                     $hasil_lembur_3 = '1';
+                    $total_upah_lembur_3 = $hasil_kerja_3*0;
                 }
 
                 if($request->total_jam_3[$key]){
@@ -5104,7 +5144,10 @@ class PengerjaanController extends Controller
                 $hasil_lembur_3 = '1';
                 $total_jam_3 = '0';
                 $hasil_kerja_3 = 0;
+                $total_upah_lembur_3 = '0';
             }
+
+            $total_hasil_lembur_3 = $total_upah_lembur_3;
 
             if ($request->umk_borongan_lokal_kerja_4) {
                 $umk_borongan_lokal_4 = UMKBoronganEkspor::select('id','jenis_produk','umk_kemas')
@@ -5125,9 +5168,11 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_4){
                     $lembur_4 = '4-y';
                     $hasil_lembur_4 = '1.5';
+                    $total_upah_lembur_4 = $hasil_kerja_4*1.5;
                 }else{
                     $lembur_4 = '4-n';
                     $hasil_lembur_4 = '1';
+                    $total_upah_lembur_4 = $hasil_kerja_4*0;
                 }
 
                 if($request->total_jam_4[$key]){
@@ -5142,7 +5187,10 @@ class PengerjaanController extends Controller
                 $hasil_lembur_4 = '1';
                 $total_jam_4 = '0';
                 $hasil_kerja_4 = 0;
+                $total_upah_lembur_4 = '0';
             }
+
+            $total_hasil_lembur_4 = $total_upah_lembur_4;
 
             if ($request->umk_borongan_lokal_kerja_5) {
                 $umk_borongan_lokal_5 = UMKBoronganEkspor::select('id','jenis_produk','umk_kemas')
@@ -5163,9 +5211,11 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_5){
                     $lembur_5 = '5-y';
                     $hasil_lembur_5 = '1.5';
+                    $total_upah_lembur_5 = $hasil_kerja_5*1.5;
                 }else{
                     $lembur_5 = '5-n';
                     $hasil_lembur_5 = '1';
+                    $total_upah_lembur_5 = $hasil_kerja_5*0;
                 }
 
                 if($request->total_jam_5[$key]){
@@ -5180,10 +5230,15 @@ class PengerjaanController extends Controller
                 $hasil_lembur_5 = '1';
                 $total_jam_5 = '0';
                 $hasil_kerja_5 = 0;
+                $total_upah_lembur_5 = '0';
             }
+
+            $total_hasil_lembur_5 = $total_upah_lembur_5;
 
             $lemburs = '|'.$lembur_1.'|'.$lembur_2.'|'.$lembur_3.'|'.$lembur_4.'|'.$lembur_5;
             $hasil_upah_dasar = $hasil_kerja_1+$hasil_kerja_2+$hasil_kerja_3+$hasil_kerja_4+$hasil_kerja_5;
+
+            $penjumlahan_lembur = round($total_hasil_lembur_1+$total_hasil_lembur_2+$total_hasil_lembur_3+$total_hasil_lembur_4+$total_hasil_lembur_5);
             // dd($hasil_upah_dasar);
             $karyawan_pengerjaan->update([
                 'hasil_kerja_1' => $hasil_pengerjaan_1,
@@ -5191,6 +5246,7 @@ class PengerjaanController extends Controller
                 'hasil_kerja_3' => $hasil_pengerjaan_3,
                 'hasil_kerja_4' => $hasil_pengerjaan_4,
                 'hasil_kerja_5' => $hasil_pengerjaan_5,
+                'uang_lembur' => $penjumlahan_lembur,
                 'lembur' => $lemburs,
                 'total_jam_kerja_1' => $total_jam_1,
                 'total_jam_kerja_2' => $total_jam_2,
