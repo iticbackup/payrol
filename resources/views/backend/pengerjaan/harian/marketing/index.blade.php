@@ -301,8 +301,13 @@
                                                                                             ->where('kode_pengerjaan',$kode_pengerjaan)
                                                                                             ->get();
                                         foreach ($pengerjaan_harians as $key => $pengerjaan_harian) {
-                                            $explode_hasil_kerja = explode("|",$pengerjaan_harian->hasil_kerja);
-                                            $hasil_kerja = array_push($total_hari_jam_kerja,$explode_hasil_kerja[$i]);
+                                            if (!empty($pengerjaan_harian->hasil_kerja)) {
+                                                $explode_hasil_kerja = explode("|",$pengerjaan_harian->hasil_kerja);
+                                                $hasil_kerja = array_push($total_hari_jam_kerja,$explode_hasil_kerja[$i]);
+                                            }
+                                            // else{
+
+                                            // }
                                         }
                                                                                             // dd($pengerjaan_harians);
                                     @endphp
