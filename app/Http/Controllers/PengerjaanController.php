@@ -469,7 +469,7 @@ class PengerjaanController extends Controller
             if ($request['checkbox_'.$i]) {
                 $data_checkbox = $request['checkbox_'.$i];
                 foreach ($data_checkbox as $key => $checkbox) {
-                    $cek_karyawan_operator = KaryawanOperator::where('nik',$checkbox)->first();
+                    $cek_karyawan_operator = KaryawanOperator::where('nik',$checkbox)->orderBy('id','desc')->first();
                     $data[] = [
                         'id' => $total_id+1,
                         'nik' => $checkbox,
@@ -479,6 +479,7 @@ class PengerjaanController extends Controller
                         'jht' => $cek_karyawan_operator->jht,
                         'bpjs' => $cek_karyawan_operator->bpjs,
                         'training' => $cek_karyawan_operator->training,
+                        'status' => $cek_karyawan_operator->status,
                     ];
                     KaryawanOperator::create([
                         'id' => $total_id+$key+1,
@@ -493,6 +494,7 @@ class PengerjaanController extends Controller
                         'status' => $cek_karyawan_operator->status,
                     ]);
                 }
+                // dd($data);
             }
         }
 
