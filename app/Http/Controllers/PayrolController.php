@@ -10402,7 +10402,13 @@ class PayrolController extends Controller
                 $pdf->Cell(35,5,"- page $page -",'',0,''); 
                 $pdf->ln(12);
             }
-            $pdf->ln(8);
+            if ($a == 6) {
+                // 6 hari kerja
+                $pdf->ln(8);
+            }else{
+                // 5 hari kerja
+                $pdf->ln(16);
+            }
         }
 
         // foreach ($pengerjaan_rit_weeklys as $prw => $pengerjaan_rit_weekly) {
