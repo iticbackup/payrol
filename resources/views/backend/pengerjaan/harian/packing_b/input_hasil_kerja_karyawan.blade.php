@@ -1,4 +1,4 @@
-@extends('layouts.backend.app')
+@extends('layouts.backend.master_no_header')
 
 @section('css')
     <link href="{{ URL::asset('public/assets/css/iziToast.css') }}" rel="stylesheet" type="text/css" />

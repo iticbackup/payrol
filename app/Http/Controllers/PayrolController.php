@@ -32,10 +32,45 @@ use \Codedge\Fpdf\Fpdf\Fpdf;
 
 class PayrolController extends Controller
 {
+
+    function __construct(
+        NewDataPengerjaan $newDataPengerjaan,
+        BiodataKaryawan $biodataKaryawan,
+        KaryawanOperator $karyawanOperator,
+        PengerjaanWeekly $pengerjaanWeekly,
+        Pengerjaan $pengerjaan,
+        PengerjaanHarian $pengerjaanHarian,
+        PengerjaanRITHarian $pengerjaanRitHarian,
+        PengerjaanRITWeekly $pengerjaanRitWeekly,
+        RitPosisi $ritPosisi,
+        RitUMK $ritUmk,
+        RitTujuan $ritTujuan,
+        UMKBoronganLokal $umkBoronganLokal,
+        UMKBoronganEkspor $umkBoronganEkspor,
+        UMKBoronganAmbri $umkBoronganAmbri,
+        JenisOperatorDetailPengerjaan $jenisOperatorDetailPengerjaan
+    ){
+        $this->newDataPengerjaan = $newDataPengerjaan;
+        $this->biodataKaryawan = $biodataKaryawan;
+        $this->karyawanOperator = $karyawanOperator;
+        $this->pengerjaanWeekly = $pengerjaanWeekly;
+        $this->pengerjaan = $pengerjaan;
+        $this->pengerjaanHarian = $pengerjaanHarian;
+        $this->pengerjaanRitHarian = $pengerjaanRitHarian;
+        $this->pengerjaanRitWeekly = $pengerjaanRitWeekly;
+        $this->ritPosisi = $ritPosisi;
+        $this->ritUmk = $ritUmk;
+        $this->ritTujuan = $ritTujuan;
+        $this->umkBoronganLokal = $umkBoronganLokal;
+        $this->umkBoronganEkspor = $umkBoronganEkspor;
+        $this->umkBoronganAmbri = $umkBoronganAmbri;
+        $this->jenisOperatorDetailPengerjaan = $jenisOperatorDetailPengerjaan;
+    }
+
     public function borongan(Request $request)
     {
         if ($request->ajax()) {
-            $data = NewDataPengerjaan::where('kode_pengerjaan','LIKE','%PB%')->get();
+            $data = $this->newDataPengerjaan->where('kode_pengerjaan','LIKE','%PB%')->get();
             return DataTables::of($data)
                             ->addIndexColumn()
                             ->addColumn('tanggal_penggajian', function($row){
@@ -83,7 +118,7 @@ class PayrolController extends Controller
     }
 
     public function borongan_slip_gaji($kode_pengerjaan){
-        $data['new_data_pengerjaan'] = NewDataPengerjaan::where('kode_pengerjaan',$kode_pengerjaan)->first();
+        $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
         $explode_tanggal_pengerjaans = explode('#',$data['new_data_pengerjaan']['tanggal']);
         $exp_tanggals = array_filter($explode_tanggal_pengerjaans);
         $a = count($exp_tanggals);
@@ -91,11 +126,11 @@ class PayrolController extends Controller
         $exp_tgl_awal = explode('-', $exp_tanggals[1]);
         $exp_tgl_akhir = explode('-', $exp_tanggals[$a]);
         $jenis_operator_id = [];
-        $jenis_pengerjaan_operator = JenisOperatorDetailPengerjaan::where('id','<=',11)->orderBy('id','asc')->get();
+        $jenis_pengerjaan_operator = $this->jenisOperatorDetailPengerjaan->where('id','<=',11)->orderBy('id','asc')->get();
         foreach ($jenis_pengerjaan_operator as $jpo) {
             $jenis_operator_id[] = $jpo->id;
         }
-        $first_pengerjaan_weekly_id = PengerjaanWeekly::select([
+        $first_pengerjaan_weekly_id = $this->pengerjaanWeekly->select([
                                                         'pengerjaan_weekly.id as id',
                                                         'operator_karyawan.nik as nik',
                                                         'operator_karyawan.jenis_operator_detail_pekerjaan_id as jenis_operator_detail_pekerjaan_id'
@@ -115,7 +150,7 @@ class PayrolController extends Controller
             // $ganjil_genap = 'MOD(pengerjaan_weekly.id, 2) = 0';
         }
 
-        $query_weeklys = PengerjaanWeekly::select([
+        $query_weeklys = $this->pengerjaanWeekly->select([
                         'pengerjaan_weekly.id as id',
                         'pengerjaan_weekly.kode_payrol as kode_payrol',
                         'pengerjaan_weekly.operator_karyawan_id as operator_karyawan_id',
@@ -160,9 +195,9 @@ class PayrolController extends Controller
         $pdf->SetFont('Arial','',8);
         $no=0;
         for ($i=0; $i < count($query_weeklys); $i++) { 
-            $row1_nama = BiodataKaryawan::where('nik',$query_weeklys[$i]['nik'])->orderBy('nama','asc')->first();
+            $row1_nama = $this->biodataKaryawan->where('nik',$query_weeklys[$i]['nik'])->orderBy('nama','asc')->first();
             $row1_upah_lembur = [];
-            $row1_pengerjaans = Pengerjaan::where('operator_karyawan_id',$query_weeklys[$i]['operator_karyawan_id'])
+            $row1_pengerjaans = $this->pengerjaan->where('operator_karyawan_id',$query_weeklys[$i]['operator_karyawan_id'])
                                         ->where('kode_pengerjaan',$kode_pengerjaan)
                                         ->get();
                                         // dd($row1_pengerjaans);
@@ -175,7 +210,7 @@ class PayrolController extends Controller
                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 1) {
                     // Hasil Kerja 1
                     ${"row1_explode_hasil_kerja_1"} = explode("|",$row1_pengerjaan['hasil_kerja_1']);
-                    ${"row1_umk_borongan_lokal_1"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_1"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_1"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_1"})){
@@ -200,7 +235,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 2
                     ${"row1_explode_hasil_kerja_2"} = explode("|",$row1_pengerjaan['hasil_kerja_2']);
-                    ${"row1_umk_borongan_lokal_2"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_2"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_2"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_2"})){
@@ -225,7 +260,7 @@ class PayrolController extends Controller
                     
                     // Hasil Kerja 3
                     ${"row1_explode_hasil_kerja_3"} = explode("|",$row1_pengerjaan['hasil_kerja_3']);
-                    ${"row1_umk_borongan_lokal_3"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_3"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_3"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_3"})){
@@ -250,7 +285,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 4
                     ${"row1_explode_hasil_kerja_4"} = explode("|",$row1_pengerjaan['hasil_kerja_4']);
-                    ${"row1_umk_borongan_lokal_4"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_4"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_4"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_4"})){
@@ -275,7 +310,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 5
                     ${"row1_explode_hasil_kerja_5"} = explode("|",$row1_pengerjaan['hasil_kerja_5']);
-                    ${"row1_umk_borongan_lokal_5"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_5"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_5"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_5"})){
@@ -302,7 +337,7 @@ class PayrolController extends Controller
                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 2) {
                     // Hasil Kerja 1
                     ${"row1_explode_hasil_kerja_1"} = explode("|",$row1_pengerjaan['hasil_kerja_1']);
-                    ${"row1_umk_borongan_lokal_1"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_1"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_1"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_1"})){
@@ -327,7 +362,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 2
                     ${"row1_explode_hasil_kerja_2"} = explode("|",$row1_pengerjaan['hasil_kerja_2']);
-                    ${"row1_umk_borongan_lokal_2"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_2"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_2"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_2"})){
@@ -352,7 +387,7 @@ class PayrolController extends Controller
                     
                     // Hasil Kerja 3
                     ${"row1_explode_hasil_kerja_3"} = explode("|",$row1_pengerjaan['hasil_kerja_3']);
-                    ${"row1_umk_borongan_lokal_3"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_3"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_3"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_3"})){
@@ -377,7 +412,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 4
                     ${"row1_explode_hasil_kerja_4"} = explode("|",$row1_pengerjaan['hasil_kerja_4']);
-                    ${"row1_umk_borongan_lokal_4"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_4"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_4"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_4"})){
@@ -402,7 +437,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 5
                     ${"row1_explode_hasil_kerja_5"} = explode("|",$row1_pengerjaan['hasil_kerja_5']);
-                    ${"row1_umk_borongan_lokal_5"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_5"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_5"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_5"})){
@@ -429,7 +464,7 @@ class PayrolController extends Controller
                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 3) {
                     // Hasil Kerja 1
                     ${"row1_explode_hasil_kerja_1"} = explode("|",$row1_pengerjaan['hasil_kerja_1']);
-                    ${"row1_umk_borongan_lokal_1"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_1"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_1"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_1"})){
@@ -454,7 +489,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 2
                     ${"row1_explode_hasil_kerja_2"} = explode("|",$row1_pengerjaan['hasil_kerja_2']);
-                    ${"row1_umk_borongan_lokal_2"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_2"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_2"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_2"})){
@@ -479,7 +514,7 @@ class PayrolController extends Controller
                     
                     // Hasil Kerja 3
                     ${"row1_explode_hasil_kerja_3"} = explode("|",$row1_pengerjaan['hasil_kerja_3']);
-                    ${"row1_umk_borongan_lokal_3"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_3"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_3"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_3"})){
@@ -504,7 +539,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 4
                     ${"row1_explode_hasil_kerja_4"} = explode("|",$row1_pengerjaan['hasil_kerja_4']);
-                    ${"row1_umk_borongan_lokal_4"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_4"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_4"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_4"})){
@@ -529,7 +564,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 5
                     ${"row1_explode_hasil_kerja_5"} = explode("|",$row1_pengerjaan['hasil_kerja_5']);
-                    ${"row1_umk_borongan_lokal_5"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_5"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_5"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_5"})){
@@ -556,7 +591,7 @@ class PayrolController extends Controller
                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 4) {
                     // Hasil Kerja 1
                     ${"row1_explode_hasil_kerja_1"} = explode("|",$row1_pengerjaan['hasil_kerja_1']);
-                    ${"row1_umk_borongan_lokal_1"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_1"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_1"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_1"})){
@@ -581,7 +616,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 2
                     ${"row1_explode_hasil_kerja_2"} = explode("|",$row1_pengerjaan['hasil_kerja_2']);
-                    ${"row1_umk_borongan_lokal_2"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_2"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_2"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_2"})){
@@ -606,7 +641,7 @@ class PayrolController extends Controller
                     
                     // Hasil Kerja 3
                     ${"row1_explode_hasil_kerja_3"} = explode("|",$row1_pengerjaan['hasil_kerja_3']);
-                    ${"row1_umk_borongan_lokal_3"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_3"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_3"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_3"})){
@@ -631,7 +666,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 4
                     ${"row1_explode_hasil_kerja_4"} = explode("|",$row1_pengerjaan['hasil_kerja_4']);
-                    ${"row1_umk_borongan_lokal_4"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_4"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_4"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_4"})){
@@ -656,7 +691,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 5
                     ${"row1_explode_hasil_kerja_5"} = explode("|",$row1_pengerjaan['hasil_kerja_5']);
-                    ${"row1_umk_borongan_lokal_5"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                    ${"row1_umk_borongan_lokal_5"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                     ->where('id',${"row1_explode_hasil_kerja_5"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_5"})){
@@ -684,7 +719,7 @@ class PayrolController extends Controller
                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 5) {
                     // Hasil Kerja 1
                     ${"row1_explode_hasil_kerja_1"} = explode("|",$row1_pengerjaan['hasil_kerja_1']);
-                    ${"row1_umk_borongan_lokal_1"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                    ${"row1_umk_borongan_lokal_1"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                     ->where('id',${"row1_explode_hasil_kerja_1"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_1"})){
@@ -709,7 +744,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 2
                     ${"row1_explode_hasil_kerja_2"} = explode("|",$row1_pengerjaan['hasil_kerja_2']);
-                    ${"row1_umk_borongan_lokal_2"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                    ${"row1_umk_borongan_lokal_2"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                     ->where('id',${"row1_explode_hasil_kerja_2"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_2"})){
@@ -734,7 +769,7 @@ class PayrolController extends Controller
                     
                     // Hasil Kerja 3
                     ${"row1_explode_hasil_kerja_3"} = explode("|",$row1_pengerjaan['hasil_kerja_3']);
-                    ${"row1_umk_borongan_lokal_3"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                    ${"row1_umk_borongan_lokal_3"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                     ->where('id',${"row1_explode_hasil_kerja_3"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_3"})){
@@ -759,7 +794,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 4
                     ${"row1_explode_hasil_kerja_4"} = explode("|",$row1_pengerjaan['hasil_kerja_4']);
-                    ${"row1_umk_borongan_lokal_4"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                    ${"row1_umk_borongan_lokal_4"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                     ->where('id',${"row1_explode_hasil_kerja_4"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_4"})){
@@ -784,7 +819,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 5
                     ${"row1_explode_hasil_kerja_5"} = explode("|",$row1_pengerjaan['hasil_kerja_5']);
-                    ${"row1_umk_borongan_lokal_5"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                    ${"row1_umk_borongan_lokal_5"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                     ->where('id',${"row1_explode_hasil_kerja_5"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_5"})){
@@ -811,7 +846,7 @@ class PayrolController extends Controller
                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 6) {
                     // Hasil Kerja 1
                     ${"row1_explode_hasil_kerja_1"} = explode("|",$row1_pengerjaan['hasil_kerja_1']);
-                    ${"row1_umk_borongan_lokal_1"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                    ${"row1_umk_borongan_lokal_1"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                     ->where('id',${"row1_explode_hasil_kerja_1"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_1"})){
@@ -836,7 +871,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 2
                     ${"row1_explode_hasil_kerja_2"} = explode("|",$row1_pengerjaan['hasil_kerja_2']);
-                    ${"row1_umk_borongan_lokal_2"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                    ${"row1_umk_borongan_lokal_2"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                     ->where('id',${"row1_explode_hasil_kerja_2"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_2"})){
@@ -861,7 +896,7 @@ class PayrolController extends Controller
                     
                     // Hasil Kerja 3
                     ${"row1_explode_hasil_kerja_3"} = explode("|",$row1_pengerjaan['hasil_kerja_3']);
-                    ${"row1_umk_borongan_lokal_3"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                    ${"row1_umk_borongan_lokal_3"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                     ->where('id',${"row1_explode_hasil_kerja_3"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_3"})){
@@ -886,7 +921,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 4
                     ${"row1_explode_hasil_kerja_4"} = explode("|",$row1_pengerjaan['hasil_kerja_4']);
-                    ${"row1_umk_borongan_lokal_4"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                    ${"row1_umk_borongan_lokal_4"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                     ->where('id',${"row1_explode_hasil_kerja_4"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_4"})){
@@ -911,7 +946,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 5
                     ${"row1_explode_hasil_kerja_5"} = explode("|",$row1_pengerjaan['hasil_kerja_5']);
-                    ${"row1_umk_borongan_lokal_5"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                    ${"row1_umk_borongan_lokal_5"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                     ->where('id',${"row1_explode_hasil_kerja_5"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_5"})){
@@ -938,7 +973,7 @@ class PayrolController extends Controller
                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 7) {
                     // Hasil Kerja 1
                     ${"row1_explode_hasil_kerja_1"} = explode("|",$row1_pengerjaan['hasil_kerja_1']);
-                    ${"row1_umk_borongan_lokal_1"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                    ${"row1_umk_borongan_lokal_1"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                     ->where('id',${"row1_explode_hasil_kerja_1"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_1"})){
@@ -963,7 +998,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 2
                     ${"row1_explode_hasil_kerja_2"} = explode("|",$row1_pengerjaan['hasil_kerja_2']);
-                    ${"row1_umk_borongan_lokal_2"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                    ${"row1_umk_borongan_lokal_2"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                     ->where('id',${"row1_explode_hasil_kerja_2"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_2"})){
@@ -988,7 +1023,7 @@ class PayrolController extends Controller
                     
                     // Hasil Kerja 3
                     ${"row1_explode_hasil_kerja_3"} = explode("|",$row1_pengerjaan['hasil_kerja_3']);
-                    ${"row1_umk_borongan_lokal_3"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                    ${"row1_umk_borongan_lokal_3"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                     ->where('id',${"row1_explode_hasil_kerja_3"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_3"})){
@@ -1013,7 +1048,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 4
                     ${"row1_explode_hasil_kerja_4"} = explode("|",$row1_pengerjaan['hasil_kerja_4']);
-                    ${"row1_umk_borongan_lokal_4"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                    ${"row1_umk_borongan_lokal_4"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                     ->where('id',${"row1_explode_hasil_kerja_4"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_4"})){
@@ -1038,7 +1073,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 5
                     ${"row1_explode_hasil_kerja_5"} = explode("|",$row1_pengerjaan['hasil_kerja_5']);
-                    ${"row1_umk_borongan_lokal_5"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                    ${"row1_umk_borongan_lokal_5"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                     ->where('id',${"row1_explode_hasil_kerja_5"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_5"})){
@@ -1066,7 +1101,7 @@ class PayrolController extends Controller
                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 8) {
                     // Hasil Kerja 1
                     ${"row1_explode_hasil_kerja_1"} = explode("|",$row1_pengerjaan['hasil_kerja_1']);
-                    ${"row1_umk_borongan_lokal_1"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                    ${"row1_umk_borongan_lokal_1"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                     ->where('id',${"row1_explode_hasil_kerja_1"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_1"})){
@@ -1091,7 +1126,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 2
                     ${"row1_explode_hasil_kerja_2"} = explode("|",$row1_pengerjaan['hasil_kerja_2']);
-                    ${"row1_umk_borongan_lokal_2"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                    ${"row1_umk_borongan_lokal_2"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                     ->where('id',${"row1_explode_hasil_kerja_2"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_2"})){
@@ -1116,7 +1151,7 @@ class PayrolController extends Controller
                     
                     // Hasil Kerja 3
                     ${"row1_explode_hasil_kerja_3"} = explode("|",$row1_pengerjaan['hasil_kerja_3']);
-                    ${"row1_umk_borongan_lokal_3"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                    ${"row1_umk_borongan_lokal_3"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                     ->where('id',${"row1_explode_hasil_kerja_3"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_3"})){
@@ -1141,7 +1176,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 4
                     ${"row1_explode_hasil_kerja_4"} = explode("|",$row1_pengerjaan['hasil_kerja_4']);
-                    ${"row1_umk_borongan_lokal_4"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                    ${"row1_umk_borongan_lokal_4"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                     ->where('id',${"row1_explode_hasil_kerja_4"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_4"})){
@@ -1166,7 +1201,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 5
                     ${"row1_explode_hasil_kerja_5"} = explode("|",$row1_pengerjaan['hasil_kerja_5']);
-                    ${"row1_umk_borongan_lokal_5"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                    ${"row1_umk_borongan_lokal_5"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                     ->where('id',${"row1_explode_hasil_kerja_5"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_5"})){
@@ -1193,7 +1228,7 @@ class PayrolController extends Controller
                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 9) {
                     // Hasil Kerja 1
                     ${"row1_explode_hasil_kerja_1"} = explode("|",$row1_pengerjaan['hasil_kerja_1']);
-                    ${"row1_umk_borongan_lokal_1"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                    ${"row1_umk_borongan_lokal_1"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                     ->where('id',${"row1_explode_hasil_kerja_1"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_1"})){
@@ -1218,7 +1253,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 2
                     ${"row1_explode_hasil_kerja_2"} = explode("|",$row1_pengerjaan['hasil_kerja_2']);
-                    ${"row1_umk_borongan_lokal_2"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                    ${"row1_umk_borongan_lokal_2"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                     ->where('id',${"row1_explode_hasil_kerja_2"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_2"})){
@@ -1243,7 +1278,7 @@ class PayrolController extends Controller
                     
                     // Hasil Kerja 3
                     ${"row1_explode_hasil_kerja_3"} = explode("|",$row1_pengerjaan['hasil_kerja_3']);
-                    ${"row1_umk_borongan_lokal_3"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                    ${"row1_umk_borongan_lokal_3"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                     ->where('id',${"row1_explode_hasil_kerja_3"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_3"})){
@@ -1268,7 +1303,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 4
                     ${"row1_explode_hasil_kerja_4"} = explode("|",$row1_pengerjaan['hasil_kerja_4']);
-                    ${"row1_umk_borongan_lokal_4"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                    ${"row1_umk_borongan_lokal_4"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                     ->where('id',${"row1_explode_hasil_kerja_4"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_4"})){
@@ -1293,7 +1328,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 5
                     ${"row1_explode_hasil_kerja_5"} = explode("|",$row1_pengerjaan['hasil_kerja_5']);
-                    ${"row1_umk_borongan_lokal_5"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                    ${"row1_umk_borongan_lokal_5"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                     ->where('id',${"row1_explode_hasil_kerja_5"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_5"})){
@@ -1320,7 +1355,7 @@ class PayrolController extends Controller
                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 11) {
                     // Hasil Kerja 1
                     ${"row1_explode_hasil_kerja_1"} = explode("|",$row1_pengerjaan['hasil_kerja_1']);
-                    ${"row1_umk_borongan_lokal_1"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                    ${"row1_umk_borongan_lokal_1"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                     ->where('id',${"row1_explode_hasil_kerja_1"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_1"})){
@@ -1345,7 +1380,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 2
                     ${"row1_explode_hasil_kerja_2"} = explode("|",$row1_pengerjaan['hasil_kerja_2']);
-                    ${"row1_umk_borongan_lokal_2"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                    ${"row1_umk_borongan_lokal_2"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                     ->where('id',${"row1_explode_hasil_kerja_2"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_2"})){
@@ -1370,7 +1405,7 @@ class PayrolController extends Controller
                     
                     // Hasil Kerja 3
                     ${"row1_explode_hasil_kerja_3"} = explode("|",$row1_pengerjaan['hasil_kerja_3']);
-                    ${"row1_umk_borongan_lokal_3"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                    ${"row1_umk_borongan_lokal_3"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                     ->where('id',${"row1_explode_hasil_kerja_3"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_3"})){
@@ -1395,7 +1430,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 4
                     ${"row1_explode_hasil_kerja_4"} = explode("|",$row1_pengerjaan['hasil_kerja_4']);
-                    ${"row1_umk_borongan_lokal_4"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                    ${"row1_umk_borongan_lokal_4"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                     ->where('id',${"row1_explode_hasil_kerja_4"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_4"})){
@@ -1420,7 +1455,7 @@ class PayrolController extends Controller
 
                     // Hasil Kerja 5
                     ${"row1_explode_hasil_kerja_5"} = explode("|",$row1_pengerjaan['hasil_kerja_5']);
-                    ${"row1_umk_borongan_lokal_5"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                    ${"row1_umk_borongan_lokal_5"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                     ->where('id',${"row1_explode_hasil_kerja_5"}[0])
                                                     ->first();
                     if(empty(${"row1_umk_borongan_lokal_5"})){
@@ -1601,7 +1636,7 @@ class PayrolController extends Controller
                     if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 1) {
                         // Hasil Kerja 1
                         ${"row2_explode_hasil_kerja_1"} = explode("|",$row2_pengerjaan['hasil_kerja_1']);
-                        ${"row2_umk_borongan_lokal_1"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_1"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_1"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_1"})){
@@ -1626,7 +1661,7 @@ class PayrolController extends Controller
     
                         // Hasil Kerja 2
                         ${"row2_explode_hasil_kerja_2"} = explode("|",$row2_pengerjaan['hasil_kerja_2']);
-                        ${"row2_umk_borongan_lokal_2"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_2"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_2"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_2"})){
@@ -1651,7 +1686,7 @@ class PayrolController extends Controller
                         
                         // Hasil Kerja 3
                         ${"row2_explode_hasil_kerja_3"} = explode("|",$row2_pengerjaan['hasil_kerja_3']);
-                        ${"row2_umk_borongan_lokal_3"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_3"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_3"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_3"})){
@@ -1676,7 +1711,7 @@ class PayrolController extends Controller
     
                         // Hasil Kerja 4
                         ${"row2_explode_hasil_kerja_4"} = explode("|",$row2_pengerjaan['hasil_kerja_4']);
-                        ${"row2_umk_borongan_lokal_4"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_4"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_4"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_4"})){
@@ -1701,7 +1736,7 @@ class PayrolController extends Controller
     
                         // Hasil Kerja 5
                         ${"row2_explode_hasil_kerja_5"} = explode("|",$row2_pengerjaan['hasil_kerja_5']);
-                        ${"row2_umk_borongan_lokal_5"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_5"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_5"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_5"})){
@@ -1728,7 +1763,7 @@ class PayrolController extends Controller
                     if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 2) {
                         // Hasil Kerja 1
                         ${"row2_explode_hasil_kerja_1"} = explode("|",$row2_pengerjaan['hasil_kerja_1']);
-                        ${"row2_umk_borongan_lokal_1"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_1"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_1"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_1"})){
@@ -1753,7 +1788,7 @@ class PayrolController extends Controller
     
                         // Hasil Kerja 2
                         ${"row2_explode_hasil_kerja_2"} = explode("|",$row2_pengerjaan['hasil_kerja_2']);
-                        ${"row2_umk_borongan_lokal_2"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_2"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_2"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_2"})){
@@ -1778,7 +1813,7 @@ class PayrolController extends Controller
                         
                         // Hasil Kerja 3
                         ${"row2_explode_hasil_kerja_3"} = explode("|",$row2_pengerjaan['hasil_kerja_3']);
-                        ${"row2_umk_borongan_lokal_3"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_3"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_3"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_3"})){
@@ -1803,7 +1838,7 @@ class PayrolController extends Controller
     
                         // Hasil Kerja 4
                         ${"row2_explode_hasil_kerja_4"} = explode("|",$row2_pengerjaan['hasil_kerja_4']);
-                        ${"row2_umk_borongan_lokal_4"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_4"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_4"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_4"})){
@@ -1828,7 +1863,7 @@ class PayrolController extends Controller
     
                         // Hasil Kerja 5
                         ${"row2_explode_hasil_kerja_5"} = explode("|",$row2_pengerjaan['hasil_kerja_5']);
-                        ${"row2_umk_borongan_lokal_5"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_5"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_5"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_5"})){
@@ -1855,7 +1890,7 @@ class PayrolController extends Controller
                     if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 3) {
                         // Hasil Kerja 1
                         ${"row2_explode_hasil_kerja_1"} = explode("|",$row2_pengerjaan['hasil_kerja_1']);
-                        ${"row2_umk_borongan_lokal_1"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_1"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_1"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_1"})){
@@ -1880,7 +1915,7 @@ class PayrolController extends Controller
     
                         // Hasil Kerja 2
                         ${"row2_explode_hasil_kerja_2"} = explode("|",$row2_pengerjaan['hasil_kerja_2']);
-                        ${"row2_umk_borongan_lokal_2"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_2"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_2"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_2"})){
@@ -1905,7 +1940,7 @@ class PayrolController extends Controller
                         
                         // Hasil Kerja 3
                         ${"row2_explode_hasil_kerja_3"} = explode("|",$row2_pengerjaan['hasil_kerja_3']);
-                        ${"row2_umk_borongan_lokal_3"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_3"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_3"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_3"})){
@@ -1930,7 +1965,7 @@ class PayrolController extends Controller
     
                         // Hasil Kerja 4
                         ${"row2_explode_hasil_kerja_4"} = explode("|",$row2_pengerjaan['hasil_kerja_4']);
-                        ${"row2_umk_borongan_lokal_4"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_4"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_4"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_4"})){
@@ -1955,7 +1990,7 @@ class PayrolController extends Controller
     
                         // Hasil Kerja 5
                         ${"row2_explode_hasil_kerja_5"} = explode("|",$row2_pengerjaan['hasil_kerja_5']);
-                        ${"row2_umk_borongan_lokal_5"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_5"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_5"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_5"})){
@@ -1982,7 +2017,7 @@ class PayrolController extends Controller
                     if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 4) {
                         // Hasil Kerja 1
                         ${"row2_explode_hasil_kerja_1"} = explode("|",$row2_pengerjaan['hasil_kerja_1']);
-                        ${"row2_umk_borongan_lokal_1"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_1"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_1"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_1"})){
@@ -2007,7 +2042,7 @@ class PayrolController extends Controller
     
                         // Hasil Kerja 2
                         ${"row2_explode_hasil_kerja_2"} = explode("|",$row2_pengerjaan['hasil_kerja_2']);
-                        ${"row2_umk_borongan_lokal_2"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_2"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_2"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_2"})){
@@ -2032,7 +2067,7 @@ class PayrolController extends Controller
                         
                         // Hasil Kerja 3
                         ${"row2_explode_hasil_kerja_3"} = explode("|",$row2_pengerjaan['hasil_kerja_3']);
-                        ${"row2_umk_borongan_lokal_3"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_3"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_3"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_3"})){
@@ -2057,7 +2092,7 @@ class PayrolController extends Controller
     
                         // Hasil Kerja 4
                         ${"row2_explode_hasil_kerja_4"} = explode("|",$row2_pengerjaan['hasil_kerja_4']);
-                        ${"row2_umk_borongan_lokal_4"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_4"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_4"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_4"})){
@@ -2082,7 +2117,7 @@ class PayrolController extends Controller
     
                         // Hasil Kerja 5
                         ${"row2_explode_hasil_kerja_5"} = explode("|",$row2_pengerjaan['hasil_kerja_5']);
-                        ${"row2_umk_borongan_lokal_5"} = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
+                        ${"row2_umk_borongan_lokal_5"} = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')
                                                         ->where('id',${"row2_explode_hasil_kerja_5"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_5"})){
@@ -2110,7 +2145,7 @@ class PayrolController extends Controller
                     if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 5) {
                         // Hasil Kerja 1
                         ${"row2_explode_hasil_kerja_1"} = explode("|",$row2_pengerjaan['hasil_kerja_1']);
-                        ${"row2_umk_borongan_lokal_1"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                        ${"row2_umk_borongan_lokal_1"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                         ->where('id',${"row2_explode_hasil_kerja_1"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_1"})){
@@ -2135,7 +2170,7 @@ class PayrolController extends Controller
 
                         // Hasil Kerja 2
                         ${"row2_explode_hasil_kerja_2"} = explode("|",$row2_pengerjaan['hasil_kerja_2']);
-                        ${"row2_umk_borongan_lokal_2"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                        ${"row2_umk_borongan_lokal_2"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                         ->where('id',${"row2_explode_hasil_kerja_2"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_2"})){
@@ -2160,7 +2195,7 @@ class PayrolController extends Controller
                         
                         // Hasil Kerja 3
                         ${"row2_explode_hasil_kerja_3"} = explode("|",$row2_pengerjaan['hasil_kerja_3']);
-                        ${"row2_umk_borongan_lokal_3"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                        ${"row2_umk_borongan_lokal_3"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                         ->where('id',${"row2_explode_hasil_kerja_3"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_3"})){
@@ -2185,7 +2220,7 @@ class PayrolController extends Controller
 
                         // Hasil Kerja 4
                         ${"row2_explode_hasil_kerja_4"} = explode("|",$row2_pengerjaan['hasil_kerja_4']);
-                        ${"row2_umk_borongan_lokal_4"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                        ${"row2_umk_borongan_lokal_4"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                         ->where('id',${"row2_explode_hasil_kerja_4"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_4"})){
@@ -2210,7 +2245,7 @@ class PayrolController extends Controller
 
                         // Hasil Kerja 5
                         ${"row2_explode_hasil_kerja_5"} = explode("|",$row2_pengerjaan['hasil_kerja_5']);
-                        ${"row2_umk_borongan_lokal_5"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                        ${"row2_umk_borongan_lokal_5"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                         ->where('id',${"row2_explode_hasil_kerja_5"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_5"})){
@@ -2237,7 +2272,7 @@ class PayrolController extends Controller
                     if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 6) {
                         // Hasil Kerja 1
                         ${"row2_explode_hasil_kerja_1"} = explode("|",$row2_pengerjaan['hasil_kerja_1']);
-                        ${"row2_umk_borongan_lokal_1"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                        ${"row2_umk_borongan_lokal_1"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                         ->where('id',${"row2_explode_hasil_kerja_1"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_1"})){
@@ -2262,7 +2297,7 @@ class PayrolController extends Controller
 
                         // Hasil Kerja 2
                         ${"row2_explode_hasil_kerja_2"} = explode("|",$row2_pengerjaan['hasil_kerja_2']);
-                        ${"row2_umk_borongan_lokal_2"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                        ${"row2_umk_borongan_lokal_2"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                         ->where('id',${"row2_explode_hasil_kerja_2"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_2"})){
@@ -2287,7 +2322,7 @@ class PayrolController extends Controller
                         
                         // Hasil Kerja 3
                         ${"row2_explode_hasil_kerja_3"} = explode("|",$row2_pengerjaan['hasil_kerja_3']);
-                        ${"row2_umk_borongan_lokal_3"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                        ${"row2_umk_borongan_lokal_3"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                         ->where('id',${"row2_explode_hasil_kerja_3"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_3"})){
@@ -2312,7 +2347,7 @@ class PayrolController extends Controller
 
                         // Hasil Kerja 4
                         ${"row2_explode_hasil_kerja_4"} = explode("|",$row2_pengerjaan['hasil_kerja_4']);
-                        ${"row2_umk_borongan_lokal_4"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                        ${"row2_umk_borongan_lokal_4"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                         ->where('id',${"row2_explode_hasil_kerja_4"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_4"})){
@@ -2337,7 +2372,7 @@ class PayrolController extends Controller
 
                         // Hasil Kerja 5
                         ${"row2_explode_hasil_kerja_5"} = explode("|",$row2_pengerjaan['hasil_kerja_5']);
-                        ${"row2_umk_borongan_lokal_5"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                        ${"row2_umk_borongan_lokal_5"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                         ->where('id',${"row2_explode_hasil_kerja_5"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_5"})){
@@ -2364,7 +2399,7 @@ class PayrolController extends Controller
                     if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 7) {
                         // Hasil Kerja 1
                         ${"row2_explode_hasil_kerja_1"} = explode("|",$row2_pengerjaan['hasil_kerja_1']);
-                        ${"row2_umk_borongan_lokal_1"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                        ${"row2_umk_borongan_lokal_1"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                         ->where('id',${"row2_explode_hasil_kerja_1"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_1"})){
@@ -2389,7 +2424,7 @@ class PayrolController extends Controller
 
                         // Hasil Kerja 2
                         ${"row2_explode_hasil_kerja_2"} = explode("|",$row2_pengerjaan['hasil_kerja_2']);
-                        ${"row2_umk_borongan_lokal_2"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                        ${"row2_umk_borongan_lokal_2"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                         ->where('id',${"row2_explode_hasil_kerja_2"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_2"})){
@@ -2414,7 +2449,7 @@ class PayrolController extends Controller
                         
                         // Hasil Kerja 3
                         ${"row2_explode_hasil_kerja_3"} = explode("|",$row2_pengerjaan['hasil_kerja_3']);
-                        ${"row2_umk_borongan_lokal_3"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                        ${"row2_umk_borongan_lokal_3"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                         ->where('id',${"row2_explode_hasil_kerja_3"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_3"})){
@@ -2439,7 +2474,7 @@ class PayrolController extends Controller
 
                         // Hasil Kerja 4
                         ${"row2_explode_hasil_kerja_4"} = explode("|",$row2_pengerjaan['hasil_kerja_4']);
-                        ${"row2_umk_borongan_lokal_4"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                        ${"row2_umk_borongan_lokal_4"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                         ->where('id',${"row2_explode_hasil_kerja_4"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_4"})){
@@ -2464,7 +2499,7 @@ class PayrolController extends Controller
 
                         // Hasil Kerja 5
                         ${"row2_explode_hasil_kerja_5"} = explode("|",$row2_pengerjaan['hasil_kerja_5']);
-                        ${"row2_umk_borongan_lokal_5"} = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
+                        ${"row2_umk_borongan_lokal_5"} = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')
                                                         ->where('id',${"row2_explode_hasil_kerja_5"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_5"})){
@@ -2492,7 +2527,7 @@ class PayrolController extends Controller
                     if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 8) {
                         // Hasil Kerja 1
                         ${"row2_explode_hasil_kerja_1"} = explode("|",$row2_pengerjaan['hasil_kerja_1']);
-                        ${"row2_umk_borongan_lokal_1"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                        ${"row2_umk_borongan_lokal_1"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                         ->where('id',${"row2_explode_hasil_kerja_1"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_1"})){
@@ -2517,7 +2552,7 @@ class PayrolController extends Controller
 
                         // Hasil Kerja 2
                         ${"row2_explode_hasil_kerja_2"} = explode("|",$row2_pengerjaan['hasil_kerja_2']);
-                        ${"row2_umk_borongan_lokal_2"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                        ${"row2_umk_borongan_lokal_2"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                         ->where('id',${"row2_explode_hasil_kerja_2"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_2"})){
@@ -2542,7 +2577,7 @@ class PayrolController extends Controller
                         
                         // Hasil Kerja 3
                         ${"row2_explode_hasil_kerja_3"} = explode("|",$row2_pengerjaan['hasil_kerja_3']);
-                        ${"row2_umk_borongan_lokal_3"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                        ${"row2_umk_borongan_lokal_3"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                         ->where('id',${"row2_explode_hasil_kerja_3"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_3"})){
@@ -2567,7 +2602,7 @@ class PayrolController extends Controller
 
                         // Hasil Kerja 4
                         ${"row2_explode_hasil_kerja_4"} = explode("|",$row2_pengerjaan['hasil_kerja_4']);
-                        ${"row2_umk_borongan_lokal_4"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                        ${"row2_umk_borongan_lokal_4"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                         ->where('id',${"row2_explode_hasil_kerja_4"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_4"})){
@@ -2592,7 +2627,7 @@ class PayrolController extends Controller
 
                         // Hasil Kerja 5
                         ${"row2_explode_hasil_kerja_5"} = explode("|",$row2_pengerjaan['hasil_kerja_5']);
-                        ${"row2_umk_borongan_lokal_5"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                        ${"row2_umk_borongan_lokal_5"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                         ->where('id',${"row2_explode_hasil_kerja_5"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_5"})){
@@ -2619,7 +2654,7 @@ class PayrolController extends Controller
                     if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 9) {
                         // Hasil Kerja 1
                         ${"row2_explode_hasil_kerja_1"} = explode("|",$row2_pengerjaan['hasil_kerja_1']);
-                        ${"row2_umk_borongan_lokal_1"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                        ${"row2_umk_borongan_lokal_1"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                         ->where('id',${"row2_explode_hasil_kerja_1"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_1"})){
@@ -2644,7 +2679,7 @@ class PayrolController extends Controller
 
                         // Hasil Kerja 2
                         ${"row2_explode_hasil_kerja_2"} = explode("|",$row2_pengerjaan['hasil_kerja_2']);
-                        ${"row2_umk_borongan_lokal_2"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                        ${"row2_umk_borongan_lokal_2"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                         ->where('id',${"row2_explode_hasil_kerja_2"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_2"})){
@@ -2669,7 +2704,7 @@ class PayrolController extends Controller
                         
                         // Hasil Kerja 3
                         ${"row2_explode_hasil_kerja_3"} = explode("|",$row2_pengerjaan['hasil_kerja_3']);
-                        ${"row2_umk_borongan_lokal_3"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                        ${"row2_umk_borongan_lokal_3"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                         ->where('id',${"row2_explode_hasil_kerja_3"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_3"})){
@@ -2694,7 +2729,7 @@ class PayrolController extends Controller
 
                         // Hasil Kerja 4
                         ${"row2_explode_hasil_kerja_4"} = explode("|",$row2_pengerjaan['hasil_kerja_4']);
-                        ${"row2_umk_borongan_lokal_4"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                        ${"row2_umk_borongan_lokal_4"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                         ->where('id',${"row2_explode_hasil_kerja_4"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_4"})){
@@ -2719,7 +2754,7 @@ class PayrolController extends Controller
 
                         // Hasil Kerja 5
                         ${"row2_explode_hasil_kerja_5"} = explode("|",$row2_pengerjaan['hasil_kerja_5']);
-                        ${"row2_umk_borongan_lokal_5"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                        ${"row2_umk_borongan_lokal_5"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                         ->where('id',${"row2_explode_hasil_kerja_5"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_5"})){
@@ -2746,7 +2781,7 @@ class PayrolController extends Controller
                     if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 11) {
                         // Hasil Kerja 1
                         ${"row2_explode_hasil_kerja_1"} = explode("|",$row2_pengerjaan['hasil_kerja_1']);
-                        ${"row2_umk_borongan_lokal_1"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                        ${"row2_umk_borongan_lokal_1"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                         ->where('id',${"row2_explode_hasil_kerja_1"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_1"})){
@@ -2771,7 +2806,7 @@ class PayrolController extends Controller
 
                         // Hasil Kerja 2
                         ${"row2_explode_hasil_kerja_2"} = explode("|",$row2_pengerjaan['hasil_kerja_2']);
-                        ${"row2_umk_borongan_lokal_2"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                        ${"row2_umk_borongan_lokal_2"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                         ->where('id',${"row2_explode_hasil_kerja_2"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_2"})){
@@ -2796,7 +2831,7 @@ class PayrolController extends Controller
                         
                         // Hasil Kerja 3
                         ${"row2_explode_hasil_kerja_3"} = explode("|",$row2_pengerjaan['hasil_kerja_3']);
-                        ${"row2_umk_borongan_lokal_3"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                        ${"row2_umk_borongan_lokal_3"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                         ->where('id',${"row2_explode_hasil_kerja_3"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_3"})){
@@ -2821,7 +2856,7 @@ class PayrolController extends Controller
 
                         // Hasil Kerja 4
                         ${"row2_explode_hasil_kerja_4"} = explode("|",$row2_pengerjaan['hasil_kerja_4']);
-                        ${"row2_umk_borongan_lokal_4"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                        ${"row2_umk_borongan_lokal_4"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                         ->where('id',${"row2_explode_hasil_kerja_4"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_4"})){
@@ -2846,7 +2881,7 @@ class PayrolController extends Controller
 
                         // Hasil Kerja 5
                         ${"row2_explode_hasil_kerja_5"} = explode("|",$row2_pengerjaan['hasil_kerja_5']);
-                        ${"row2_umk_borongan_lokal_5"} = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
+                        ${"row2_umk_borongan_lokal_5"} = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')
                                                         ->where('id',${"row2_explode_hasil_kerja_5"}[0])
                                                         ->first();
                         if(empty(${"row2_umk_borongan_lokal_5"})){
@@ -3594,7 +3629,7 @@ class PayrolController extends Controller
 //                 //Begin Lokal
 //                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 1) {
 //                     $row1_explode_hasil_kerja_1 = explode("|",$row1_pengerjaan->hasil_kerja_1);
-//                     $row1_umk_borongan_lokal_1 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_1 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_1)){
 //                         $row1_jenis_produk_1 = '-';
 //                         $row1_hasil_kerja_1 = null;
@@ -3616,7 +3651,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_2 = explode("|",$row1_pengerjaan->hasil_kerja_2);
-//                     $row1_umk_borongan_lokal_2 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_2[0])->first();
+//                     $row1_umk_borongan_lokal_2 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_2[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_2)){
 //                         $row1_jenis_produk_2 = '-';
 //                         $row1_hasil_kerja_2 = null;
@@ -3637,7 +3672,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_3 = explode("|",$row1_pengerjaan->hasil_kerja_3);
-//                     $row1_umk_borongan_lokal_3 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_3[0])->first();
+//                     $row1_umk_borongan_lokal_3 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_3[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_3)){
 //                         $row1_jenis_produk_3 = '-';
 //                         $row1_hasil_kerja_3 = null;
@@ -3658,7 +3693,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_4 = explode("|",$row1_pengerjaan->hasil_kerja_4);
-//                     $row1_umk_borongan_lokal_4 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_4[0])->first();
+//                     $row1_umk_borongan_lokal_4 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_4[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_4)){
 //                         $row1_jenis_produk_4 = '-';
 //                         $row1_hasil_kerja_4 = null;
@@ -3679,7 +3714,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_5 = explode("|",$row1_pengerjaan->hasil_kerja_5);
-//                     $row1_umk_borongan_lokal_5 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_5[0])->first();
+//                     $row1_umk_borongan_lokal_5 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_5[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_5)){
 //                         $row1_jenis_produk_5 = '-';
 //                         $row1_hasil_kerja_5 = null;
@@ -3702,7 +3737,7 @@ class PayrolController extends Controller
 
 //                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 2) {
 //                     $row1_explode_hasil_kerja_1 = explode("|",$row1_pengerjaan->hasil_kerja_1);
-//                     $row1_umk_borongan_lokal_1 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_1 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_1)){
 //                         $row1_jenis_produk_1 = '-';
 //                         $row1_hasil_kerja_1 = null;
@@ -3751,7 +3786,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_2 = explode("|",$row1_pengerjaan->hasil_kerja_2);
-//                     $row1_umk_borongan_lokal_2 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_2[0])->first();
+//                     $row1_umk_borongan_lokal_2 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_2[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_2)){
 //                         $row1_jenis_produk_2 = '-';
 //                         $row1_hasil_kerja_2 = null;
@@ -3800,7 +3835,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_3 = explode("|",$row1_pengerjaan->hasil_kerja_3);
-//                     $row1_umk_borongan_lokal_3 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_3[0])->first();
+//                     $row1_umk_borongan_lokal_3 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_3[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_3)){
 //                         $row1_jenis_produk_3 = '-';
 //                         $row1_hasil_kerja_3 = null;
@@ -3849,7 +3884,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_4 = explode("|",$row1_pengerjaan->hasil_kerja_4);
-//                     $row1_umk_borongan_lokal_4 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_4[0])->first();
+//                     $row1_umk_borongan_lokal_4 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_4[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_4)){
 //                         $row1_jenis_produk_4 = '-';
 //                         $row1_hasil_kerja_4 = null;
@@ -3898,7 +3933,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_5 = explode("|",$row1_pengerjaan->hasil_kerja_5);
-//                     $row1_umk_borongan_lokal_5 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_5[0])->first();
+//                     $row1_umk_borongan_lokal_5 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_5[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_5)){
 //                         $row1_jenis_produk_5 = '-';
 //                         $row1_hasil_kerja_5 = null;
@@ -3949,7 +3984,7 @@ class PayrolController extends Controller
 
 //                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 3) {
 //                     $row1_explode_hasil_kerja_1 = explode("|",$row1_pengerjaan->hasil_kerja_1);
-//                     $row1_umk_borongan_lokal_1 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_1 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_1)){
 //                         $row1_jenis_produk_1 = '-';
 //                         $row1_hasil_kerja_1 = null;
@@ -3998,7 +4033,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_2 = explode("|",$row1_pengerjaan->hasil_kerja_2);
-//                     $row1_umk_borongan_lokal_2 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_2[0])->first();
+//                     $row1_umk_borongan_lokal_2 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_2[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_2)){
 //                         $row1_jenis_produk_2 = '-';
 //                         $row1_hasil_kerja_2 = null;
@@ -4047,7 +4082,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_3 = explode("|",$row1_pengerjaan->hasil_kerja_3);
-//                     $row1_umk_borongan_lokal_3 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_3[0])->first();
+//                     $row1_umk_borongan_lokal_3 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_3[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_3)){
 //                         $row1_jenis_produk_3 = '-';
 //                         $row1_hasil_kerja_3 = null;
@@ -4096,7 +4131,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_4 = explode("|",$row1_pengerjaan->hasil_kerja_4);
-//                     $row1_umk_borongan_lokal_4 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_4[0])->first();
+//                     $row1_umk_borongan_lokal_4 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_4[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_4)){
 //                         $row1_jenis_produk_4 = '-';
 //                         $row1_hasil_kerja_4 = null;
@@ -4145,7 +4180,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_5 = explode("|",$row1_pengerjaan->hasil_kerja_5);
-//                     $row1_umk_borongan_lokal_5 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_5[0])->first();
+//                     $row1_umk_borongan_lokal_5 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_5[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_5)){
 //                         $row1_jenis_produk_5 = '-';
 //                         $row1_hasil_kerja_5 = null;
@@ -4196,7 +4231,7 @@ class PayrolController extends Controller
 
 //                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 4) {
 //                     $row1_explode_hasil_kerja_1 = explode("|",$row1_pengerjaan->hasil_kerja_1);
-//                     $row1_umk_borongan_lokal_1 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_1 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_1)){
 //                         $row1_jenis_produk_1 = '-';
 //                         $row1_hasil_kerja_1 = null;
@@ -4245,7 +4280,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_2 = explode("|",$row1_pengerjaan->hasil_kerja_2);
-//                     $row1_umk_borongan_lokal_2 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_2[0])->first();
+//                     $row1_umk_borongan_lokal_2 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_2[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_2)){
 //                         $row1_jenis_produk_2 = '-';
 //                         $row1_hasil_kerja_2 = null;
@@ -4294,7 +4329,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_3 = explode("|",$row1_pengerjaan->hasil_kerja_3);
-//                     $row1_umk_borongan_lokal_3 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_3[0])->first();
+//                     $row1_umk_borongan_lokal_3 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_3[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_3)){
 //                         $row1_jenis_produk_3 = '-';
 //                         $row1_hasil_kerja_3 = null;
@@ -4343,7 +4378,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_4 = explode("|",$row1_pengerjaan->hasil_kerja_4);
-//                     $row1_umk_borongan_lokal_4 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_4[0])->first();
+//                     $row1_umk_borongan_lokal_4 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_4[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_4)){
 //                         $row1_jenis_produk_4 = '-';
 //                         $row1_hasil_kerja_4 = null;
@@ -4392,7 +4427,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_5 = explode("|",$row1_pengerjaan->hasil_kerja_5);
-//                     $row1_umk_borongan_lokal_5 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_5[0])->first();
+//                     $row1_umk_borongan_lokal_5 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row1_explode_hasil_kerja_5[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_5)){
 //                         $row1_jenis_produk_5 = '-';
 //                         $row1_hasil_kerja_5 = null;
@@ -4445,7 +4480,7 @@ class PayrolController extends Controller
 //                 //Begin Ekspor
 //                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 5) {
 //                     $row1_explode_hasil_kerja_1 = explode("|",$row1_pengerjaan->hasil_kerja_1);
-//                     $row1_umk_borongan_lokal_1 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_1 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_1)){
 //                         $row1_jenis_produk_1 = '-';
 //                         $row1_hasil_kerja_1 = null;
@@ -4494,7 +4529,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_2 = explode("|",$row1_pengerjaan->hasil_kerja_2);
-//                     $row1_umk_borongan_lokal_2 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_2 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_2)){
 //                         $row1_jenis_produk_2 = '-';
 //                         $row1_hasil_kerja_2 = null;
@@ -4543,7 +4578,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_3 = explode("|",$row1_pengerjaan->hasil_kerja_3);
-//                     $row1_umk_borongan_lokal_3 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_3 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_3)){
 //                         $row1_jenis_produk_3 = '-';
 //                         $row1_hasil_kerja_3 = null;
@@ -4592,7 +4627,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_4 = explode("|",$row1_pengerjaan->hasil_kerja_4);
-//                     $row1_umk_borongan_lokal_4 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_4 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_4)){
 //                         $row1_jenis_produk_4 = '-';
 //                         $row1_hasil_kerja_4 = null;
@@ -4641,7 +4676,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_5 = explode("|",$row1_pengerjaan->hasil_kerja_5);
-//                     $row1_umk_borongan_lokal_5 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_5 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_5)){
 //                         $row1_jenis_produk_5 = '-';
 //                         $row1_hasil_kerja_5 = null;
@@ -4692,7 +4727,7 @@ class PayrolController extends Controller
 
 //                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 6) {
 //                     $row1_explode_hasil_kerja_1 = explode("|",$row1_pengerjaan->hasil_kerja_1);
-//                     $row1_umk_borongan_lokal_1 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_1 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_1)){
 //                         $row1_jenis_produk_1 = '-';
 //                         $row1_hasil_kerja_1 = null;
@@ -4741,7 +4776,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_2 = explode("|",$row1_pengerjaan->hasil_kerja_2);
-//                     $row1_umk_borongan_lokal_2 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_2 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_2)){
 //                         $row1_jenis_produk_2 = '-';
 //                         $row1_hasil_kerja_2 = null;
@@ -4790,7 +4825,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_3 = explode("|",$row1_pengerjaan->hasil_kerja_3);
-//                     $row1_umk_borongan_lokal_3 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_3 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_3)){
 //                         $row1_jenis_produk_3 = '-';
 //                         $row1_hasil_kerja_3 = null;
@@ -4839,7 +4874,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_4 = explode("|",$row1_pengerjaan->hasil_kerja_4);
-//                     $row1_umk_borongan_lokal_4 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_4 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_4)){
 //                         $row1_jenis_produk_4 = '-';
 //                         $row1_hasil_kerja_4 = null;
@@ -4888,7 +4923,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_5 = explode("|",$row1_pengerjaan->hasil_kerja_5);
-//                     $row1_umk_borongan_lokal_5 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_5 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_5)){
 //                         $row1_jenis_produk_5 = '-';
 //                         $row1_hasil_kerja_5 = null;
@@ -4939,7 +4974,7 @@ class PayrolController extends Controller
 
 //                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 7) {
 //                     $row1_explode_hasil_kerja_1 = explode("|",$row1_pengerjaan->hasil_kerja_1);
-//                     $row1_umk_borongan_lokal_1 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_1 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_1)){
 //                         $row1_jenis_produk_1 = '-';
 //                         $row1_hasil_kerja_1 = null;
@@ -4988,7 +5023,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_2 = explode("|",$row1_pengerjaan->hasil_kerja_2);
-//                     $row1_umk_borongan_lokal_2 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_2 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_2)){
 //                         $row1_jenis_produk_2 = '-';
 //                         $row1_hasil_kerja_2 = null;
@@ -5037,7 +5072,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_3 = explode("|",$row1_pengerjaan->hasil_kerja_3);
-//                     $row1_umk_borongan_lokal_3 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_3 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_3)){
 //                         $row1_jenis_produk_3 = '-';
 //                         $row1_hasil_kerja_3 = null;
@@ -5086,7 +5121,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_4 = explode("|",$row1_pengerjaan->hasil_kerja_4);
-//                     $row1_umk_borongan_lokal_4 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_4 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_4)){
 //                         $row1_jenis_produk_4 = '-';
 //                         $row1_hasil_kerja_4 = null;
@@ -5135,7 +5170,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_5 = explode("|",$row1_pengerjaan->hasil_kerja_5);
-//                     $row1_umk_borongan_lokal_5 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_5 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_5)){
 //                         $row1_jenis_produk_5 = '-';
 //                         $row1_hasil_kerja_5 = null;
@@ -5188,7 +5223,7 @@ class PayrolController extends Controller
 //                 //Begin Ambri
 //                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 8) {
 //                     $row1_explode_hasil_kerja_1 = explode("|",$row1_pengerjaan->hasil_kerja_1);
-//                     $row1_umk_borongan_lokal_1 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_1 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_1)){
 //                         $row1_jenis_produk_1 = '-';
 //                         $row1_hasil_kerja_1 = null;
@@ -5237,7 +5272,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_2 = explode("|",$row1_pengerjaan->hasil_kerja_2);
-//                     $row1_umk_borongan_lokal_2 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_2 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_2)){
 //                         $row1_jenis_produk_2 = '-';
 //                         $row1_hasil_kerja_2 = null;
@@ -5286,7 +5321,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_3 = explode("|",$row1_pengerjaan->hasil_kerja_3);
-//                     $row1_umk_borongan_lokal_3 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_3 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_3)){
 //                         $row1_jenis_produk_3 = '-';
 //                         $row1_hasil_kerja_3 = null;
@@ -5335,7 +5370,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_4 = explode("|",$row1_pengerjaan->hasil_kerja_4);
-//                     $row1_umk_borongan_lokal_4 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_4 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_4)){
 //                         $row1_jenis_produk_4 = '-';
 //                         $row1_hasil_kerja_4 = null;
@@ -5384,7 +5419,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_5 = explode("|",$row1_pengerjaan->hasil_kerja_5);
-//                     $row1_umk_borongan_lokal_5 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_5 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_5)){
 //                         $row1_jenis_produk_5 = '-';
 //                         $row1_hasil_kerja_5 = null;
@@ -5435,7 +5470,7 @@ class PayrolController extends Controller
 
 //                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 9) {
 //                     $row1_explode_hasil_kerja_1 = explode("|",$row1_pengerjaan->hasil_kerja_1);
-//                     $row1_umk_borongan_lokal_1 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_1 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_1)){
 //                         $row1_jenis_produk_1 = '-';
 //                         $row1_hasil_kerja_1 = null;
@@ -5484,7 +5519,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_2 = explode("|",$row1_pengerjaan->hasil_kerja_2);
-//                     $row1_umk_borongan_lokal_2 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_2 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_2)){
 //                         $row1_jenis_produk_2 = '-';
 //                         $row1_hasil_kerja_2 = null;
@@ -5533,7 +5568,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_3 = explode("|",$row1_pengerjaan->hasil_kerja_3);
-//                     $row1_umk_borongan_lokal_3 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_3 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_3)){
 //                         $row1_jenis_produk_3 = '-';
 //                         $row1_hasil_kerja_3 = null;
@@ -5582,7 +5617,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_4 = explode("|",$row1_pengerjaan->hasil_kerja_4);
-//                     $row1_umk_borongan_lokal_4 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_4 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_4)){
 //                         $row1_jenis_produk_4 = '-';
 //                         $row1_hasil_kerja_4 = null;
@@ -5631,7 +5666,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_5 = explode("|",$row1_pengerjaan->hasil_kerja_5);
-//                     $row1_umk_borongan_lokal_5 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_5 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_5)){
 //                         $row1_jenis_produk_5 = '-';
 //                         $row1_hasil_kerja_5 = null;
@@ -5682,7 +5717,7 @@ class PayrolController extends Controller
 
 //                 if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 11) {
 //                     $row1_explode_hasil_kerja_1 = explode("|",$row1_pengerjaan->hasil_kerja_1);
-//                     $row1_umk_borongan_lokal_1 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_1 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_1)){
 //                         $row1_jenis_produk_1 = '-';
 //                         $row1_hasil_kerja_1 = null;
@@ -5731,7 +5766,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_2 = explode("|",$row1_pengerjaan->hasil_kerja_2);
-//                     $row1_umk_borongan_lokal_2 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_2 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_2)){
 //                         $row1_jenis_produk_2 = '-';
 //                         $row1_hasil_kerja_2 = null;
@@ -5780,7 +5815,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_3 = explode("|",$row1_pengerjaan->hasil_kerja_3);
-//                     $row1_umk_borongan_lokal_3 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_3 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_3)){
 //                         $row1_jenis_produk_3 = '-';
 //                         $row1_hasil_kerja_3 = null;
@@ -5829,7 +5864,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_4 = explode("|",$row1_pengerjaan->hasil_kerja_4);
-//                     $row1_umk_borongan_lokal_4 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_4 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_4)){
 //                         $row1_jenis_produk_4 = '-';
 //                         $row1_hasil_kerja_4 = null;
@@ -5878,7 +5913,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row1_explode_hasil_kerja_5 = explode("|",$row1_pengerjaan->hasil_kerja_5);
-//                     $row1_umk_borongan_lokal_5 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
+//                     $row1_umk_borongan_lokal_5 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row1_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row1_umk_borongan_lokal_5)){
 //                         $row1_jenis_produk_5 = '-';
 //                         $row1_hasil_kerja_5 = null;
@@ -6090,7 +6125,7 @@ class PayrolController extends Controller
 //                 //Begin Lokal
 //                 if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 1) {
 //                     $row2_explode_hasil_kerja_1 = explode("|",$row2_pengerjaan->hasil_kerja_1);
-//                     $row2_umk_borongan_lokal_1 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_1 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_1)){
 //                         $row2_jenis_produk_1 = '-';
 //                         $row2_hasil_kerja_1 = null;
@@ -6139,7 +6174,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_2 = explode("|",$row2_pengerjaan->hasil_kerja_2);
-//                     $row2_umk_borongan_lokal_2 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_2[0])->first();
+//                     $row2_umk_borongan_lokal_2 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_2[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_2)){
 //                         $row2_jenis_produk_2 = '-';
 //                         $row2_hasil_kerja_2 = null;
@@ -6188,7 +6223,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_3 = explode("|",$row2_pengerjaan->hasil_kerja_3);
-//                     $row2_umk_borongan_lokal_3 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_3[0])->first();
+//                     $row2_umk_borongan_lokal_3 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_3[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_3)){
 //                         $row2_jenis_produk_3 = '-';
 //                         $row2_hasil_kerja_3 = null;
@@ -6237,7 +6272,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_4 = explode("|",$row2_pengerjaan->hasil_kerja_4);
-//                     $row2_umk_borongan_lokal_4 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_4[0])->first();
+//                     $row2_umk_borongan_lokal_4 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_4[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_4)){
 //                         $row2_jenis_produk_4 = '-';
 //                         $row2_hasil_kerja_4 = null;
@@ -6286,7 +6321,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_5 = explode("|",$row2_pengerjaan->hasil_kerja_5);
-//                     $row2_umk_borongan_lokal_5 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_5[0])->first();
+//                     $row2_umk_borongan_lokal_5 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_5[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_5)){
 //                         $row2_jenis_produk_5 = '-';
 //                         $row2_hasil_kerja_5 = null;
@@ -6337,7 +6372,7 @@ class PayrolController extends Controller
 
 //                 if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 2) {
 //                     $row2_explode_hasil_kerja_1 = explode("|",$row2_pengerjaan->hasil_kerja_1);
-//                     $row2_umk_borongan_lokal_1 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_1 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_1)){
 //                         $row2_jenis_produk_1 = '-';
 //                         $row2_hasil_kerja_1 = null;
@@ -6386,7 +6421,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_2 = explode("|",$row2_pengerjaan->hasil_kerja_2);
-//                     $row2_umk_borongan_lokal_2 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_2[0])->first();
+//                     $row2_umk_borongan_lokal_2 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_2[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_2)){
 //                         $row2_jenis_produk_2 = '-';
 //                         $row2_hasil_kerja_2 = null;
@@ -6435,7 +6470,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_3 = explode("|",$row2_pengerjaan->hasil_kerja_3);
-//                     $row2_umk_borongan_lokal_3 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_3[0])->first();
+//                     $row2_umk_borongan_lokal_3 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_3[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_3)){
 //                         $row2_jenis_produk_3 = '-';
 //                         $row2_hasil_kerja_3 = null;
@@ -6484,7 +6519,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_4 = explode("|",$row2_pengerjaan->hasil_kerja_4);
-//                     $row2_umk_borongan_lokal_4 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_4[0])->first();
+//                     $row2_umk_borongan_lokal_4 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_4[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_4)){
 //                         $row2_jenis_produk_4 = '-';
 //                         $row2_hasil_kerja_4 = null;
@@ -6533,7 +6568,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_5 = explode("|",$row2_pengerjaan->hasil_kerja_5);
-//                     $row2_umk_borongan_lokal_5 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_5[0])->first();
+//                     $row2_umk_borongan_lokal_5 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_5[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_5)){
 //                         $row2_jenis_produk_5 = '-';
 //                         $row2_hasil_kerja_5 = null;
@@ -6584,7 +6619,7 @@ class PayrolController extends Controller
 
 //                 if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 3) {
 //                     $row2_explode_hasil_kerja_1 = explode("|",$row2_pengerjaan->hasil_kerja_1);
-//                     $row2_umk_borongan_lokal_1 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_1 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_1)){
 //                         $row2_jenis_produk_1 = '-';
 //                         $row2_hasil_kerja_1 = null;
@@ -6633,7 +6668,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_2 = explode("|",$row2_pengerjaan->hasil_kerja_2);
-//                     $row2_umk_borongan_lokal_2 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_2[0])->first();
+//                     $row2_umk_borongan_lokal_2 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_2[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_2)){
 //                         $row2_jenis_produk_2 = '-';
 //                         $row2_hasil_kerja_2 = null;
@@ -6682,7 +6717,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_3 = explode("|",$row2_pengerjaan->hasil_kerja_3);
-//                     $row2_umk_borongan_lokal_3 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_3[0])->first();
+//                     $row2_umk_borongan_lokal_3 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_3[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_3)){
 //                         $row2_jenis_produk_3 = '-';
 //                         $row2_hasil_kerja_3 = null;
@@ -6731,7 +6766,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_4 = explode("|",$row2_pengerjaan->hasil_kerja_4);
-//                     $row2_umk_borongan_lokal_4 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_4[0])->first();
+//                     $row2_umk_borongan_lokal_4 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_4[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_4)){
 //                         $row2_jenis_produk_4 = '-';
 //                         $row2_hasil_kerja_4 = null;
@@ -6780,7 +6815,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_5 = explode("|",$row2_pengerjaan->hasil_kerja_5);
-//                     $row2_umk_borongan_lokal_5 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_5[0])->first();
+//                     $row2_umk_borongan_lokal_5 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_5[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_5)){
 //                         $row2_jenis_produk_5 = '-';
 //                         $row2_hasil_kerja_5 = null;
@@ -6831,7 +6866,7 @@ class PayrolController extends Controller
 
 //                 if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 4) {
 //                     $row2_explode_hasil_kerja_1 = explode("|",$row2_pengerjaan->hasil_kerja_1);
-//                     $row2_umk_borongan_lokal_1 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_1 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_1)){
 //                         $row2_jenis_produk_1 = '-';
 //                         $row2_hasil_kerja_1 = null;
@@ -6880,7 +6915,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_2 = explode("|",$row2_pengerjaan->hasil_kerja_2);
-//                     $row2_umk_borongan_lokal_2 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_2[0])->first();
+//                     $row2_umk_borongan_lokal_2 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_2[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_2)){
 //                         $row2_jenis_produk_2 = '-';
 //                         $row2_hasil_kerja_2 = null;
@@ -6929,7 +6964,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_3 = explode("|",$row2_pengerjaan->hasil_kerja_3);
-//                     $row2_umk_borongan_lokal_3 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_3[0])->first();
+//                     $row2_umk_borongan_lokal_3 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_3[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_3)){
 //                         $row2_jenis_produk_3 = '-';
 //                         $row2_hasil_kerja_3 = null;
@@ -6978,7 +7013,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_4 = explode("|",$row2_pengerjaan->hasil_kerja_4);
-//                     $row2_umk_borongan_lokal_4 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_4[0])->first();
+//                     $row2_umk_borongan_lokal_4 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_4[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_4)){
 //                         $row2_jenis_produk_4 = '-';
 //                         $row2_hasil_kerja_4 = null;
@@ -7027,7 +7062,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_5 = explode("|",$row2_pengerjaan->hasil_kerja_5);
-//                     $row2_umk_borongan_lokal_5 = UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_5[0])->first();
+//                     $row2_umk_borongan_lokal_5 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$row2_explode_hasil_kerja_5[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_5)){
 //                         $row2_jenis_produk_5 = '-';
 //                         $row2_hasil_kerja_5 = null;
@@ -7080,7 +7115,7 @@ class PayrolController extends Controller
 //                 //Begin Ekspor
 //                 if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 5) {
 //                     $row2_explode_hasil_kerja_1 = explode("|",$row2_pengerjaan->hasil_kerja_1);
-//                     $row2_umk_borongan_lokal_1 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_1 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_1)){
 //                         $row2_jenis_produk_1 = '-';
 //                         $row2_hasil_kerja_1 = null;
@@ -7129,7 +7164,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_2 = explode("|",$row2_pengerjaan->hasil_kerja_2);
-//                     $row2_umk_borongan_lokal_2 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_2[0])->first();
+//                     $row2_umk_borongan_lokal_2 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_2[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_2)){
 //                         $row2_jenis_produk_2 = '-';
 //                         $row2_hasil_kerja_2 = null;
@@ -7178,7 +7213,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_3 = explode("|",$row2_pengerjaan->hasil_kerja_3);
-//                     $row2_umk_borongan_lokal_3 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_3[0])->first();
+//                     $row2_umk_borongan_lokal_3 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_3[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_3)){
 //                         $row2_jenis_produk_3 = '-';
 //                         $row2_hasil_kerja_3 = null;
@@ -7227,7 +7262,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_4 = explode("|",$row2_pengerjaan->hasil_kerja_4);
-//                     $row2_umk_borongan_lokal_4 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_4[0])->first();
+//                     $row2_umk_borongan_lokal_4 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_4[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_4)){
 //                         $row2_jenis_produk_4 = '-';
 //                         $row2_hasil_kerja_4 = null;
@@ -7276,7 +7311,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_5 = explode("|",$row2_pengerjaan->hasil_kerja_5);
-//                     $row2_umk_borongan_lokal_5 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_5[0])->first();
+//                     $row2_umk_borongan_lokal_5 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_5[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_5)){
 //                         $row2_jenis_produk_5 = '-';
 //                         $row2_hasil_kerja_5 = null;
@@ -7327,7 +7362,7 @@ class PayrolController extends Controller
 
 //                 if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 6) {
 //                     $row2_explode_hasil_kerja_1 = explode("|",$row2_pengerjaan->hasil_kerja_1);
-//                     $row2_umk_borongan_lokal_1 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_1 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_1)){
 //                         $row2_jenis_produk_1 = '-';
 //                         $row2_hasil_kerja_1 = null;
@@ -7376,7 +7411,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_2 = explode("|",$row2_pengerjaan->hasil_kerja_2);
-//                     $row2_umk_borongan_lokal_2 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_2[0])->first();
+//                     $row2_umk_borongan_lokal_2 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_2[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_2)){
 //                         $row2_jenis_produk_2 = '-';
 //                         $row2_hasil_kerja_2 = null;
@@ -7425,7 +7460,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_3 = explode("|",$row2_pengerjaan->hasil_kerja_3);
-//                     $row2_umk_borongan_lokal_3 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_3[0])->first();
+//                     $row2_umk_borongan_lokal_3 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_3[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_3)){
 //                         $row2_jenis_produk_3 = '-';
 //                         $row2_hasil_kerja_3 = null;
@@ -7474,7 +7509,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_4 = explode("|",$row2_pengerjaan->hasil_kerja_4);
-//                     $row2_umk_borongan_lokal_4 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_4[0])->first();
+//                     $row2_umk_borongan_lokal_4 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_4[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_4)){
 //                         $row2_jenis_produk_4 = '-';
 //                         $row2_hasil_kerja_4 = null;
@@ -7523,7 +7558,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_5 = explode("|",$row2_pengerjaan->hasil_kerja_5);
-//                     $row2_umk_borongan_lokal_5 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_5[0])->first();
+//                     $row2_umk_borongan_lokal_5 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_5[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_5)){
 //                         $row2_jenis_produk_5 = '-';
 //                         $row2_hasil_kerja_5 = null;
@@ -7574,7 +7609,7 @@ class PayrolController extends Controller
 
 //                 if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 7) {
 //                     $row2_explode_hasil_kerja_1 = explode("|",$row2_pengerjaan->hasil_kerja_1);
-//                     $row2_umk_borongan_lokal_1 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_1 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_1)){
 //                         $row2_jenis_produk_1 = '-';
 //                         $row2_hasil_kerja_1 = null;
@@ -7623,7 +7658,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_2 = explode("|",$row2_pengerjaan->hasil_kerja_2);
-//                     $row2_umk_borongan_lokal_2 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_2[0])->first();
+//                     $row2_umk_borongan_lokal_2 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_2[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_2)){
 //                         $row2_jenis_produk_2 = '-';
 //                         $row2_hasil_kerja_2 = null;
@@ -7672,7 +7707,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_3 = explode("|",$row2_pengerjaan->hasil_kerja_3);
-//                     $row2_umk_borongan_lokal_3 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_3[0])->first();
+//                     $row2_umk_borongan_lokal_3 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_3[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_3)){
 //                         $row2_jenis_produk_3 = '-';
 //                         $row2_hasil_kerja_3 = null;
@@ -7721,7 +7756,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_4 = explode("|",$row2_pengerjaan->hasil_kerja_4);
-//                     $row2_umk_borongan_lokal_4 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_4[0])->first();
+//                     $row2_umk_borongan_lokal_4 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_4[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_4)){
 //                         $row2_jenis_produk_4 = '-';
 //                         $row2_hasil_kerja_4 = null;
@@ -7770,7 +7805,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_5 = explode("|",$row2_pengerjaan->hasil_kerja_5);
-//                     $row2_umk_borongan_lokal_5 = UMKBoronganEkspor::select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_5[0])->first();
+//                     $row2_umk_borongan_lokal_5 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$row2_explode_hasil_kerja_5[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_5)){
 //                         $row2_jenis_produk_5 = '-';
 //                         $row2_hasil_kerja_5 = null;
@@ -7823,7 +7858,7 @@ class PayrolController extends Controller
 //                 //Begin Ambri
 //                 if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 8) {
 //                     $row2_explode_hasil_kerja_1 = explode("|",$row2_pengerjaan->hasil_kerja_1);
-//                     $row2_umk_borongan_lokal_1 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_1 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_1)){
 //                         $row2_jenis_produk_1 = '-';
 //                         $row2_hasil_kerja_1 = null;
@@ -7872,7 +7907,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_2 = explode("|",$row2_pengerjaan->hasil_kerja_2);
-//                     $row2_umk_borongan_lokal_2 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_2 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_2)){
 //                         $row2_jenis_produk_2 = '-';
 //                         $row2_hasil_kerja_2 = null;
@@ -7921,7 +7956,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_3 = explode("|",$row2_pengerjaan->hasil_kerja_3);
-//                     $row2_umk_borongan_lokal_3 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_3 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_3)){
 //                         $row2_jenis_produk_3 = '-';
 //                         $row2_hasil_kerja_3 = null;
@@ -7970,7 +8005,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_4 = explode("|",$row2_pengerjaan->hasil_kerja_4);
-//                     $row2_umk_borongan_lokal_4 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_4 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_4)){
 //                         $row2_jenis_produk_4 = '-';
 //                         $row2_hasil_kerja_4 = null;
@@ -8019,7 +8054,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_5 = explode("|",$row2_pengerjaan->hasil_kerja_5);
-//                     $row2_umk_borongan_lokal_5 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_5 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_5)){
 //                         $row2_jenis_produk_5 = '-';
 //                         $row2_hasil_kerja_5 = null;
@@ -8070,7 +8105,7 @@ class PayrolController extends Controller
 
 //                 if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 9) {
 //                     $row2_explode_hasil_kerja_1 = explode("|",$row2_pengerjaan->hasil_kerja_1);
-//                     $row2_umk_borongan_lokal_1 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_1 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_1)){
 //                         $row2_jenis_produk_1 = '-';
 //                         $row2_hasil_kerja_1 = null;
@@ -8119,7 +8154,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_2 = explode("|",$row2_pengerjaan->hasil_kerja_2);
-//                     $row2_umk_borongan_lokal_2 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_2 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_2)){
 //                         $row2_jenis_produk_2 = '-';
 //                         $row2_hasil_kerja_2 = null;
@@ -8168,7 +8203,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_3 = explode("|",$row2_pengerjaan->hasil_kerja_3);
-//                     $row2_umk_borongan_lokal_3 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_3 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_3)){
 //                         $row2_jenis_produk_3 = '-';
 //                         $row2_hasil_kerja_3 = null;
@@ -8217,7 +8252,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_4 = explode("|",$row2_pengerjaan->hasil_kerja_4);
-//                     $row2_umk_borongan_lokal_4 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_4 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_4)){
 //                         $row2_jenis_produk_4 = '-';
 //                         $row2_hasil_kerja_4 = null;
@@ -8266,7 +8301,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_5 = explode("|",$row2_pengerjaan->hasil_kerja_5);
-//                     $row2_umk_borongan_lokal_5 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_5 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_5)){
 //                         $row2_jenis_produk_5 = '-';
 //                         $row2_hasil_kerja_5 = null;
@@ -8317,7 +8352,7 @@ class PayrolController extends Controller
 
 //                 if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 11) {
 //                     $row2_explode_hasil_kerja_1 = explode("|",$row2_pengerjaan->hasil_kerja_1);
-//                     $row2_umk_borongan_lokal_1 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_1 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_1)){
 //                         $row2_jenis_produk_1 = '-';
 //                         $row2_hasil_kerja_1 = null;
@@ -8366,7 +8401,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_2 = explode("|",$row2_pengerjaan->hasil_kerja_2);
-//                     $row2_umk_borongan_lokal_2 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_2 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_2)){
 //                         $row2_jenis_produk_2 = '-';
 //                         $row2_hasil_kerja_2 = null;
@@ -8415,7 +8450,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_3 = explode("|",$row2_pengerjaan->hasil_kerja_3);
-//                     $row2_umk_borongan_lokal_3 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_3 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_3)){
 //                         $row2_jenis_produk_3 = '-';
 //                         $row2_hasil_kerja_3 = null;
@@ -8464,7 +8499,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_4 = explode("|",$row2_pengerjaan->hasil_kerja_4);
-//                     $row2_umk_borongan_lokal_4 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_4 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_4)){
 //                         $row2_jenis_produk_4 = '-';
 //                         $row2_hasil_kerja_4 = null;
@@ -8513,7 +8548,7 @@ class PayrolController extends Controller
 //                     }
 
 //                     $row2_explode_hasil_kerja_5 = explode("|",$row2_pengerjaan->hasil_kerja_5);
-//                     $row2_umk_borongan_lokal_5 = UMKBoronganAmbri::select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
+//                     $row2_umk_borongan_lokal_5 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$row2_explode_hasil_kerja_1[0])->first();
 //                     if(empty($row2_umk_borongan_lokal_5)){
 //                         $row2_jenis_produk_5 = '-';
 //                         $row2_hasil_kerja_5 = null;
@@ -8924,8 +8959,8 @@ class PayrolController extends Controller
     {
         $data['kode_pengerjaan'] = $kode_pengerjaan;
         // dd($data);
-        $data['new_data_pengerjaan'] = NewDataPengerjaan::where('kode_pengerjaan',$kode_pengerjaan)->first();
-        $data['karyawan_operators'] = PengerjaanWeekly::select([
+        $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
+        $data['karyawan_operators'] = $this->pengerjaanWeekly->select([
                                                       'pengerjaan_weekly.id as id',
                                                       'operator_karyawan.nik as nik',
                                                       'biodata_karyawan.nama as nama',
@@ -8944,8 +8979,8 @@ class PayrolController extends Controller
     public function borongan_weekly_report($kode_pengerjaan)
     {
         $data['kode_pengerjaan'] = $kode_pengerjaan;
-        $data['new_data_pengerjaan'] = NewDataPengerjaan::where('kode_pengerjaan',$kode_pengerjaan)->first();
-        $data['jenis_operator_detail_pengerjaans'] = JenisOperatorDetailPengerjaan::where('jenis_operator_detail_id',1)->get();
+        $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
+        $data['jenis_operator_detail_pengerjaans'] = $this->jenisOperatorDetailPengerjaan->where('jenis_operator_detail_id',1)->get();
 
         // $options = new Options();
         // $options->set('isJavascriptEnabled', TRUE);
@@ -8965,7 +9000,7 @@ class PayrolController extends Controller
     public function harian(Request $request)
     {
         if ($request->ajax()) {
-            $data = NewDataPengerjaan::where('kode_pengerjaan','LIKE','%PH%')->get();
+            $data = $this->newDataPengerjaan->where('kode_pengerjaan','LIKE','%PH%')->get();
             return DataTables::of($data)
                             ->addIndexColumn()
                             ->addColumn('tanggal_penggajian', function($row){
@@ -9016,7 +9051,7 @@ class PayrolController extends Controller
 
     public function harian_slip_gaji($kode_pengerjaan)
     {
-        $data['new_data_pengerjaan'] = NewDataPengerjaan::where('kode_pengerjaan',$kode_pengerjaan)->first();
+        $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
         
         $explode_tanggal_pengerjaans = explode('#',$data['new_data_pengerjaan']['tanggal']);
         $exp_tanggals = array_filter($explode_tanggal_pengerjaans);
@@ -9025,13 +9060,13 @@ class PayrolController extends Controller
         $exp_tgl_akhir = explode('-', $exp_tanggals[$a]);
 
         $jenis_operator_id = [];
-        $jenis_pengerjaan_operator = JenisOperatorDetailPengerjaan::where('id','>=',12)->orderBy('id','asc')->get();
+        $jenis_pengerjaan_operator = $this->jenisOperatorDetailPengerjaan->where('id','>=',12)->orderBy('id','asc')->get();
         foreach ($jenis_pengerjaan_operator as $jpo) {
             $jenis_operator_id[] = $jpo->id;
         }
         // dd($jenis_operator_id);
 
-        $first_weekly_id = PengerjaanHarian::where('kode_pengerjaan',$kode_pengerjaan)->first();
+        $first_weekly_id = $this->pengerjaanHarian->where('kode_pengerjaan',$kode_pengerjaan)->first();
         // dd($first_weekly_id);
         if ($first_weekly_id->id%2==0) {
             $ganjil_genap = 'MOD(pengerjaan_harian.id, 2) = 0';
@@ -9039,7 +9074,7 @@ class PayrolController extends Controller
             $ganjil_genap = 'MOD(pengerjaan_harian.id, 2) <> 0';
         }
 
-        $pengerjaan_harians = PengerjaanHarian::select([
+        $pengerjaan_harians = $this->pengerjaanHarian->select([
                                                 'pengerjaan_harian.id as id',
                                                 'pengerjaan_harian.operator_harian_karyawan_id as operator_harian_karyawan_id',
                                                 'jenis_operator_detail_pekerjaan.jenis_posisi_pekerjaan as jenis_posisi_pekerjaan',
@@ -9088,7 +9123,7 @@ class PayrolController extends Controller
         $no=0;
         foreach ($pengerjaan_harians as $key => $ph) {
 
-            $row1_nama = BiodataKaryawan::where('nik',$ph->nik)->first();
+            $row1_nama = $this->biodataKaryawan->where('nik',$ph->nik)->first();
             
             // dd($row2_weekly);
             // $row2_nama = BiodataKaryawan::where('nik',$row2_weekly->nik)->first();
@@ -9216,7 +9251,7 @@ class PayrolController extends Controller
             
             $id_selanjutnya = $ph->id+1;
             // dd($id_selanjutnya);
-            $row2_weekly = PengerjaanHarian::select([
+            $row2_weekly = $this->pengerjaanHarian->select([
                                                 'pengerjaan_harian.id as id',
                                                 'pengerjaan_harian.operator_harian_karyawan_id as operator_harian_karyawan_id',
                                                 'jenis_operator_detail_pekerjaan.jenis_posisi_pekerjaan as jenis_posisi_pekerjaan',
@@ -9672,8 +9707,8 @@ class PayrolController extends Controller
     public function harian_bank($kode_pengerjaan)
     {
         $data['kode_pengerjaan'] = $kode_pengerjaan;
-        $data['new_data_pengerjaan'] = NewDataPengerjaan::where('kode_pengerjaan',$kode_pengerjaan)->first();
-        $data['pengerjaan_harians'] = PengerjaanHarian::select([
+        $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
+        $data['pengerjaan_harians'] = $this->pengerjaanHarian->select([
                                                         'pengerjaan_harian.id as id',
                                                         'operator_harian_karyawan.nik as nik',
                                                         'biodata_karyawan.nama as nama',
@@ -9691,8 +9726,8 @@ class PayrolController extends Controller
     public function harian_weekly_report($kode_pengerjaan)
     {
         $data['kode_pengerjaan'] = $kode_pengerjaan;
-        $data['new_data_pengerjaan'] = NewDataPengerjaan::where('kode_pengerjaan',$kode_pengerjaan)->first();
-        $data['jenis_operator_detail_pengerjaans'] = JenisOperatorDetailPengerjaan::where('jenis_operator_detail_id',4)->get();
+        $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
+        $data['jenis_operator_detail_pengerjaans'] = $this->jenisOperatorDetailPengerjaan->where('jenis_operator_detail_id',4)->get();
 
         $pdf = Pdf::loadView('backend.payrol.penggajian.harian.weekly_report',$data);
         $pdf->setPaper('a4','landscape')->setWarnings(false);
@@ -9703,7 +9738,7 @@ class PayrolController extends Controller
     public function supir_rit(Request $request)
     {
         if ($request->ajax()) {
-            $data = NewDataPengerjaan::where('kode_pengerjaan','LIKE','%PS%')->get();
+            $data = $this->newDataPengerjaan->where('kode_pengerjaan','LIKE','%PS%')->get();
             return DataTables::of($data)
                             ->addIndexColumn()
                             ->addColumn('tanggal_penggajian', function($row){
@@ -9754,7 +9789,7 @@ class PayrolController extends Controller
 
     public function supir_rit_slip_gaji($kode_pengerjaan)
     {
-        $data['new_data_pengerjaan'] = NewDataPengerjaan::where('kode_pengerjaan',$kode_pengerjaan)->first();
+        $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
         // dd($data['new_data_pengerjaan']['akhir_bulan']);
         $explode_tanggal_pengerjaans = explode('#',$data['new_data_pengerjaan']['tanggal']);
         $exp_tanggals = array_filter($explode_tanggal_pengerjaans);
@@ -9763,7 +9798,7 @@ class PayrolController extends Controller
         $exp_tgl_awal = explode('-', $exp_tanggals[1]);
         $exp_tgl_akhir = explode('-', $exp_tanggals[$a]);
 
-        $first_weekly_id = PengerjaanRITWeekly::where('kode_pengerjaan',$kode_pengerjaan)->first();
+        $first_weekly_id = $this->pengerjaanRitWeekly->where('kode_pengerjaan',$kode_pengerjaan)->first();
 
         if ($first_weekly_id->id%2==0) {
             $ganjil_genap = 'MOD(pengerjaan_supir_rit_weekly.id, 2) = 0';
@@ -9771,7 +9806,7 @@ class PayrolController extends Controller
             $ganjil_genap = 'MOD(pengerjaan_supir_rit_weekly.id, 2) <> 0';
         }
 
-        $pengerjaan_rit_weeklys = PengerjaanRITWeekly::select([
+        $pengerjaan_rit_weeklys = $this->pengerjaanRitWeekly->select([
                                                         'pengerjaan_supir_rit_weekly.id as id',
                                                         'pengerjaan_supir_rit_weekly.karyawan_supir_rit_id as karyawan_supir_rit_id',
                                                         'pengerjaan_supir_rit_weekly.lembur as lembur',
@@ -9815,10 +9850,10 @@ class PayrolController extends Controller
         $no=0;
 
         foreach ($pengerjaan_rit_weeklys as $prw => $pengerjaan_rit_weekly) {
-            $row1_nama = BiodataKaryawan::where('nik',$pengerjaan_rit_weekly->nik)->first();
+            $row1_nama = $this->biodataKaryawan->where('nik',$pengerjaan_rit_weekly->nik)->first();
             $id_selanjutnya=$pengerjaan_rit_weekly->id+1;
             // dd($id_selanjutnya);
-            $row2_weekly = PengerjaanRITWeekly::select([
+            $row2_weekly = $this->pengerjaanRitWeekly->select([
                                                     'pengerjaan_supir_rit_weekly.id as id',
                                                     'pengerjaan_supir_rit_weekly.karyawan_supir_rit_id as karyawan_supir_rit_id',
                                                     'pengerjaan_supir_rit_weekly.lembur as lembur',
@@ -9850,7 +9885,7 @@ class PayrolController extends Controller
                 $row2_karyawan_supir_rit_id = $row2_weekly->karyawan_supir_rit_id;
             }
 
-            $row2_nama = BiodataKaryawan::where('nik',$row2_nik)->first();
+            $row2_nama = $this->biodataKaryawan->where('nik',$row2_nik)->first();
 
             if (empty($row2_nama)) {
                 $row2_nama_new = null;
@@ -9895,10 +9930,10 @@ class PayrolController extends Controller
             $row2_upah_dasar = array();
 
             for ($i=0;$i<$a;$i++) { 
-                $row_daily_1 = PengerjaanRITHarian::where('kode_pengerjaan',$kode_pengerjaan)
+                $row_daily_1 = $this->pengerjaanRitHarian->where('kode_pengerjaan',$kode_pengerjaan)
                                                 ->where('karyawan_supir_rit_id',$pengerjaan_rit_weekly->karyawan_supir_rit_id)
                                                 ->get();
-                $row_daily_2 = PengerjaanRITHarian::where('kode_pengerjaan',$kode_pengerjaan)
+                $row_daily_2 = $this->pengerjaanRitHarian->where('kode_pengerjaan',$kode_pengerjaan)
                                                 ->where('karyawan_supir_rit_id',$row2_karyawan_supir_rit_id)
                                                 ->get();
                 // dd($row_daily_1);
@@ -9913,7 +9948,7 @@ class PayrolController extends Controller
                     // $row_daily1_tanggal_pengerjaan = $row_daily_1[$i]->tanggal_pengerjaan;
                     $row_daily1_tanggal_pengerjaan = Carbon::create($row_daily_1[$i]->tanggal_pengerjaan)->isoFormat('D MMM');
                     $row_daily1_explode_hasil_kerja_1 = explode("|",$row_daily_1[$i]->hasil_kerja_1);
-                    $row_daily1_umk_rit = RitUMK::where('id',$row_daily1_explode_hasil_kerja_1[0])->first();
+                    $row_daily1_umk_rit = $this->ritUmk->where('id',$row_daily1_explode_hasil_kerja_1[0])->first();
                     if (empty($row_daily1_umk_rit)) {
                         $row_daily1_hasil_kerja_1 = 0;
                         $row_daily1_hasil_umk_rit = 0;
@@ -9948,7 +9983,7 @@ class PayrolController extends Controller
                 }else{
                     $row_daily2_tanggal_pengerjaan = Carbon::create($row_daily_2[$i]->tanggal_pengerjaan)->isoFormat('D MMM');
                     $row_daily2_explode_hasil_kerja_1 = explode("|",$row_daily_2[$i]->hasil_kerja_1);
-                    $row_daily2_umk_rit = RitUMK::where('id',$row_daily2_explode_hasil_kerja_1[0])->first();
+                    $row_daily2_umk_rit = $this->ritUmk->where('id',$row_daily2_explode_hasil_kerja_1[0])->first();
                     if (empty($row_daily2_umk_rit)) {
                         $row_daily2_hasil_kerja_1 = 0;
                         $row_daily2_hasil_umk_rit = 0;
@@ -10402,7 +10437,10 @@ class PayrolController extends Controller
                 $pdf->Cell(35,5,"- page $page -",'',0,''); 
                 $pdf->ln(12);
             }
-            if ($a == 6) {
+            if ($a == 7) {
+                // 7 hari kerja
+                $pdf->ln(4);
+            }elseif ($a == 6) {
                 // 6 hari kerja
                 $pdf->ln(8);
             }else{
@@ -10976,8 +11014,8 @@ class PayrolController extends Controller
     public function supir_rit_bank($kode_pengerjaan)
     {
         $data['kode_pengerjaan'] = $kode_pengerjaan;
-        $data['new_data_pengerjaan'] = NewDataPengerjaan::where('kode_pengerjaan',$kode_pengerjaan)->first();
-        $data['pengerjaan_supir_rits'] = PengerjaanRITWeekly::select([
+        $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
+        $data['pengerjaan_supir_rits'] = $this->pengerjaanRitWeekly->select([
                                                             'pengerjaan_supir_rit_weekly.id as id',
                                                             'pengerjaan_supir_rit_weekly.karyawan_supir_rit_id as karyawan_supir_rit_id',
                                                             'operator_supir_rit_karyawan.nik as nik',
@@ -10998,9 +11036,9 @@ class PayrolController extends Controller
     public function supir_rit_weekly_report($kode_pengerjaan)
     {
         $data['kode_pengerjaan'] = $kode_pengerjaan;
-        $data['new_data_pengerjaan'] = NewDataPengerjaan::where('kode_pengerjaan',$kode_pengerjaan)->first();
+        $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
 
-        $data['rit_posisis'] = RitPosisi::all();
+        $data['rit_posisis'] = $this->ritPosisi->all();
         // return view('backend.payrol.penggajian.supir_rit.weekly_report',$data);
         $pdf = Pdf::loadView('backend.payrol.penggajian.supir_rit.weekly_report',$data);
         $pdf->setPaper('a4','landscape')->setWarnings(false);

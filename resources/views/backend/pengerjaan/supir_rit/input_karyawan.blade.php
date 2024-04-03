@@ -1,4 +1,4 @@
-@extends('layouts.backend.app')
+@extends('layouts.backend.master_no_header')
 
 @section('title')
     Input Hasil Kerja Karyawan Supir RIT

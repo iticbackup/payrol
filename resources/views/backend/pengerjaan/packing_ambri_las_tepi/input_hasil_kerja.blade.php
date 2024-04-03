@@ -1,4 +1,4 @@
-@extends('layouts.backend.app')
+@extends('layouts.backend.master_no_header')
 
 @section('title')
 
@@ -16,9 +16,6 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
-
-                </div>
                 {{-- <form action="{{ route('hasil_kerja.lasTepi.view_hasil.simpan',['id' => $id, 'kode_pengerjaan' => $kode_pengerjaan, 'tanggal' => $tanggal]) }}" method="post" enctype="multipart/form-data"> --}}
                 <form id="form-simpan" method="post" enctype="multipart/form-data">
                     @csrf
