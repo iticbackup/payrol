@@ -10437,15 +10437,36 @@ class PayrolController extends Controller
                 $pdf->Cell(35,5,"- page $page -",'',0,''); 
                 $pdf->ln(12);
             }
-            if ($a == 7) {
-                // 7 hari kerja
-                $pdf->ln(4);
-            }elseif ($a == 6) {
-                // 6 hari kerja
-                $pdf->ln(8);
-            }else{
-                // 5 hari kerja
-                $pdf->ln(16);
+            // if ($a == 3) {
+                
+            // }
+            // elseif ($a == 7) {
+            //     // 7 hari kerja
+            //     $pdf->ln(4);
+            // }elseif ($a == 6) {
+            //     // 6 hari kerja
+            //     $pdf->ln(8);
+            // }else{
+            //     // 5 hari kerja
+            //     $pdf->ln(16);
+            // }
+            switch ($a) {
+                case '3':
+                    // 3 hari kerja
+                    $pdf->ln(34);
+                    break;
+                case '6':
+                    // 6 hari kerja
+                    $pdf->ln(8);
+                    break;
+                case '7':
+                    // 7 hari kerja
+                    $pdf->ln(4);
+                    break;
+                default:
+                    // 5 hari kerja
+                    $pdf->ln(16);
+                    break;
             }
         }
 
