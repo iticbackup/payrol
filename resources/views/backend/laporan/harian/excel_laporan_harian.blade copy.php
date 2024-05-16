@@ -321,6 +321,7 @@
                         }
                         array_push($total_hari_kerja,$total_all_hasil_kerja);
                     @endphp
+
                     <td style="text-align: center; border: 1px solid black;">{{ $total_all_hasil_kerja }}</td>
                     <td style="text-align: right; border: 1px solid black;">{{ $pengerjaan_harian->upah_dasar }}</td>
                     <td style="text-align: right; border: 1px solid black;">{{ $pengerjaan_harian->upah_dasar_weekly }}</td>
