@@ -1885,7 +1885,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_1){
                     $lembur_1 = '1-y';
                     $hasil_lembur_1 = '1.5';
-                    $total_upah_lembur_1 = ($hasil_kerja_1*1.5)-$hasil_kerja_1;
+                    // $total_upah_lembur_1 = ($hasil_kerja_1*1.5)-$hasil_kerja_1;
+                    $total_upah_lembur_1 = $hasil_kerja_1*1.5;
                 }else{
                     $lembur_1 = '1-n';
                     $hasil_lembur_1 = '1';
@@ -1930,7 +1931,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_2){
                     $lembur_2 = '2-y';
                     $hasil_lembur_2 = '1.5';
-                    $total_upah_lembur_2 = ($hasil_kerja_2*1.5)-$hasil_kerja_2;
+                    // $total_upah_lembur_2 = ($hasil_kerja_2*1.5)-$hasil_kerja_2;
+                    $total_upah_lembur_2 = $hasil_kerja_2*1.5;
                 }else{
                     $lembur_2 = '2-n';
                     $hasil_lembur_2 = '1';
@@ -1973,7 +1975,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_3){
                     $lembur_3 = '3-y';
                     $hasil_lembur_3 = '1.5';
-                    $total_upah_lembur_3 = ($hasil_kerja_3*1.5)-$hasil_kerja_3;
+                    // $total_upah_lembur_3 = ($hasil_kerja_3*1.5)-$hasil_kerja_3;
+                    $total_upah_lembur_3 = $hasil_kerja_3*1.5;
                 }else{
                     $lembur_3 = '3-n';
                     $hasil_lembur_3 = '1';
@@ -2016,7 +2019,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_4){
                     $lembur_4 = '4-y';
                     $hasil_lembur_4 = '1.5';
-                    $total_upah_lembur_4 = ($hasil_kerja_4*1.5)-$hasil_kerja_4;
+                    // $total_upah_lembur_4 = ($hasil_kerja_4*1.5)-$hasil_kerja_4;
+                    $total_upah_lembur_4 = $hasil_kerja_4*1.5;
                 }else{
                     $lembur_4 = '4-n';
                     $hasil_lembur_4 = '1';
@@ -2059,7 +2063,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_5){
                     $lembur_5 = '5-y';
                     $hasil_lembur_5 = '1.5';
-                    $total_upah_lembur_5 = ($hasil_kerja_5*1.5)-$hasil_kerja_5;
+                    // $total_upah_lembur_5 = ($hasil_kerja_5*1.5)-$hasil_kerja_5;
+                    $total_upah_lembur_5 = $hasil_kerja_5*1.5;
                 }else{
                     $lembur_5 = '5-n';
                     $hasil_lembur_5 = '1';
@@ -2687,7 +2692,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_1){
                     $lembur_1 = '1-y';
                     $hasil_lembur_1 = '1.5';
-                    $total_upah_lembur_1 = ($hasil_kerja_1*1.5)-$hasil_kerja_1;
+                    $total_upah_lembur_1 = $hasil_kerja_1*1.5;
+                    // $total_upah_lembur_1 = ($hasil_kerja_1*1.5)-$hasil_kerja_1;
                 }else{
                     $lembur_1 = '1-n';
                     $hasil_lembur_1 = '1';
@@ -2732,7 +2738,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_2){
                     $lembur_2 = '2-y';
                     $hasil_lembur_2 = '1.5';
-                    $total_upah_lembur_2 = ($hasil_kerja_2*1.5)-$hasil_kerja_2;
+                    // $total_upah_lembur_2 = ($hasil_kerja_2*1.5)-$hasil_kerja_2;
+                    $total_upah_lembur_2 = $hasil_kerja_2*1.5;
                 }else{
                     $lembur_2 = '2-n';
                     $hasil_lembur_2 = '1';
@@ -2775,7 +2782,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_3){
                     $lembur_3 = '3-y';
                     $hasil_lembur_3 = '1.5';
-                    $total_upah_lembur_3 = ($hasil_kerja_3*1.5)-$hasil_kerja_3;
+                    // $total_upah_lembur_3 = ($hasil_kerja_3*1.5)-$hasil_kerja_3;
+                    $total_upah_lembur_3 = $hasil_kerja_3*1.5;
                 }else{
                     $lembur_3 = '3-n';
                     $hasil_lembur_3 = '1';
@@ -2818,7 +2826,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_4){
                     $lembur_4 = '4-y';
                     $hasil_lembur_4 = '1.5';
-                    $total_upah_lembur_4 = ($hasil_kerja_4*1.5)-$hasil_kerja_4;
+                    // $total_upah_lembur_4 = ($hasil_kerja_4*1.5)-$hasil_kerja_4;
+                    $total_upah_lembur_4 = $hasil_kerja_4*1.5;
                 }else{
                     $lembur_4 = '4-n';
                     $hasil_lembur_4 = '1';
@@ -2861,7 +2870,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_5){
                     $lembur_5 = '5-y';
                     $hasil_lembur_5 = '1.5';
-                    $total_upah_lembur_5 = ($hasil_kerja_5*1.5)-$hasil_kerja_5;
+                    // $total_upah_lembur_5 = ($hasil_kerja_5*1.5)-$hasil_kerja_5;
+                    $total_upah_lembur_5 = $hasil_kerja_5*1.5;
                 }else{
                     $lembur_5 = '5-n';
                     $hasil_lembur_5 = '1';
@@ -3500,7 +3510,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_1){
                     $lembur_1 = '1-y';
                     $hasil_lembur_1 = '1.5';
-                    $total_upah_lembur_1 = ($hasil_kerja_1*1.5)-$hasil_kerja_1;
+                    // $total_upah_lembur_1 = ($hasil_kerja_1*1.5)-$hasil_kerja_1;
+                    $total_upah_lembur_1 = $hasil_kerja_1*1.5;
                 }else{
                     $lembur_1 = '1-n';
                     $hasil_lembur_1 = '1';
@@ -3545,7 +3556,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_2){
                     $lembur_2 = '2-y';
                     $hasil_lembur_2 = '1.5';
-                    $total_upah_lembur_2 = ($hasil_kerja_2*1.5)-$hasil_kerja_2;
+                    // $total_upah_lembur_2 = ($hasil_kerja_2*1.5)-$hasil_kerja_2;
+                    $total_upah_lembur_2 = $hasil_kerja_2*1.5;
                 }else{
                     $lembur_2 = '2-n';
                     $hasil_lembur_2 = '1';
@@ -3588,7 +3600,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_3){
                     $lembur_3 = '3-y';
                     $hasil_lembur_3 = '1.5';
-                    $total_upah_lembur_3 = ($hasil_kerja_3*1.5)-$hasil_kerja_3;
+                    // $total_upah_lembur_3 = ($hasil_kerja_3*1.5)-$hasil_kerja_3;
+                    $total_upah_lembur_3 = $hasil_kerja_3*1.5;
                 }else{
                     $lembur_3 = '3-n';
                     $hasil_lembur_3 = '1';
@@ -3631,7 +3644,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_4){
                     $lembur_4 = '4-y';
                     $hasil_lembur_4 = '1.5';
-                    $total_upah_lembur_4 = ($hasil_kerja_4*1.5)-$hasil_kerja_4;
+                    // $total_upah_lembur_4 = ($hasil_kerja_4*1.5)-$hasil_kerja_4;
+                    $total_upah_lembur_4 = $hasil_kerja_4*1.5;
                 }else{
                     $lembur_4 = '4-n';
                     $hasil_lembur_4 = '1';
@@ -3674,7 +3688,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_5){
                     $lembur_5 = '5-y';
                     $hasil_lembur_5 = '1.5';
-                    $total_upah_lembur_5 = ($hasil_kerja_5*1.5)-$hasil_kerja_5;
+                    // $total_upah_lembur_5 = ($hasil_kerja_5*1.5)-$hasil_kerja_5;
+                    $total_upah_lembur_5 = $hasil_kerja_5*1.5;
                 }else{
                     $lembur_5 = '5-n';
                     $hasil_lembur_5 = '1';
@@ -6691,7 +6706,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_1){
                     $lembur_1 = '1-y';
                     $hasil_lembur_1 = '1.5';
-                    $total_upah_lembur_1 = ($hasil_kerja_1*1.5)-$hasil_kerja_1;
+                    // $total_upah_lembur_1 = ($hasil_kerja_1*1.5)-$hasil_kerja_1;
+                    $total_upah_lembur_1 = $hasil_kerja_1*1.5;
                 }else{
                     $lembur_1 = '1-n';
                     $hasil_lembur_1 = '1';
@@ -6736,7 +6752,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_2){
                     $lembur_2 = '2-y';
                     $hasil_lembur_2 = '1.5';
-                    $total_upah_lembur_2 = ($hasil_kerja_2*1.5)-$hasil_kerja_2;
+                    // $total_upah_lembur_2 = ($hasil_kerja_2*1.5)-$hasil_kerja_2;
+                    $total_upah_lembur_2 = $hasil_kerja_2*1.5;
                 }else{
                     $lembur_2 = '2-n';
                     $hasil_lembur_2 = '1';
@@ -6779,7 +6796,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_3){
                     $lembur_3 = '3-y';
                     $hasil_lembur_3 = '1.5';
-                    $total_upah_lembur_3 = ($hasil_kerja_3*1.5)-$hasil_kerja_3;
+                    // $total_upah_lembur_3 = ($hasil_kerja_3*1.5)-$hasil_kerja_3;
+                    $total_upah_lembur_3 = $hasil_kerja_3*1.5;
                 }else{
                     $lembur_3 = '3-n';
                     $hasil_lembur_3 = '1';
@@ -6822,7 +6840,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_4){
                     $lembur_4 = '4-y';
                     $hasil_lembur_4 = '1.5';
-                    $total_upah_lembur_4 = ($hasil_kerja_4*1.5)-$hasil_kerja_4;
+                    // $total_upah_lembur_4 = ($hasil_kerja_4*1.5)-$hasil_kerja_4;
+                    $total_upah_lembur_4 = $hasil_kerja_4*1.5;
                 }else{
                     $lembur_4 = '4-n';
                     $hasil_lembur_4 = '1';
@@ -6865,7 +6884,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_5){
                     $lembur_5 = '5-y';
                     $hasil_lembur_5 = '1.5';
-                    $total_upah_lembur_5 = ($hasil_kerja_5*1.5)-$hasil_kerja_5;
+                    // $total_upah_lembur_5 = ($hasil_kerja_5*1.5)-$hasil_kerja_5;
+                    $total_upah_lembur_5 = $hasil_kerja_5*1.5;
                 }else{
                     $lembur_5 = '5-n';
                     $hasil_lembur_5 = '1';
@@ -7499,7 +7519,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_1){
                     $lembur_1 = '1-y';
                     $hasil_lembur_1 = '1.5';
-                    $total_upah_lembur_1 = ($hasil_kerja_1*1.5)-$hasil_kerja_1;
+                    // $total_upah_lembur_1 = ($hasil_kerja_1*1.5)-$hasil_kerja_1;
+                    $total_upah_lembur_1 = $hasil_kerja_1*1.5;
                 }else{
                     $lembur_1 = '1-n';
                     $hasil_lembur_1 = '1';
@@ -7544,7 +7565,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_2){
                     $lembur_2 = '2-y';
                     $hasil_lembur_2 = '1.5';
-                    $total_upah_lembur_2 = ($hasil_kerja_2*1.5)-$hasil_kerja_2;
+                    // $total_upah_lembur_2 = ($hasil_kerja_2*1.5)-$hasil_kerja_2;
+                    $total_upah_lembur_2 = $hasil_kerja_2*1.5;
                 }else{
                     $lembur_2 = '2-n';
                     $hasil_lembur_2 = '1';
@@ -7587,7 +7609,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_3){
                     $lembur_3 = '3-y';
                     $hasil_lembur_3 = '1.5';
-                    $total_upah_lembur_3 = ($hasil_kerja_3*1.5)-$hasil_kerja_3;
+                    // $total_upah_lembur_3 = ($hasil_kerja_3*1.5)-$hasil_kerja_3;
+                    $total_upah_lembur_3 = $hasil_kerja_3*1.5;
                 }else{
                     $lembur_3 = '3-n';
                     $hasil_lembur_3 = '1';
@@ -7630,7 +7653,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_4){
                     $lembur_4 = '4-y';
                     $hasil_lembur_4 = '1.5';
-                    $total_upah_lembur_4 = ($hasil_kerja_4*1.5)-$hasil_kerja_4;
+                    // $total_upah_lembur_4 = ($hasil_kerja_4*1.5)-$hasil_kerja_4;
+                    $total_upah_lembur_4 = $hasil_kerja_4*1.5;
                 }else{
                     $lembur_4 = '4-n';
                     $hasil_lembur_4 = '1';
@@ -7673,7 +7697,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_5){
                     $lembur_5 = '5-y';
                     $hasil_lembur_5 = '1.5';
-                    $total_upah_lembur_5 = ($hasil_kerja_5*1.5)-$hasil_kerja_5;
+                    // $total_upah_lembur_5 = ($hasil_kerja_5*1.5)-$hasil_kerja_5;
+                    $total_upah_lembur_5 = $hasil_kerja_5*1.5;
                 }else{
                     $lembur_5 = '5-n';
                     $hasil_lembur_5 = '1';
@@ -8309,7 +8334,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_1){
                     $lembur_1 = '1-y';
                     $hasil_lembur_1 = '1.5';
-                    $total_upah_lembur_1 = ($hasil_kerja_1*1.5)-$hasil_kerja_1;
+                    // $total_upah_lembur_1 = ($hasil_kerja_1*1.5)-$hasil_kerja_1;
+                    $total_upah_lembur_1 = $hasil_kerja_1*1.5;
                 }else{
                     $lembur_1 = '1-n';
                     $hasil_lembur_1 = '1';
@@ -8354,7 +8380,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_2){
                     $lembur_2 = '2-y';
                     $hasil_lembur_2 = '1.5';
-                    $total_upah_lembur_2 = ($hasil_kerja_2*1.5)-$hasil_kerja_2;
+                    // $total_upah_lembur_2 = ($hasil_kerja_2*1.5)-$hasil_kerja_2;
+                    $total_upah_lembur_2 = $hasil_kerja_2*1.5;
                 }else{
                     $lembur_2 = '2-n';
                     $hasil_lembur_2 = '1';
@@ -8397,7 +8424,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_3){
                     $lembur_3 = '3-y';
                     $hasil_lembur_3 = '1.5';
-                    $total_upah_lembur_3 = ($hasil_kerja_3*1.5)-$hasil_kerja_3;
+                    // $total_upah_lembur_3 = ($hasil_kerja_3*1.5)-$hasil_kerja_3;
+                    $total_upah_lembur_3 = $hasil_kerja_3*1.5;
                 }else{
                     $lembur_3 = '3-n';
                     $hasil_lembur_3 = '1';
@@ -8440,7 +8468,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_4){
                     $lembur_4 = '4-y';
                     $hasil_lembur_4 = '1.5';
-                    $total_upah_lembur_4 = ($hasil_kerja_4*1.5)-$hasil_kerja_4;
+                    // $total_upah_lembur_4 = ($hasil_kerja_4*1.5)-$hasil_kerja_4;
+                    $total_upah_lembur_4 = $hasil_kerja_4*1.5;
                 }else{
                     $lembur_4 = '4-n';
                     $hasil_lembur_4 = '1';
@@ -8483,7 +8512,8 @@ class PengerjaanController extends Controller
                 if($request->lembur_kerja_5){
                     $lembur_5 = '5-y';
                     $hasil_lembur_5 = '1.5';
-                    $total_upah_lembur_5 = ($hasil_kerja_5*1.5)-$hasil_kerja_5;
+                    // $total_upah_lembur_5 = ($hasil_kerja_5*1.5)-$hasil_kerja_5;
+                    $total_upah_lembur_5 = $hasil_kerja_5*1.5;
                 }else{
                     $lembur_5 = '5-n';
                     $hasil_lembur_5 = '1';

@@ -1479,6 +1479,7 @@ class PayrolController extends Controller
                     // End Hasil Kerja 5
                 }
 
+                // $row1_total_hasil_kerja = (round(($row1_hasil_kerja_1*$row1_lembur_1)+($row1_hasil_kerja_2*$row1_lembur_2)+($row1_hasil_kerja_3*$row1_lembur_3)+($row1_hasil_kerja_4*$row1_lembur_4)+($row1_hasil_kerja_5*$row1_lembur_5)));
                 $row1_total_hasil_kerja = (round(($row1_hasil_kerja_1*$row1_lembur_1)+($row1_hasil_kerja_2*$row1_lembur_2)+($row1_hasil_kerja_3*$row1_lembur_3)+($row1_hasil_kerja_4*$row1_lembur_4)+($row1_hasil_kerja_5*$row1_lembur_5)))-$row1_pengerjaan['uang_lembur'];
                 // $row1_total_hasil_kerja = (($row1_hasil_kerja_1*$row1_lembur_1)+($row1_hasil_kerja_2*$row1_lembur_2)+($row1_hasil_kerja_3*$row1_lembur_3)+($row1_hasil_kerja_4*$row1_lembur_4)+($row1_hasil_kerja_5*$row1_lembur_5))-$row1_pengerjaan['uang_lembur'];
                 $row1_total_lembur = $row1_pengerjaan['uang_lembur'];
