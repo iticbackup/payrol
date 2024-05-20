@@ -9835,7 +9835,11 @@ class PayrolController extends Controller
                                                     ->get();
         // dd($pengerjaan_rit_weeklys);
 
-        $pdf = new Fpdf('P', 'mm', 'legal');
+        if ($a >= 7) {
+            $pdf = new Fpdf('P', 'mm', 'legal');
+        }else{
+            $pdf = new Fpdf('P', 'mm', 'a4');
+        }
         $title='Payrol Supir RIT '.Carbon::parse($exp_tgl_awal[0] . '-' . $exp_tgl_awal[1] . '-' . $exp_tgl_awal[2])->isoFormat('D MMMM').' s/d '.Carbon::parse($exp_tgl_akhir[0] . '-' . $exp_tgl_akhir[1] . '-' . $exp_tgl_akhir[2])->isoFormat('D MMMM YYYY');
         $pdf->SetTitle($title);
         $pdf->AddPage();
@@ -10455,6 +10459,10 @@ class PayrolController extends Controller
                 case '3':
                     // 3 hari kerja
                     $pdf->ln(34);
+                    break;
+                case '5':
+                    // 3 hari kerja
+                    $pdf->ln(18);
                     break;
                 case '6':
                     // 6 hari kerja
