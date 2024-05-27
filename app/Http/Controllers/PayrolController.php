@@ -9835,7 +9835,7 @@ class PayrolController extends Controller
                                                     ->get();
         // dd($pengerjaan_rit_weeklys);
 
-        if ($a >= 7) {
+        if ($a > 6) {
             $pdf = new Fpdf('P', 'mm', 'legal');
         }else{
             $pdf = new Fpdf('P', 'mm', 'a4');
@@ -10470,7 +10470,7 @@ class PayrolController extends Controller
                     break;
                 case '7':
                     // 7 hari kerja
-                    $pdf->ln(4);
+                    $pdf->ln(28);
                     break;
                 case '8':
                     // 7 hari kerja
