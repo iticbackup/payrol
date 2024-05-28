@@ -1659,6 +1659,16 @@ class PengerjaanController extends Controller
         ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
+        // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
+        //     $data['total_potongan_tk']=0;
+        // }
+        // // elseif($data['pengerjaan_weekly']['tunjangan_kehadiran'] < 75000){
+        // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
+        // // }
+        // else{
+        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        // }
+
         $data['total_potongan_tk']=$total_potongan_tk;
         return view('backend.pengerjaan.packing_lokal.input_hasil_kerja_karyawan',$data);
     }
@@ -2463,6 +2473,16 @@ class PengerjaanController extends Controller
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
         ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
+
+        // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
+        //     $data['total_potongan_tk']=0;
+        // }
+        // // elseif($data['pengerjaan_weekly']['tunjangan_kehadiran'] < 75000){
+        // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
+        // // }
+        // else{
+        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
         return view('backend.pengerjaan.packing_bandrol.input_hasil_kerja_karyawan',$data);
@@ -3271,6 +3291,16 @@ class PengerjaanController extends Controller
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
         ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
+
+        // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
+        //     $data['total_potongan_tk']=0;
+        // }
+        // // elseif($data['pengerjaan_weekly']['tunjangan_kehadiran'] < 75000){
+        // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
+        // // }
+        // else{
+        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
         return view('backend.pengerjaan.packing_inner.input_hasil_kerja_karyawan',$data);
@@ -4090,6 +4120,16 @@ class PengerjaanController extends Controller
         ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
+        // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
+        //     $data['total_potongan_tk']=0;
+        // }
+        // // elseif($data['pengerjaan_weekly']['tunjangan_kehadiran'] < 75000){
+        // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
+        // // }
+        // else{
+        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        // }
+
         $data['total_potongan_tk']=$total_potongan_tk;
         return view('backend.pengerjaan.packing_outer.input_hasil_kerja_karyawan',$data);
     }
@@ -4901,6 +4941,16 @@ class PengerjaanController extends Controller
         ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
+        // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
+        //     $data['total_potongan_tk']=0;
+        // }
+        // // elseif($data['pengerjaan_weekly']['tunjangan_kehadiran'] < 75000){
+        // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
+        // // }
+        // else{
+        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        // }
+
         $data['total_potongan_tk']=$total_potongan_tk;
         return view('backend.pengerjaan.packing_ekspor.input_hasil_kerja_karyawan',$data);
     }
@@ -5704,6 +5754,16 @@ class PengerjaanController extends Controller
         ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {$total_potongan_tk=0;}
 
+        // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
+        //     $data['total_potongan_tk']=0;
+        // }
+        // // elseif($data['pengerjaan_weekly']['tunjangan_kehadiran'] < 75000){
+        // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
+        // // }
+        // else{
+        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        // }
+
         $data['total_potongan_tk']=$total_potongan_tk;
         return view('backend.pengerjaan.packing_ekspor_kemas.input_hasil_kerja_karyawan',$data);
     }
@@ -6474,6 +6534,16 @@ class PengerjaanController extends Controller
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
         ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
+
+        // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
+        //     $data['total_potongan_tk']=0;
+        // }
+        // // elseif($data['pengerjaan_weekly']['tunjangan_kehadiran'] < 75000){
+        // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
+        // // }
+        // else{
+        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
         return view('backend.pengerjaan.packing_ekspor_gagang.input_hasil_kerja_karyawan',$data);
@@ -7286,6 +7356,16 @@ class PengerjaanController extends Controller
         ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
+        // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
+        //     $data['total_potongan_tk']=0;
+        // }
+        // // elseif($data['pengerjaan_weekly']['tunjangan_kehadiran'] < 75000){
+        // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
+        // // }
+        // else{
+        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        // }
+
         $data['total_potongan_tk']=$total_potongan_tk;
         return view('backend.pengerjaan.packing_ambri_isi_etiket.input_hasil_kerja_karyawan',$data);
     }
@@ -8097,6 +8177,16 @@ class PengerjaanController extends Controller
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
         ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
+
+        // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
+        //     $data['total_potongan_tk']=0;
+        // }
+        // // elseif($data['pengerjaan_weekly']['tunjangan_kehadiran'] < 75000){
+        // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
+        // // }
+        // else{
+        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
         return view('backend.pengerjaan.packing_ambri_las_tepi.input_hasil_kerja_karyawan',$data);
@@ -8915,6 +9005,16 @@ class PengerjaanController extends Controller
         ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
+        // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
+        //     $data['total_potongan_tk']=0;
+        // }
+        // // elseif($data['pengerjaan_weekly']['tunjangan_kehadiran'] < 75000){
+        // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
+        // // }
+        // else{
+        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        // }
+
         $data['total_potongan_tk']=$total_potongan_tk;
         return view('backend.pengerjaan.packing_ambri_isi_ambri.input_hasil_kerja_karyawan',$data);
     }
@@ -9332,6 +9432,16 @@ class PengerjaanController extends Controller
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
         ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
+
+        // if ($data['pengerjaan_harian_weekly']['tunjangan_kerja'] == 75000) {
+        //     $data['total_potongan_tk']=0;
+        // }
+        // // elseif($data['pengerjaan_harian_weekly']['tunjangan_kerja'] < 75000){
+        // //     $data['total_potongan_tk']=$data['pengerjaan_harian_weekly']['tunjangan_kerja'];
+        // // }
+        // else{
+        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
 
@@ -10000,6 +10110,15 @@ class PengerjaanController extends Controller
         // dd($total_potongan_tk);
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
+        // if ($data['pengerjaan_harian_weekly']['tunjangan_kerja'] == 75000) {
+        //     $data['total_potongan_tk']=0;
+        // }
+        // // elseif($data['pengerjaan_harian_weekly']['tunjangan_kerja'] < 75000){
+        // //     $data['total_potongan_tk']=$data['pengerjaan_harian_weekly']['tunjangan_kerja'];
+        // // }
+        // else{
+        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        // }
         $data['total_potongan_tk']=$total_potongan_tk;
 
         return view('backend.pengerjaan.harian.ppic_tembakau.input_hasil_kerja_karyawan',$data);
@@ -10419,7 +10538,17 @@ class PengerjaanController extends Controller
         ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
-        $data['total_potongan_tk']=$total_potongan_tk;
+        if ($data['pengerjaan_harian_weekly']['tunjangan_kerja'] == 75000) {
+            $data['total_potongan_tk']=0;
+        }
+        elseif($data['pengerjaan_harian_weekly']['tunjangan_kerja'] < 75000){
+            $data['total_potongan_tk']=$data['pengerjaan_harian_weekly']['tunjangan_kerja'];
+        }
+        else{
+            $data['total_potongan_tk']=$total_potongan_tk; 
+        }
+
+        // $data['total_potongan_tk']=$total_potongan_tk;
 
         return view('backend.pengerjaan.harian.primary_process.input_hasil_kerja_karyawan',$data);
 
@@ -10827,6 +10956,16 @@ class PengerjaanController extends Controller
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($ijin_15*25000)+($ijin_k4*40000)+
         ($ijin_l4*75000)+($pulang_1*40000)+($pulang_2*75000)+($telat_1*15000)+($telat_2*25000)+($telat_3*30000)+($telat_4*40000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
+
+        // if ($data['pengerjaan_harian_weekly']['tunjangan_kerja'] == 75000) {
+        //     $data['total_potongan_tk']=0;
+        // }
+        // // elseif($data['pengerjaan_harian_weekly']['tunjangan_kerja'] < 75000){
+        // //     $data['total_potongan_tk']=$data['pengerjaan_harian_weekly']['tunjangan_kerja'];
+        // // }
+        // else{
+        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
 
@@ -11236,6 +11375,16 @@ class PengerjaanController extends Controller
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
         ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
+
+        // if ($data['pengerjaan_harian_weekly']['tunjangan_kerja'] == 75000) {
+        //     $data['total_potongan_tk']=0;
+        // }
+        // // elseif($data['pengerjaan_harian_weekly']['tunjangan_kerja'] < 75000){
+        // //     $data['total_potongan_tk']=$data['pengerjaan_harian_weekly']['tunjangan_kerja'];
+        // // }
+        // else{
+        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
 
@@ -11648,6 +11797,16 @@ class PengerjaanController extends Controller
         ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
+        // if ($data['pengerjaan_harian_weekly']['tunjangan_kerja'] == 75000) {
+        //     $data['total_potongan_tk']=0;
+        // }
+        // // elseif($data['pengerjaan_harian_weekly']['tunjangan_kerja'] < 75000){
+        // //     $data['total_potongan_tk']=$data['pengerjaan_harian_weekly']['tunjangan_kerja'];
+        // // }
+        // else{
+        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        // }
+
         $data['total_potongan_tk']=$total_potongan_tk;
 
         return view('backend.pengerjaan.harian.umum.input_hasil_kerja_karyawan',$data);
@@ -12058,6 +12217,16 @@ class PengerjaanController extends Controller
         // dd($total_potongan_tk);
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
+        // if ($data['pengerjaan_harian_weekly']['tunjangan_kerja'] == 75000) {
+        //     $data['total_potongan_tk']=0;
+        // }
+        // // elseif($data['pengerjaan_harian_weekly']['tunjangan_kerja'] < 75000){
+        // //     $data['total_potongan_tk']=$data['pengerjaan_harian_weekly']['tunjangan_kerja'];
+        // // }
+        // else{
+        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        // }
+
         $data['total_potongan_tk']=$total_potongan_tk;
 
         return view('backend.pengerjaan.harian.supir.input_hasil_kerja_karyawan',$data);
@@ -12466,6 +12635,16 @@ class PengerjaanController extends Controller
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
         ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
+
+        // if ($data['pengerjaan_harian_weekly']['tunjangan_kerja'] == 75000) {
+        //     $data['total_potongan_tk']=0;
+        // }
+        // // elseif($data['pengerjaan_harian_weekly']['tunjangan_kerja'] < 75000){
+        // //     $data['total_potongan_tk']=$data['pengerjaan_harian_weekly']['tunjangan_kerja'];
+        // // }
+        // else{
+        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
 
@@ -12933,6 +13112,12 @@ class PengerjaanController extends Controller
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
         ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
+
+        // if ($data['karyawan_supir_rit']['tunjangan_kehadiran'] > 0) {
+        //     $data['total_potongan_tk']=$data['karyawan_supir_rit']['tunjangan_kehadiran'];
+        // }else{
+        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
 

@@ -218,7 +218,7 @@
                                                             <div
                                                                 class="col-sm-4 form-label align-self-center mb-lg-0 text-center">
                                                                 <input type="text" class="form-control"
-                                                                    value="{{ $alpa->count() }}" id="" >
+                                                                    value="{{ $alpa->count() }}" id="" readonly>
                                                             </div>
                                                             <div class="col-sm-8">
                                                                 <label
@@ -246,7 +246,7 @@
                                                             <div class="col-sm-5">
                                                                 <input type="text" class="form-control"
                                                                     value="{{ number_format(75000 * $alpa->count(), 0, ',', '.') }}"
-                                                                    id="" >
+                                                                    id="" readonly>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -258,7 +258,7 @@
                                                                 class="col-sm-4 form-label align-self-center mb-lg-0 text-center">
                                                                 <input type="text" class="form-control"
                                                                     value="{{ $diliburkan->count() }}" id=""
-                                                                    >
+                                                                    readonly>
                                                             </div>
                                                             <div class="col-sm-8">
                                                                 <label
@@ -286,7 +286,7 @@
                                                             <div class="col-sm-5">
                                                                 <input type="text" class="form-control"
                                                                     value="{{ number_format(75000 * $diliburkan->count(), 0, ',', '.') }}"
-                                                                    id="" >
+                                                                    id="" readonly>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -298,7 +298,7 @@
                                                                 class="col-sm-4 form-label align-self-center mb-lg-0 text-center">
                                                                 <input type="text" class="form-control"
                                                                     value="{{ $sakit->count() }}" id=""
-                                                                    >
+                                                                    readonly>
                                                             </div>
                                                             <div class="col-sm-8">
                                                                 <label
@@ -326,7 +326,7 @@
                                                             <div class="col-sm-5">
                                                                 <input type="text" class="form-control"
                                                                     value="{{ number_format(75000 * $sakit->count(), 0, ',', '.') }}"
-                                                                    id="" >
+                                                                    id="" readonly>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -337,7 +337,7 @@
                                                             <div
                                                                 class="col-sm-4 form-label align-self-center mb-lg-0 text-center">
                                                                 <input type="text" class="form-control"
-                                                                    value="{{ $cuti->count() }}" id="" >
+                                                                    value="{{ $cuti->count() }}" id="" readonly>
                                                             </div>
                                                             <div class="col-sm-8">
                                                                 <label
@@ -365,7 +365,7 @@
                                                             <div class="col-sm-5">
                                                                 <input type="text" class="form-control"
                                                                     value="{{ number_format(75000 * $cuti->count(), 0, ',', '.') }}"
-                                                                    id="" >
+                                                                    id="" readonly>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -377,7 +377,7 @@
                                                                 class="col-sm-4 form-label align-self-center mb-lg-0 text-center">
                                                                 <input type="text" class="form-control"
                                                                     value="{{ $ijin_full->count() }}" id=""
-                                                                    >
+                                                                    readonly>
                                                             </div>
                                                             <div class="col-sm-8">
                                                                 <label
@@ -405,7 +405,7 @@
                                                             <div class="col-sm-5">
                                                                 <input type="text" class="form-control"
                                                                     value="{{ number_format(75000 * $ijin_full->count(), 0, ',', '.') }}"
-                                                                    id="" >
+                                                                    id="" readonly>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -416,13 +416,13 @@
                                                             <div
                                                                 class="col-sm-4 form-label align-self-center mb-lg-0 text-center">
                                                                 <input type="text" class="form-control"
-                                                                    value="{{ $ijin_15 }}" id="" >
+                                                                    value="{{ $ijin_15 }}" id="" readonly>
                                                             </div>
                                                             <div class="col-sm-8">
                                                                 <label
                                                                     class="col-sm-10 form-label align-self-center mb-lg-0">Hari
                                                                     Izin <u>
-                                                                        << /u> 15 Menit</label>
+                                                                        <</u> 15 Menit</label>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -445,7 +445,7 @@
                                                             <div class="col-sm-5">
                                                                 <input type="text" class="form-control"
                                                                     value="{{ number_format($ijin_15 * 25000, 0, ',', '.') }}"
-                                                                    id="" >
+                                                                    id="" readonly>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -456,7 +456,7 @@
                                                             <div
                                                                 class="col-sm-4 form-label align-self-center mb-lg-0 text-center">
                                                                 <input type="text" class="form-control"
-                                                                    value="{{ $ijin_k4 }}" id="" >
+                                                                    value="{{ $ijin_k4 }}" id="" readonly>
                                                             </div>
                                                             <div class="col-sm-8">
                                                                 <label
@@ -485,7 +485,7 @@
                                                             <div class="col-sm-5">
                                                                 <input type="text" class="form-control"
                                                                     value="{{ number_format($ijin_k4 * 40000, 0, ',', '.') }}"
-                                                                    id="" >
+                                                                    id="" readonly>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -496,7 +496,7 @@
                                                             <div
                                                                 class="col-sm-4 form-label align-self-center mb-lg-0 text-center">
                                                                 <input type="text" class="form-control"
-                                                                    value="{{ $ijin_l4 }}" id="" >
+                                                                    value="{{ $ijin_l4 }}" id="" readonly>
                                                             </div>
                                                             <div class="col-sm-8">
                                                                 <label
@@ -524,7 +524,7 @@
                                                             <div class="col-sm-5">
                                                                 <input type="text" class="form-control"
                                                                     value="{{ number_format($ijin_k4 * 75000, 0, ',', '.') }}"
-                                                                    id="" >
+                                                                    id="" readonly>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -535,7 +535,7 @@
                                                             <div
                                                                 class="col-sm-4 form-label align-self-center mb-lg-0 text-center">
                                                                 <input type="text" class="form-control"
-                                                                    value="{{ $pulang_1 }}" id="" >
+                                                                    value="{{ $pulang_1 }}" id="" readonly>
                                                             </div>
                                                             <div class="col-sm-8">
                                                                 <label
@@ -564,7 +564,7 @@
                                                             <div class="col-sm-5">
                                                                 <input type="text" class="form-control"
                                                                     value="{{ number_format($pulang_1 * 40000, 0, ',', '.') }}"
-                                                                    id="" >
+                                                                    id="" readonly>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -575,7 +575,7 @@
                                                             <div
                                                                 class="col-sm-4 form-label align-self-center mb-lg-0 text-center">
                                                                 <input type="text" class="form-control"
-                                                                    value="{{ $pulang_2 }}" id="" >
+                                                                    value="{{ $pulang_2 }}" id="" readonly>
                                                             </div>
                                                             <div class="col-sm-8">
                                                                 <label
@@ -603,7 +603,7 @@
                                                             <div class="col-sm-5">
                                                                 <input type="text" class="form-control"
                                                                     value="{{ number_format($pulang_2, 0, ',', '.') }}"
-                                                                    id="" >
+                                                                    id="" readonly>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -614,7 +614,7 @@
                                                             <div
                                                                 class="col-sm-4 form-label align-self-center mb-lg-0 text-center">
                                                                 <input type="text" class="form-control"
-                                                                    value="{{ $telat_1 }}" id="" >
+                                                                    value="{{ $telat_1 }}" id="" readonly>
                                                             </div>
                                                             <div class="col-sm-8">
                                                                 <label
@@ -643,7 +643,7 @@
                                                             <div class="col-sm-5">
                                                                 <input type="text" class="form-control"
                                                                     value="{{ number_format($telat_1 * 15000, 0, ',', '.') }}"
-                                                                    id="" >
+                                                                    id="" readonly>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -654,12 +654,12 @@
                                                             <div
                                                                 class="col-sm-4 form-label align-self-center mb-lg-0 text-center">
                                                                 <input type="text" class="form-control"
-                                                                    value="{{ $telat_2 }}" id="" >
+                                                                    value="{{ $telat_2 }}" id="" readonly>
                                                             </div>
                                                             <div class="col-sm-8">
                                                                 <label
                                                                     class="col-sm-10 form-label align-self-center mb-lg-0">Hari
-                                                                    Terlambar <u>></u> 5 Menit <u>
+                                                                    Terlambat <u>></u> 5 Menit <u>
                                                                         < </u> 15 Menit</label>
                                                             </div>
                                                         </div>
@@ -683,7 +683,7 @@
                                                             <div class="col-sm-5">
                                                                 <input type="text" class="form-control"
                                                                     value="{{ number_format($telat_2 * 25000, 0, ',', '.') }}"
-                                                                    id="" >
+                                                                    id="" readonly>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -694,7 +694,7 @@
                                                             <div
                                                                 class="col-sm-4 form-label align-self-center mb-lg-0 text-center">
                                                                 <input type="text" class="form-control"
-                                                                    value="{{ $telat_3 }}" id="" >
+                                                                    value="{{ $telat_3 }}" id="" readonly>
                                                             </div>
                                                             <div class="col-sm-8">
                                                                 <label
@@ -723,7 +723,7 @@
                                                             <div class="col-sm-5">
                                                                 <input type="text" class="form-control"
                                                                     value="{{ number_format($telat_3 * 30000, 0, ',', '.') }}"
-                                                                    id="" >
+                                                                    id="" readonly>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -734,7 +734,7 @@
                                                             <div
                                                                 class="col-sm-4 form-label align-self-center mb-lg-0 text-center">
                                                                 <input type="text" class="form-control"
-                                                                    value="{{ $telat_4 }}" id="" >
+                                                                    value="{{ $telat_4 }}" id="" readonly>
                                                             </div>
                                                             <div class="col-sm-8">
                                                                 <label
@@ -763,7 +763,7 @@
                                                             <div class="col-sm-5">
                                                                 <input type="text" class="form-control"
                                                                     value="{{ number_format($telat_4 * 40000, 0, ',', '.') }}"
-                                                                    id="" >
+                                                                    id="" readonly>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -774,10 +774,10 @@
                                                 <tr>
                                                     <td>Potongan T. Kehadiran</td>
                                                     <td>
-                                                        {{-- <input type="text" class="form-control"
+                                                        <input type="text" class="form-control"
                                                             value="{{ number_format($total_potongan_tk, 0, ',', '.') }}"
-                                                            id="" readonly> --}}
-                                                        <input type="text" name="pot_tunjangan_kehadiran"
+                                                            id="" readonly>
+                                                        <input type="hidden" name="pot_tunjangan_kehadiran"
                                                             value="{{ $total_potongan_tk }}" class="form-control">
                                                     </td>
                                                 </tr>
