@@ -370,3 +370,13 @@ Route::group(['middleware' => 'auth'], function () {
         return $id;
     });
 });
+
+// Route::get('testing',function(){
+//     $startPeriode = \Carbon\Carbon::create(2024,05,26)->format('Y-m-d');
+//     $endPeriode = \Carbon\Carbon::create(2024,06,25)->format('Y-m-d');
+//     $periode = \Carbon\CarbonPeriod::create($startPeriode,$endPeriode);
+//     foreach ($periode as $key => $prd) {
+//         $data[] = $prd->format('Y-m-d');
+//     }
+//     return $data;
+// });

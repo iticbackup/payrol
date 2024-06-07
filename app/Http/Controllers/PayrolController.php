@@ -9997,7 +9997,7 @@ class PayrolController extends Controller
                         $row_daily2_jenis_umk = '-';
                     }else{
                         // $row_daily2_hasil_kerja_1 = $row_daily2_umk_rit->tarif;
-                        $row_daily2_hasil_kerja_1 = $row_daily2_umk_rit->tarif*$row_daily1_explode_hasil_kerja_1[1];
+                        $row_daily2_hasil_kerja_1 = $row_daily2_umk_rit->tarif*$row_daily2_explode_hasil_kerja_1[1];
                         $row_daily2_hasil_umk_rit = $row_daily2_umk_rit->kategori_upah;
                         $row_daily2_tarif_umk = $row_daily2_umk_rit->tarif;
                         $row_daily2_dpb = $row_daily_2[$i]->dpb/7*$row_daily_2[$i]->upah_dasar;
