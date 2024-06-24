@@ -10468,6 +10468,8 @@ class PengerjaanController extends Controller
             }
         }
 
+        // dd($data['telat_3']);
+
         //jumlah status pulang awal
         $data['pulang_awals'] = $this->presensiInfo->where('pin',$data['karyawan_harian']['pin'])
                                     ->whereBetween('scan_date',[$bulan_kemarin,$bulan_sekarang])
@@ -10538,17 +10540,17 @@ class PengerjaanController extends Controller
         ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
-        if ($data['pengerjaan_harian_weekly']['tunjangan_kerja'] == 75000) {
-            $data['total_potongan_tk']=0;
-        }
-        elseif($data['pengerjaan_harian_weekly']['tunjangan_kerja'] < 75000){
-            $data['total_potongan_tk']=$data['pengerjaan_harian_weekly']['tunjangan_kerja'];
-        }
-        else{
-            $data['total_potongan_tk']=$total_potongan_tk; 
-        }
+        // if ($data['pengerjaan_harian_weekly']['tunjangan_kerja'] == 75000) {
+        //     $data['total_potongan_tk']=0;
+        // }
+        // elseif($data['pengerjaan_harian_weekly']['tunjangan_kerja'] < 75000){
+        //     $data['total_potongan_tk']=$data['pengerjaan_harian_weekly']['tunjangan_kerja'];
+        // }
+        // else{
+        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        // }
 
-        // $data['total_potongan_tk']=$total_potongan_tk;
+        $data['total_potongan_tk']=$total_potongan_tk;
 
         return view('backend.pengerjaan.harian.primary_process.input_hasil_kerja_karyawan',$data);
 
