@@ -9057,6 +9057,7 @@ class PayrolController extends Controller
         $explode_tanggal_pengerjaans = explode('#',$data['new_data_pengerjaan']['tanggal']);
         $exp_tanggals = array_filter($explode_tanggal_pengerjaans);
         $a = count($exp_tanggals);
+        // dd($a);
         $exp_tgl_awal = explode('-', $exp_tanggals[1]);
         $exp_tgl_akhir = explode('-', $exp_tanggals[$a]);
 

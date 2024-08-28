@@ -1334,14 +1334,16 @@ class PengerjaanController extends Controller
                                                     'biodata_karyawan.nama as nama',
                                                     'operator_karyawan.nik as nik',
                                                     'biodata_karyawan.pin as pin',
-                                                    'operator_karyawan.tunjangan_kerja_id as tunjangan_kerja_id'
+                                                    'operator_karyawan.tunjangan_kerja_id as tunjangan_kerja_id',
+                                                    'operator_karyawan.jenis_operator_detail_pekerjaan_id as jenis_operator_detail_pekerjaan_id'
                                                     ])
                                                     ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
                                                     ->where('operator_karyawan.nik',$nik)
                                                     ->where('status','Y')
+                                                    // ->where('biodata_karyawan.status_karyawan',null)
                                                     ->where('operator_karyawan.jenis_operator_detail_pekerjaan_id',1)
                                                     ->first();
-
+                                                    // dd($data['karyawan']);
         $data['new_data_pengerjaan'] = $this->newDataPengerjaan->select('akhir_bulan')->where('kode_pengerjaan',$kode_pengerjaan)->first();
         $data['jhts'] = $this->bpjsJht->where('status','y')->get();
         $data['bpjs_kesehatan'] = $this->bpjsKesehatan->select('nominal')->where('status','y')->first();
@@ -1545,10 +1547,15 @@ class PengerjaanController extends Controller
                                     ->get();
         // dd($data['sakit']);
         //jumlah ijin full
+        // $data['ijin_full'] = $this->presensiInfo->where('pin',1090)
+        //                             ->whereBetween('scan_date',[$bulan_kemarin,$bulan_sekarang])
+        //                             ->where('status',6)
+        //                             ->get();
         $data['ijin_full'] = $this->presensiInfo->where('pin',$data['karyawan']['pin'])
                                     ->whereBetween('scan_date',[$bulan_kemarin,$bulan_sekarang])
                                     ->where('status',6)
                                     ->get();
+        // dd($data['ijin_full']);
         //jumlah status terlambat
         $data['terlambats'] = $this->presensiInfo->where('pin',$data['karyawan']['pin'])
                                     ->whereBetween('scan_date',[$bulan_kemarin,$bulan_sekarang])
@@ -1558,36 +1565,42 @@ class PengerjaanController extends Controller
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
         $telat_4=0; //terlambat > 1 jam < 3 jam	
+        $telat_5=0; //terlambat > 3 jam	
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_4;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
-			$jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
-            // $jam_datang_terlambat=strtotime($row_terlambat['jam_datang_telat']);
-			$menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
-			if($menit_telat<=4){
+            $jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
+            // $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
+            $menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
+            // dd($menit_telat);
+            if($menit_telat <= 4){
                 $telat_1=$telat_1+1;
                 $data['telat_1'] = $telat_1;
             }
-			else if(($menit_telat>=5) && ($menit_telat<=14) ){
+            else if(($menit_telat >= 5) && ($menit_telat <= 15) ){
                 $telat_2=$telat_2+1;
                 $data['telat_2'] = $telat_2;
             }
-			else if(($menit_telat>=15) && ($menit_telat<=59)){
+            else if(($menit_telat >= 16) && ($menit_telat <= 59)){
                 $telat_3=$telat_3+1;
                 $data['telat_3'] = $telat_3;
             }
-			else if(($menit_telat>=60) && ($menit_telat<=179)){
+            else if(($menit_telat >= 60) && ($menit_telat <= 179)){
                 $telat_4=$telat_4+1;
                 $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
             }
-			else{
-                $telat_4=$telat_4+1;
-                $data['telat_4'] = $telat_4;
-            }
+            // else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
         }
 
         //jumlah status pulang awal
@@ -4840,36 +4853,42 @@ class PengerjaanController extends Controller
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
         $telat_4=0; //terlambat > 1 jam < 3 jam	
+        $telat_5=0; //terlambat > 3 jam	
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_4;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
-			$jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
-            // $jam_datang_terlambat=strtotime($row_terlambat['jam_datang_telat']);
-			$menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
-			if($menit_telat<=4){
+            $jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
+            // $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
+            $menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
+            // dd($menit_telat);
+            if($menit_telat <= 4){
                 $telat_1=$telat_1+1;
                 $data['telat_1'] = $telat_1;
             }
-			else if(($menit_telat>=5) && ($menit_telat<=14) ){
+            else if(($menit_telat >= 5) && ($menit_telat <= 15) ){
                 $telat_2=$telat_2+1;
                 $data['telat_2'] = $telat_2;
             }
-			else if(($menit_telat>=15) && ($menit_telat<=59)){
+            else if(($menit_telat >= 16) && ($menit_telat <= 59)){
                 $telat_3=$telat_3+1;
                 $data['telat_3'] = $telat_3;
             }
-			else if(($menit_telat>=60) && ($menit_telat<=179)){
+            else if(($menit_telat >= 60) && ($menit_telat <= 179)){
                 $telat_4=$telat_4+1;
                 $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
             }
-			else{
-                $telat_4=$telat_4+1;
-                $data['telat_4'] = $telat_4;
-            }
+            // else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
         }
 
         //jumlah status pulang awal
@@ -5655,35 +5674,42 @@ class PengerjaanController extends Controller
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
         $telat_4=0; //terlambat > 1 jam < 3 jam	
+        $telat_5=0; //terlambat > 3 jam	
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_4;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
-			$jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
-			$menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
-			if($menit_telat<=4){
+            $jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
+            // $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
+            $menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
+            // dd($menit_telat);
+            if($menit_telat <= 4){
                 $telat_1=$telat_1+1;
                 $data['telat_1'] = $telat_1;
             }
-			else if(($menit_telat>=5) && ($menit_telat<=14) ){
+            else if(($menit_telat >= 5) && ($menit_telat <= 15) ){
                 $telat_2=$telat_2+1;
                 $data['telat_2'] = $telat_2;
             }
-			else if(($menit_telat>=15) && ($menit_telat<=59)){
+            else if(($menit_telat >= 16) && ($menit_telat <= 59)){
                 $telat_3=$telat_3+1;
                 $data['telat_3'] = $telat_3;
             }
-			else if(($menit_telat>=60) && ($menit_telat<=179)){
+            else if(($menit_telat >= 60) && ($menit_telat <= 179)){
                 $telat_4=$telat_4+1;
                 $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
             }
-			else{
-                $telat_4=$telat_4+1;
-                $data['telat_4'] = $telat_4;
-            }
+            // else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
         }
 
         //jumlah status pulang awal
@@ -6434,36 +6460,42 @@ class PengerjaanController extends Controller
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
         $telat_4=0; //terlambat > 1 jam < 3 jam	
+        $telat_5=0; //terlambat > 3 jam	
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_4;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
-			$jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
-            // $jam_datang_terlambat=strtotime($row_terlambat['jam_datang_telat']);
-			$menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
-			if($menit_telat<=4){
+            $jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
+            // $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
+            $menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
+            // dd($menit_telat);
+            if($menit_telat <= 4){
                 $telat_1=$telat_1+1;
                 $data['telat_1'] = $telat_1;
             }
-			else if(($menit_telat>=5) && ($menit_telat<=14) ){
+            else if(($menit_telat >= 5) && ($menit_telat <= 15) ){
                 $telat_2=$telat_2+1;
                 $data['telat_2'] = $telat_2;
             }
-			else if(($menit_telat>=15) && ($menit_telat<=59)){
+            else if(($menit_telat >= 16) && ($menit_telat <= 59)){
                 $telat_3=$telat_3+1;
                 $data['telat_3'] = $telat_3;
             }
-			else if(($menit_telat>=60) && ($menit_telat<=179)){
+            else if(($menit_telat >= 60) && ($menit_telat <= 179)){
                 $telat_4=$telat_4+1;
                 $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
             }
-			else{
-                $telat_4=$telat_4+1;
-                $data['telat_4'] = $telat_4;
-            }
+            // else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
         }
 
         //jumlah status pulang awal
@@ -7255,36 +7287,42 @@ class PengerjaanController extends Controller
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
         $telat_4=0; //terlambat > 1 jam < 3 jam	
+        $telat_5=0; //terlambat > 3 jam	
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_4;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
             $jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
-			// $jam_datang_terlambat=strtotime($row_terlambat['jam_datang_telat']);
-			$menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
-			if($menit_telat<=4){
+            // $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
+            $menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
+            // dd($menit_telat);
+            if($menit_telat <= 4){
                 $telat_1=$telat_1+1;
                 $data['telat_1'] = $telat_1;
             }
-			else if(($menit_telat>=5) && ($menit_telat<=14) ){
+            else if(($menit_telat >= 5) && ($menit_telat <= 15) ){
                 $telat_2=$telat_2+1;
                 $data['telat_2'] = $telat_2;
             }
-			else if(($menit_telat>=15) && ($menit_telat<=59)){
+            else if(($menit_telat >= 16) && ($menit_telat <= 59)){
                 $telat_3=$telat_3+1;
                 $data['telat_3'] = $telat_3;
             }
-			else if(($menit_telat>=60) && ($menit_telat<=179)){
+            else if(($menit_telat >= 60) && ($menit_telat <= 179)){
                 $telat_4=$telat_4+1;
                 $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
             }
-			else{
-                $telat_4=$telat_4+1;
-                $data['telat_4'] = $telat_4;
-            }
+            // else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
         }
 
         //jumlah status pulang awal
@@ -8077,36 +8115,42 @@ class PengerjaanController extends Controller
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
         $telat_4=0; //terlambat > 1 jam < 3 jam	
+        $telat_5=0; //terlambat > 3 jam	
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_4;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
-			$jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
-            // $jam_datang_terlambat=strtotime($row_terlambat['jam_datang_telat']);
-			$menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
-			if($menit_telat<=4){
+            $jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
+            // $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
+            $menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
+            // dd($menit_telat);
+            if($menit_telat <= 4){
                 $telat_1=$telat_1+1;
                 $data['telat_1'] = $telat_1;
             }
-			else if(($menit_telat>=5) && ($menit_telat<=14) ){
+            else if(($menit_telat >= 5) && ($menit_telat <= 15) ){
                 $telat_2=$telat_2+1;
                 $data['telat_2'] = $telat_2;
             }
-			else if(($menit_telat>=15) && ($menit_telat<=59)){
+            else if(($menit_telat >= 16) && ($menit_telat <= 59)){
                 $telat_3=$telat_3+1;
                 $data['telat_3'] = $telat_3;
             }
-			else if(($menit_telat>=60) && ($menit_telat<=179)){
+            else if(($menit_telat >= 60) && ($menit_telat <= 179)){
                 $telat_4=$telat_4+1;
                 $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
             }
-			else{
-                $telat_4=$telat_4+1;
-                $data['telat_4'] = $telat_4;
-            }
+            // else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
         }
 
         //jumlah status pulang awal
@@ -8904,36 +8948,42 @@ class PengerjaanController extends Controller
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
         $telat_4=0; //terlambat > 1 jam < 3 jam	
+        $telat_5=0; //terlambat > 3 jam	
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_4;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
-			$jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
-            // $jam_datang_terlambat=strtotime($row_terlambat['jam_datang_telat']);
-			$menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
-			if($menit_telat<=4){
+            $jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
+            // $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
+            $menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
+            // dd($menit_telat);
+            if($menit_telat <= 4){
                 $telat_1=$telat_1+1;
                 $data['telat_1'] = $telat_1;
             }
-			else if(($menit_telat>=5) && ($menit_telat<=14) ){
+            else if(($menit_telat >= 5) && ($menit_telat <= 15) ){
                 $telat_2=$telat_2+1;
                 $data['telat_2'] = $telat_2;
             }
-			else if(($menit_telat>=15) && ($menit_telat<=59)){
+            else if(($menit_telat >= 16) && ($menit_telat <= 59)){
                 $telat_3=$telat_3+1;
                 $data['telat_3'] = $telat_3;
             }
-			else if(($menit_telat>=60) && ($menit_telat<=179)){
+            else if(($menit_telat >= 60) && ($menit_telat <= 179)){
                 $telat_4=$telat_4+1;
                 $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
             }
-			else{
-                $telat_4=$telat_4+1;
-                $data['telat_4'] = $telat_4;
-            }
+            // else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
         }
 
         //jumlah status pulang awal
@@ -9331,36 +9381,42 @@ class PengerjaanController extends Controller
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
         $telat_4=0; //terlambat > 1 jam < 3 jam	
+        $telat_5=0; //terlambat > 3 jam	
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_4;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
             $jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
-			// $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
-			$menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
-			if($menit_telat<=4){
+            // $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
+            $menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
+            // dd($menit_telat);
+            if($menit_telat <= 4){
                 $telat_1=$telat_1+1;
                 $data['telat_1'] = $telat_1;
             }
-			else if(($menit_telat>=5) && ($menit_telat<=14) ){
+            else if(($menit_telat >= 5) && ($menit_telat <= 15) ){
                 $telat_2=$telat_2+1;
                 $data['telat_2'] = $telat_2;
             }
-			else if(($menit_telat>=15) && ($menit_telat<=59)){
+            else if(($menit_telat >= 16) && ($menit_telat <= 59)){
                 $telat_3=$telat_3+1;
                 $data['telat_3'] = $telat_3;
             }
-			else if(($menit_telat>=60) && ($menit_telat<=179)){
+            else if(($menit_telat >= 60) && ($menit_telat <= 179)){
                 $telat_4=$telat_4+1;
                 $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
             }
-			else{
-                $telat_4=$telat_4+1;
-                $data['telat_4'] = $telat_4;
-            }
+            // else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
         }
 
         //jumlah status pulang awal
@@ -10006,36 +10062,42 @@ class PengerjaanController extends Controller
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
         $telat_4=0; //terlambat > 1 jam < 3 jam	
+        $telat_5=0; //terlambat > 3 jam	
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_4;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
 			$jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
-            // dd(Carbon::parse($terlambat['scan_date'])->format('H:i'));
+			// $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
 			$menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
-			if($menit_telat<=4){
+            // dd($menit_telat);
+			if($menit_telat <= 4){
                 $telat_1=$telat_1+1;
                 $data['telat_1'] = $telat_1;
             }
-			else if(($menit_telat>=5) && ($menit_telat<=14) ){
+			else if(($menit_telat >= 5) && ($menit_telat <= 15) ){
                 $telat_2=$telat_2+1;
                 $data['telat_2'] = $telat_2;
             }
-			else if(($menit_telat>=15) && ($menit_telat<=59)){
+			else if(($menit_telat >= 16) && ($menit_telat <= 59)){
                 $telat_3=$telat_3+1;
                 $data['telat_3'] = $telat_3;
             }
-			else if(($menit_telat>=60) && ($menit_telat<=179)){
+			else if(($menit_telat >= 60) && ($menit_telat <= 179)){
                 $telat_4=$telat_4+1;
                 $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
             }
-			else{
-                $telat_4=$telat_4+1;
-                $data['telat_4'] = $telat_4;
-            }
+			// else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
         }
 
         //jumlah status pulang awal
@@ -10436,36 +10498,42 @@ class PengerjaanController extends Controller
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
         $telat_4=0; //terlambat > 1 jam < 3 jam	
+        $telat_5=0; //terlambat > 3 jam	
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_4;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
-			$jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
-			// $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
-			$menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
-			if($menit_telat<=4){
+            $jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
+            // $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
+            $menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
+            // dd($menit_telat);
+            if($menit_telat <= 4){
                 $telat_1=$telat_1+1;
                 $data['telat_1'] = $telat_1;
             }
-			else if(($menit_telat>=5) && ($menit_telat<=14) ){
+            else if(($menit_telat >= 5) && ($menit_telat <= 15) ){
                 $telat_2=$telat_2+1;
                 $data['telat_2'] = $telat_2;
             }
-			else if(($menit_telat>=15) && ($menit_telat<=59)){
+            else if(($menit_telat >= 16) && ($menit_telat <= 59)){
                 $telat_3=$telat_3+1;
                 $data['telat_3'] = $telat_3;
             }
-			else if(($menit_telat>=60) && ($menit_telat<=179)){
+            else if(($menit_telat >= 60) && ($menit_telat <= 179)){
                 $telat_4=$telat_4+1;
                 $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
             }
-			else{
-                $telat_4=$telat_4+1;
-                $data['telat_4'] = $telat_4;
-            }
+            // else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
         }
 
         // dd($data['telat_3']);
@@ -10809,7 +10877,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-26";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
@@ -10853,40 +10921,47 @@ class PengerjaanController extends Controller
                                     ->whereBetween('scan_date',[$bulan_kemarin,$bulan_sekarang])
                                     ->where('status',3)
                                     ->get();
+                                    // dd($data);
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
         $telat_4=0; //terlambat > 1 jam < 3 jam	
+        $telat_5=0; //terlambat > 3 jam	
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_4;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
-			$jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
-			// $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
-			$menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
-			if($menit_telat<=4){
+            $jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
+            // $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
+            $menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
+            // dd($menit_telat);
+            if($menit_telat <= 4){
                 $telat_1=$telat_1+1;
                 $data['telat_1'] = $telat_1;
             }
-			else if(($menit_telat>=5) && ($menit_telat<=14) ){
+            else if(($menit_telat >= 5) && ($menit_telat <= 15) ){
                 $telat_2=$telat_2+1;
                 $data['telat_2'] = $telat_2;
             }
-			else if(($menit_telat>=15) && ($menit_telat<=59)){
+            else if(($menit_telat >= 16) && ($menit_telat <= 59)){
                 $telat_3=$telat_3+1;
                 $data['telat_3'] = $telat_3;
             }
-			else if(($menit_telat>=60) && ($menit_telat<=179)){
+            else if(($menit_telat >= 60) && ($menit_telat <= 179)){
                 $telat_4=$telat_4+1;
                 $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
             }
-			else{
-                $telat_4=$telat_4+1;
-                $data['telat_4'] = $telat_4;
-            }
+            // else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
         }
 
         //jumlah status pulang awal
@@ -10953,6 +11028,7 @@ class PengerjaanController extends Controller
 
         $data['log_posisi'] = $this->logPosisi->select('tanggal')->where('nik',$nik)->first();
 		$selisih_tanggal_masuk=strtotime($bulan_kemarin)-strtotime($data['log_posisi']['tanggal']);
+        // dd($bulan_kemarin,$data['log_posisi']['tanggal']);
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($ijin_15*25000)+($ijin_k4*40000)+
@@ -11276,36 +11352,42 @@ class PengerjaanController extends Controller
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
         $telat_4=0; //terlambat > 1 jam < 3 jam	
+        $telat_5=0; //terlambat > 3 jam	
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_4;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
-			$jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
-			// $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
-			$menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
-			if($menit_telat<=4){
+            $jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
+            // $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
+            $menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
+            // dd($menit_telat);
+            if($menit_telat <= 4){
                 $telat_1=$telat_1+1;
                 $data['telat_1'] = $telat_1;
             }
-			else if(($menit_telat>=5) && ($menit_telat<=14) ){
+            else if(($menit_telat >= 5) && ($menit_telat <= 15) ){
                 $telat_2=$telat_2+1;
                 $data['telat_2'] = $telat_2;
             }
-			else if(($menit_telat>=15) && ($menit_telat<=59)){
+            else if(($menit_telat >= 16) && ($menit_telat <= 59)){
                 $telat_3=$telat_3+1;
                 $data['telat_3'] = $telat_3;
             }
-			else if(($menit_telat>=60) && ($menit_telat<=179)){
+            else if(($menit_telat >= 60) && ($menit_telat <= 179)){
                 $telat_4=$telat_4+1;
                 $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
             }
-			else{
-                $telat_4=$telat_4+1;
-                $data['telat_4'] = $telat_4;
-            }
+            // else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
         }
 
         //jumlah status pulang awal
@@ -11695,36 +11777,42 @@ class PengerjaanController extends Controller
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
         $telat_4=0; //terlambat > 1 jam < 3 jam	
+        $telat_5=0; //terlambat > 3 jam	
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_4;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
-			$jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
-			// $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
-			$menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
-			if($menit_telat<=4){
+            $jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
+            // $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
+            $menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
+            // dd($menit_telat);
+            if($menit_telat <= 4){
                 $telat_1=$telat_1+1;
                 $data['telat_1'] = $telat_1;
             }
-			else if(($menit_telat>=5) && ($menit_telat<=14) ){
+            else if(($menit_telat >= 5) && ($menit_telat <= 15) ){
                 $telat_2=$telat_2+1;
                 $data['telat_2'] = $telat_2;
             }
-			else if(($menit_telat>=15) && ($menit_telat<=59)){
+            else if(($menit_telat >= 16) && ($menit_telat <= 59)){
                 $telat_3=$telat_3+1;
                 $data['telat_3'] = $telat_3;
             }
-			else if(($menit_telat>=60) && ($menit_telat<=179)){
+            else if(($menit_telat >= 60) && ($menit_telat <= 179)){
                 $telat_4=$telat_4+1;
                 $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
             }
-			else{
-                $telat_4=$telat_4+1;
-                $data['telat_4'] = $telat_4;
-            }
+            // else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
         }
 
         // dd($data['terlambats']);
@@ -12115,37 +12203,42 @@ class PengerjaanController extends Controller
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
         $telat_4=0; //terlambat > 1 jam < 3 jam	
+        $telat_5=0; //terlambat > 3 jam	
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_4;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
-			$jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
-			// dd($jam_datang_terlambat);
+            $jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
             // $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
-			$menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
-			if($menit_telat<=4){
+            $menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
+            // dd($menit_telat);
+            if($menit_telat <= 4){
                 $telat_1=$telat_1+1;
                 $data['telat_1'] = $telat_1;
             }
-			else if(($menit_telat>=5) && ($menit_telat<=14) ){
+            else if(($menit_telat >= 5) && ($menit_telat <= 15) ){
                 $telat_2=$telat_2+1;
                 $data['telat_2'] = $telat_2;
             }
-			else if(($menit_telat>=15) && ($menit_telat<=59)){
+            else if(($menit_telat >= 16) && ($menit_telat <= 59)){
                 $telat_3=$telat_3+1;
                 $data['telat_3'] = $telat_3;
             }
-			else if(($menit_telat>=60) && ($menit_telat<=179)){
+            else if(($menit_telat >= 60) && ($menit_telat <= 179)){
                 $telat_4=$telat_4+1;
                 $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
             }
-			else{
-                $telat_4=$telat_4+1;
-                $data['telat_4'] = $telat_4;
-            }
+            // else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
         }
 
         //jumlah status pulang awal
@@ -12536,36 +12629,42 @@ class PengerjaanController extends Controller
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
         $telat_4=0; //terlambat > 1 jam < 3 jam	
+        $telat_5=0; //terlambat > 3 jam	
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_4;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
-			$jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
-			// $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
-			$menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
-			if($menit_telat<=4){
+            $jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
+            // $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
+            $menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
+            // dd($menit_telat);
+            if($menit_telat <= 4){
                 $telat_1=$telat_1+1;
                 $data['telat_1'] = $telat_1;
             }
-			else if(($menit_telat>=5) && ($menit_telat<=14) ){
+            else if(($menit_telat >= 5) && ($menit_telat <= 15) ){
                 $telat_2=$telat_2+1;
                 $data['telat_2'] = $telat_2;
             }
-			else if(($menit_telat>=15) && ($menit_telat<=59)){
+            else if(($menit_telat >= 16) && ($menit_telat <= 59)){
                 $telat_3=$telat_3+1;
                 $data['telat_3'] = $telat_3;
             }
-			else if(($menit_telat>=60) && ($menit_telat<=179)){
+            else if(($menit_telat >= 60) && ($menit_telat <= 179)){
                 $telat_4=$telat_4+1;
                 $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
             }
-			else{
-                $telat_4=$telat_4+1;
-                $data['telat_4'] = $telat_4;
-            }
+            // else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
         }
 
         //jumlah status pulang awal
@@ -13009,36 +13108,42 @@ class PengerjaanController extends Controller
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
         $telat_4=0; //terlambat > 1 jam < 3 jam	
+        $telat_5=0; //terlambat > 3 jam	
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_4;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
-			$jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
-			// $jam_datang_terlambat=strtotime($terlambat[jam_datang_telat]);
-			$menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
-			if($menit_telat<=4){
+            $jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
+            // $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
+            $menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
+            // dd($menit_telat);
+            if($menit_telat <= 4){
                 $telat_1=$telat_1+1;
                 $data['telat_1'] = $telat_1;
             }
-			else if(($menit_telat>=5) && ($menit_telat<=14) ){
+            else if(($menit_telat >= 5) && ($menit_telat <= 15) ){
                 $telat_2=$telat_2+1;
                 $data['telat_2'] = $telat_2;
             }
-			else if(($menit_telat>=15) && ($menit_telat<=59)){
+            else if(($menit_telat >= 16) && ($menit_telat <= 59)){
                 $telat_3=$telat_3+1;
                 $data['telat_3'] = $telat_3;
             }
-			else if(($menit_telat>=60) && ($menit_telat<=179)){
+            else if(($menit_telat >= 60) && ($menit_telat <= 179)){
                 $telat_4=$telat_4+1;
                 $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
             }
-			else{
-                $telat_4=$telat_4+1;
-                $data['telat_4'] = $telat_4;
-            }
+            // else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
         }
 
         //jumlah status pulang awal

@@ -768,6 +768,45 @@
                                                         </div>
                                                     </td>
                                                 </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div
+                                                                class="col-sm-4 form-label align-self-center mb-lg-0 text-center">
+                                                                <input type="text" class="form-control"
+                                                                    value="{{ $telat_5 }}" id="" readonly>
+                                                            </div>
+                                                            <div class="col-sm-8">
+                                                                <label
+                                                                    class="col-sm-10 form-label align-self-center mb-lg-0">Hari
+                                                                    Terlambat <u>></u> 3 Jam</label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div
+                                                                class="col-sm-1 form-label align-self-center mb-lg-0 text-center">
+                                                                <label
+                                                                    class="col-sm-1 form-label align-self-center mb-lg-0">X</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <input type="text" class="form-control" value="75.000"
+                                                                    id="" readonly>
+                                                            </div>
+                                                            <div
+                                                                class="col-sm-1 form-label align-self-center mb-lg-0 text-center">
+                                                                <label
+                                                                    class="col-sm-1 form-label align-self-center mb-lg-0">=</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <input type="text" class="form-control"
+                                                                    value="{{ number_format($telat_5 * 75000, 0, ',', '.') }}"
+                                                                    id="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                                 <?php
                                                 
                                                 ?>
