@@ -2386,10 +2386,12 @@ class PengerjaanController extends Controller
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
         $telat_4=0; //terlambat > 1 jam < 3 jam	
+        $telat_5=0; //terlambat > 3 jam	
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_5;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
@@ -2400,22 +2402,25 @@ class PengerjaanController extends Controller
                 $telat_1=$telat_1+1;
                 $data['telat_1'] = $telat_1;
             }
-			else if(($menit_telat>=5) && ($menit_telat<=14) ){
+			else if(($menit_telat>=5) && ($menit_telat<=15) ){
                 $telat_2=$telat_2+1;
                 $data['telat_2'] = $telat_2;
             }
-			else if(($menit_telat>=15) && ($menit_telat<=59)){
+			else if(($menit_telat>=16) && ($menit_telat<=59)){
                 $telat_3=$telat_3+1;
                 $data['telat_3'] = $telat_3;
             }
 			else if(($menit_telat>=60) && ($menit_telat<=179)){
                 $telat_4=$telat_4+1;
                 $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
             }
-			else{
-                $telat_4=$telat_4+1;
-                $data['telat_4'] = $telat_4;
-            }
+			// else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
         }
 
         //jumlah status pulang awal
@@ -3204,10 +3209,12 @@ class PengerjaanController extends Controller
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
         $telat_4=0; //terlambat > 1 jam < 3 jam	
+        $telat_5=0; //terlambat > 3 jam	
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_5;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
@@ -3218,22 +3225,25 @@ class PengerjaanController extends Controller
                 $telat_1=$telat_1+1;
                 $data['telat_1'] = $telat_1;
             }
-			else if(($menit_telat>=5) && ($menit_telat<=14) ){
+			else if(($menit_telat>=5) && ($menit_telat<=15) ){
                 $telat_2=$telat_2+1;
                 $data['telat_2'] = $telat_2;
             }
-			else if(($menit_telat>=15) && ($menit_telat<=59)){
+			else if(($menit_telat>=16) && ($menit_telat<=59)){
                 $telat_3=$telat_3+1;
                 $data['telat_3'] = $telat_3;
             }
 			else if(($menit_telat>=60) && ($menit_telat<=179)){
                 $telat_4=$telat_4+1;
                 $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
             }
-			else{
-                $telat_4=$telat_4+1;
-                $data['telat_4'] = $telat_4;
-            }
+			// else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
         }
 
         //jumlah status pulang awal
@@ -4032,10 +4042,12 @@ class PengerjaanController extends Controller
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
         $telat_4=0; //terlambat > 1 jam < 3 jam	
+        $telat_5=0; //terlambat > 3 jam	
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_5;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
@@ -4046,22 +4058,25 @@ class PengerjaanController extends Controller
                 $telat_1=$telat_1+1;
                 $data['telat_1'] = $telat_1;
             }
-			else if(($menit_telat>=5) && ($menit_telat<=14) ){
+			else if(($menit_telat>=5) && ($menit_telat<=15) ){
                 $telat_2=$telat_2+1;
                 $data['telat_2'] = $telat_2;
             }
-			else if(($menit_telat>=15) && ($menit_telat<=59)){
+			else if(($menit_telat>=16) && ($menit_telat<=59)){
                 $telat_3=$telat_3+1;
                 $data['telat_3'] = $telat_3;
             }
 			else if(($menit_telat>=60) && ($menit_telat<=179)){
                 $telat_4=$telat_4+1;
                 $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
             }
-			else{
-                $telat_4=$telat_4+1;
-                $data['telat_4'] = $telat_4;
-            }
+			// else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
         }
 
         //jumlah status pulang awal
@@ -4858,7 +4873,7 @@ class PengerjaanController extends Controller
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
-        $data['telat_5'] = $telat_4;
+        $data['telat_5'] = $telat_5;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
