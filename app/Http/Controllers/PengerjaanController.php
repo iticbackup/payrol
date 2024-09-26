@@ -13128,7 +13128,7 @@ class PengerjaanController extends Controller
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
-        $data['telat_5'] = $telat_4;
+        $data['telat_5'] = $telat_5;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
@@ -13232,7 +13232,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
-        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
         // if ($data['karyawan_supir_rit']['tunjangan_kehadiran'] > 0) {
