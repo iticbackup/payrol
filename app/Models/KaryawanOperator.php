@@ -56,7 +56,7 @@ class KaryawanOperator extends Model
 
     public function biodata_karyawan()
     {
-        return $this->belongsTo(\App\Models\BiodataKaryawan::class, 'nik');
+        return $this->belongsTo(\App\Models\BiodataKaryawan::class, 'nik', 'nik');
     }
     
     // public function biodata_karyawan()

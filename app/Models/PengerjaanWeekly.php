@@ -34,7 +34,7 @@ class PengerjaanWeekly extends Model
 
     public function operator_karyawan()
     {
-        return $this->belongsTo(\App\Models\KaryawanOperator::class, 'operator_karyawan_id');
+        return $this->belongsTo(\App\Models\KaryawanOperator::class, 'operator_karyawan_id','id');
     }
 
     // public function pengerjaan_1()

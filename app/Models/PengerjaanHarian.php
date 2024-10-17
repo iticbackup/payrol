@@ -39,7 +39,7 @@ class PengerjaanHarian extends Model
 
     public function operator_karyawan()
     {
-        return $this->belongsTo(\App\Models\KaryawanOperator::class, 'operator_karyawan_id');
+        return $this->belongsTo(\App\Models\KaryawanOperatorHarian::class, 'operator_harian_karyawan_id','id');
     }
 
     // public function pengerjaan_1()

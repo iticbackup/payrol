@@ -1,7 +1,7 @@
 @extends('layouts.backend.app')
 
 @section('title')
-Payrol Payrol Borongan
+Payrol Borongan
 @endsection
 
 @section('css')

@@ -47,7 +47,7 @@ class Pengerjaan extends Model
 
     public function operator_karyawan()
     {
-        return $this->belongsTo(\App\Models\KaryawanOperator::class, 'operator_karyawan_id');
+        return $this->belongsTo(\App\Models\KaryawanOperator::class, 'operator_karyawan_id','id');
     }
     // public $fillable = [
     //     'kode_pengerjaan',

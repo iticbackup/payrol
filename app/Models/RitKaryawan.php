@@ -31,6 +31,11 @@ class RitKaryawan extends Model
 
     public function rit_posisi()
     {
-        return $this->belongsTo(\App\Models\RitPosisi::class, 'rit_posisi_id');
+        return $this->belongsTo(\App\Models\RitPosisi::class, 'rit_posisi_id','id');
+    }
+
+    public function biodata_karyawan()
+    {
+        return $this->belongsTo(\App\Models\BiodataKaryawan::class, 'nik', 'nik');
     }
 }
