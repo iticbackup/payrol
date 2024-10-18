@@ -11500,7 +11500,6 @@ class PayrolController extends Controller
     {
         $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
         $data['pengerjaan_rit_weeklys'] = $this->pengerjaanRitWeekly->where('kode_pengerjaan',$kode_pengerjaan)
-                                                                    ->limit(2)
                                                                     ->get();
         // dd($data);
         return view('backend.payrol.penggajian.supir_rit.detail_kirim_slip',$data);
