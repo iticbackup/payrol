@@ -11368,15 +11368,20 @@ class PayrolController extends Controller
 
             $data['tanggal'] = Carbon::parse($exp_tgl_awal[0] . '-' . $exp_tgl_awal[1] . '-' . $exp_tgl_awal[2])->isoFormat('D MMMM').' sampai '.Carbon::parse($exp_tgl_akhir[0] . '-' . $exp_tgl_akhir[1] . '-' . $exp_tgl_akhir[2])->isoFormat('D MMMM YYYY');
 
-            $pdf = Pdf::loadView('backend.payrol.penggajian.harian.pdf_cek_gaji',$data);
-            $pdf->setPaper(array(0,0,560,380));   
-            $pdf->setEncryption(Carbon::create($pengerjaan_harian->operator_karyawan->biodata_karyawan->tgl_lahir)->format('dmY'),Carbon::create($pengerjaan_harian->operator_karyawan->biodata_karyawan->tgl_lahir)->format('dmY'));
-
-            Mail::send('backend.payrol.penggajian.email_kirim_gaji',$data, function($message) use($data,$pdf,$pengerjaan_harian){
-                $message->to(strtolower($pengerjaan_harian->operator_karyawan->biodata_karyawan->email))
-                        ->subject('Laporan Slip Gaji '.$pengerjaan_harian->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y'))
-                        ->attachData($pdf->output(), 'Laporan Slip Gaji '.$pengerjaan_harian->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y').'.pdf');
-            });
+            $kirim_gaji = $this->kirim_gaji->where('pengerjaan_id',$pengerjaan_harian->id)
+                                            ->where('nik',$pengerjaan_harian->operator_karyawan->nik)
+                                            ->first();
+            if (empty($kirim_gaji)) {
+                $pdf = Pdf::loadView('backend.payrol.penggajian.harian.pdf_cek_gaji',$data);
+                $pdf->setPaper(array(0,0,560,380));   
+                $pdf->setEncryption(Carbon::create($pengerjaan_harian->operator_karyawan->biodata_karyawan->tgl_lahir)->format('dmY'),Carbon::create($pengerjaan_harian->operator_karyawan->biodata_karyawan->tgl_lahir)->format('dmY'));
+    
+                Mail::send('backend.payrol.penggajian.email_kirim_gaji',$data, function($message) use($data,$pdf,$pengerjaan_harian){
+                    $message->to(strtolower($pengerjaan_harian->operator_karyawan->biodata_karyawan->email))
+                            ->subject('Laporan Slip Gaji '.$pengerjaan_harian->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y'))
+                            ->attachData($pdf->output(), 'Laporan Slip Gaji '.$pengerjaan_harian->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y').'.pdf');
+                });
+            }
 
             if (Mail::failures()) {
                 $this->kirim_gaji->firstOrCreate(
