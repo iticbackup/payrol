@@ -163,7 +163,7 @@
         <td>{{ $a.' HARI' }}</td>
         <td></td>
         <td>RP</td>
-        <td style="text-align: right">{{ number_format($total_gaji_diterima,0,',','.') }}</td>
+        <td style="text-align: right">{{ number_format($upah_dasar_weekly,0,',','.') }}</td>
     </tr>
     <tr>
         <td>Lembur ({{ $total_jam_lembur }} Jam)</td>

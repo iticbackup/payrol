@@ -42,6 +42,11 @@ class PengerjaanHarian extends Model
         return $this->belongsTo(\App\Models\KaryawanOperatorHarian::class, 'operator_harian_karyawan_id','id');
     }
 
+    public function kirim_gaji()
+    {
+        return $this->belongsTo(\App\Models\KirimGaji::class, 'pengerjaan_id', 'id');
+    }
+
     // public function pengerjaan_1()
     // {
     //     return $this->belongsTo(\App\Models\Pengerjaan::class, 'operator_karyawan_id');

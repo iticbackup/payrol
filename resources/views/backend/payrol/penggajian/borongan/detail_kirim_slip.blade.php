@@ -60,8 +60,10 @@
                             <tr>
                                 <th>No</th>
                                 <th>Nama Karyawan</th>
+                                <th>Email Karyawan</th>
                                 <th>Jenis Pengerjaan</th>
                                 <th>Nominal Gaji</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -452,6 +454,9 @@
                                                                 -
                                                                 ($jht+$bpjs_kesehatan+$minus_1+$minus_2)
                                                                 ;
+                                    $kirim_gaji = \App\Models\KirimGaji::where('pengerjaan_id',$pengerjaan_weekly->id)
+                                                                        ->where('kode_pengerjaan',$new_data_pengerjaan->kode_pengerjaan)
+                                                                        ->first();
                                 }
 
                                 array_push($total_all_gaji,$total_gaji_diterima);
@@ -464,8 +469,18 @@
                                     </td>
                                     {{-- <td>{{ ($pengerjaan_weeklys->perPage() * ($pengerjaan_weeklys->currentPage() - 1)) + $loop->iteration }}</td> --}}
                                     <td>{{ $pengerjaan_weekly->operator_karyawan->biodata_karyawan->nik.' - '.$pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama }}</td>
+                                    <td>{{ $pengerjaan_weekly->operator_karyawan->biodata_karyawan->email }}</td>
                                     <td>{{ $pengerjaan_weekly->operator_karyawan->jenis_operator->jenis_operator.' - '.$pengerjaan_weekly->operator_karyawan->jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan }}</td>
                                     <td>{{ 'Rp. '.number_format($total_gaji_diterima,0,',','.') }}</td>
+                                    <td>
+                                        @if (empty($kirim_gaji))
+                                            <span class="badge bg-primary">Belum Terkirim</span>
+                                        @elseif($kirim_gaji->status == 'terkirim')
+                                            <span class="badge bg-success">Terkirim</span>
+                                        @else
+                                            <span class="badge bg-danger">Gagal Terkirim</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         {{-- <form enctype="multipart/form-data" onsubmit="send_slip($new_data_pengerjaan->kode_pengerjaan,$pengerjaan_weekly->id)"> --}}
                                         <a href="{{ route('payrol.borongan.borongan_cek_slip_gaji',['kode_pengerjaan' => $new_data_pengerjaan->kode_pengerjaan, 'id' => $pengerjaan_weekly->id]) }}" class="btn btn-primary" target="_blank">Cek Gaji</a>

@@ -61,8 +61,10 @@
                             <tr>
                                 <th>No</th>
                                 <th>Nama Karyawan</th>
+                                <th>Email Karyawan</th>
                                 <th>Jenis Pengerjaan</th>
                                 <th>Nominal Gaji</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -246,7 +248,10 @@
 
                                     $total_upah_diterima =
                                         $total_gaji - $minus_1 - $minus_2 - $jht - $bpjs_kesehatan - $pensiun;
-
+                                    
+                                    $kirim_gaji = \App\Models\KirimGaji::where('pengerjaan_id',$pengerjaan_rit_weekly->id)
+                                                                    ->where('kode_pengerjaan',$new_data_pengerjaan->kode_pengerjaan)
+                                                                    ->first();
                                 @endphp
                                 <tr>
                                     <td>
@@ -256,9 +261,19 @@
                                     </td>
                                     <td>{{ $pengerjaan_rit_weekly->operator_supir_rit->nik . ' - ' . $pengerjaan_rit_weekly->operator_supir_rit->biodata_karyawan->nama }}
                                     </td>
+                                    <td>{{ $pengerjaan_rit_weekly->operator_supir_rit->biodata_karyawan->email }}</td>
                                     <td>{{ 'Supir Rit - ' . $pengerjaan_rit_weekly->operator_supir_rit->rit_posisi->nama_posisi }}
                                     </td>
                                     <td>{{ 'Rp. ' . number_format($total_upah_diterima, 0, ',', '.') }}</td>
+                                    <td>
+                                        @if (empty($kirim_gaji))
+                                            <span class="badge bg-primary">Belum Terkirim</span>
+                                        @elseif($kirim_gaji->status == 'terkirim')
+                                            <span class="badge bg-success">Terkirim</span>
+                                        @else
+                                            <span class="badge bg-danger">Gagal Terkirim</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         <a href="{{ route('payrol.supir_rit.supir_rit_cek_slip_gaji', ['kode_pengerjaan' => $new_data_pengerjaan->kode_pengerjaan, 'id' => $pengerjaan_rit_weekly->id]) }}"
                                             class="btn btn-primary" target="_blank">Cek Gaji</a>
