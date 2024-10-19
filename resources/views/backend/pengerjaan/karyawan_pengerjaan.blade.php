@@ -70,7 +70,7 @@
                                                         'operator_karyawan.status as status',
                                                         'biodata_karyawan.nama as nama',
                                                     ])
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
                                                     ->where('operator_karyawan.jenis_operator_detail_pekerjaan_id', $jenis_operator_detail_pekerjaan->id)
                                                     ->where('operator_karyawan.status', 'Y')
                                                     // ->orderBy('operator_karyawan.jenis_operator_detail_pekerjaan_id','asc')
