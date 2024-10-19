@@ -91,7 +91,7 @@
                                             <tr>
                                                 <td>Nama Karyawan</td>
                                                 <td class="text-center">:</td>
-                                                <td>{{ $karyawan_supir_rit->nama }}</td>
+                                                <td>{{ $karyawan_supir_rit->operator_supir_rit->biodata_karyawan->nama }}</td>
                                             </tr>
                                             <tr>
                                                 <td>Masa Kerja</td>

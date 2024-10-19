@@ -51,7 +51,7 @@
                                             <tr>
                                                 <td>Nama Karyawan</td>
                                                 <td class="text-center">:</td>
-                                                <td>{{ $karyawan_harian->nama }}</td>
+                                                <td>{{ $karyawan_harian->biodata_karyawan->nama }}</td>
                                             </tr>
                                             <tr>
                                                 <td>Masa Kerja</td>

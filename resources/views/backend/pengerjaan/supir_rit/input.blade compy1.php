@@ -30,15 +30,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($pengerjaan_supir_rits as $key => $pengerjaan_supir_rit)
+                        @foreach ($karyawan_supir_rits as $key => $karyawan_supir_rit)
                         @php
                             $pengerjaan_supir_rit_daily = \App\Models\PengerjaanRITHarian::where('tanggal_pengerjaan',$tanggal)
-                                                                                        ->where('karyawan_supir_rit_id', $pengerjaan_supir_rit->karyawan_supir_rit_id)
+                                                                                        ->where('karyawan_supir_rit_id', $karyawan_supir_rit->karyawan_supir_rit_id)
                                                                                         ->where('kode_pengerjaan',$kode_pengerjaan)
                                                                                         ->first();
-                            // dd($pengerjaan_supir_rit_daily);
-                            $rit_umks = \App\Models\RitUMK::where('rit_posisi_id',$pengerjaan_supir_rit->rit_posisi_id)->where('status','y')->orderBy('kategori_upah','asc')->get();
-                            // dd($pengerjaan_supir_rit_daily);
+                                                                                        // dd($pengerjaan_supir_rit_daily);
+                            $rit_umks = \App\Models\RitUMK::where('rit_posisi_id',$karyawan_supir_rit->rit_posisi_id)
+                                                            ->where('status','y')
+                                                            ->orderBy('kategori_upah','asc')->get();
+                            
                             if (empty($pengerjaan_supir_rit_daily->hasil_kerja_1)) {
                                 $hasil_kerja_1 = 0;
                                 $rit = 1;
@@ -53,12 +55,11 @@
                             }else{
                                 $dpb = $pengerjaan_supir_rit_daily->dpb;
                             }
-                            // echo json_encode($hasil_kerja_1);
                         @endphp
-                        <tr>
-                            <td class="text-center">{{ $key+1 }}</td>
-                            <td class="text-center">{{ $pengerjaan_supir_rit->operator_supir_rit->biodata_karyawan->nik }}</td>
-                            <td>{{ $pengerjaan_supir_rit->operator_supir_rit->biodata_karyawan->nama }}</td>
+                            <tr>
+                                <td class="text-center">{{ $key+1 }}</td>
+                            <td class="text-center">{{ $karyawan_supir_rit->biodata_karyawan->nik }}</td>
+                            <td>{{ $karyawan_supir_rit->biodata_karyawan->nama }}</td>
                             <td class="text-center">
                                 <div class="row">
                                     <div class="col-md-5">
@@ -75,7 +76,7 @@
                                 </div>
                             </td>
                             <td><input type="text" name="dpb[]" class="form-control text-center" value="{{ $dpb }}" id=""></td>
-                        </tr>
+                            </tr>
                         @endforeach
                     </tbody>
                     <tfoot>

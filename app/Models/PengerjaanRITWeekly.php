@@ -35,6 +35,6 @@ class PengerjaanRITWeekly extends Model
 
     public function operator_supir_rit()
     {
-        return $this->belongsTo(\App\Models\RitKaryawan::class, 'karyawan_supir_rit_id');
+        return $this->belongsTo(\App\Models\RitKaryawan::class, 'karyawan_supir_rit_id','id');
     }
 }

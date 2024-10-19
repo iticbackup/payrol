@@ -145,7 +145,7 @@ class PayrolController extends Controller
                                                         'operator_karyawan.jenis_operator_detail_pekerjaan_id as jenis_operator_detail_pekerjaan_id'
                                                     ])
                                                     ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan_weekly.operator_karyawan_id')
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
                                                     ->whereIn('operator_karyawan.jenis_operator_detail_pekerjaan_id',$jenis_operator_id)
                                                     ->where('pengerjaan_weekly.kode_pengerjaan',$kode_pengerjaan)
                                                     // ->orderBy('operator_karyawan.jenis_operator_detail_pekerjaan_id','asc')
@@ -180,7 +180,7 @@ class PayrolController extends Controller
                         'operator_karyawan.jenis_operator_detail_pekerjaan_id as jenis_operator_detail_pekerjaan_id'
                     ])
                     ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan_weekly.operator_karyawan_id')
-                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                    ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
                     ->leftJoin('jenis_operator_detail_pekerjaan','jenis_operator_detail_pekerjaan.id','=','operator_karyawan.jenis_operator_detail_pekerjaan_id')
                     ->whereRaw($ganjil_genap)
                     // ->where('pengerjaan_weekly.operator_karyawan_id',26)
@@ -1610,7 +1610,7 @@ class PayrolController extends Controller
                                                 'operator_karyawan.jenis_operator_detail_pekerjaan_id as jenis_operator_detail_pekerjaan_id'
                                             ])
                                             ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan_weekly.operator_karyawan_id')
-                                            ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                            ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
                                             ->leftJoin('jenis_operator_detail_pekerjaan','jenis_operator_detail_pekerjaan.id','=','operator_karyawan.jenis_operator_detail_pekerjaan_id')
                                             ->where('pengerjaan_weekly.id',$id_selanjutnya)
                                             ->where('pengerjaan_weekly.kode_pengerjaan',$kode_pengerjaan)
@@ -3538,7 +3538,7 @@ class PayrolController extends Controller
 //                                                         'operator_karyawan.jenis_operator_detail_pekerjaan_id as jenis_operator_detail_pekerjaan_id'
 //                                                     ])
 //                                                     ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan_weekly.operator_karyawan_id')
-//                                                     ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+//                                                     ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
 //                                                     ->whereIn('operator_karyawan.jenis_operator_detail_pekerjaan_id',$jenis_operator_id)
 //                                                     ->where('pengerjaan_weekly.kode_pengerjaan',$kode_pengerjaan)
 //                                                     // ->orderBy('operator_karyawan.jenis_operator_detail_pekerjaan_id','asc')
@@ -3571,7 +3571,7 @@ class PayrolController extends Controller
 //         //                 'pengerjaan_weekly.bpjs_kesehatan as bpjs_kesehatan',
 //         //             ])
 //         //             ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan_weekly.operator_karyawan_id')
-//         //             ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+//         //             ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
 //         //             ->whereRaw($ganjil_genap)
 //         //             ->where('pengerjaan_weekly.kode_pengerjaan',$kode_pengerjaan)
 //         //             ->orderBy('operator_karyawan.jenis_operator_detail_pekerjaan_id','asc')
@@ -3600,7 +3600,7 @@ class PayrolController extends Controller
 //                         'operator_karyawan.jenis_operator_detail_pekerjaan_id as jenis_operator_detail_pekerjaan_id'
 //                     ])
 //                     ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan_weekly.operator_karyawan_id')
-//                     ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+//                     ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
 //                     ->leftJoin('jenis_operator_detail_pekerjaan','jenis_operator_detail_pekerjaan.id','=','operator_karyawan.jenis_operator_detail_pekerjaan_id')
 //                     ->whereRaw($ganjil_genap)
 //                     // ->where('pengerjaan_weekly.operator_karyawan_id',26)
@@ -6098,7 +6098,7 @@ class PayrolController extends Controller
 //                             'operator_karyawan.jenis_operator_detail_pekerjaan_id as jenis_operator_detail_pekerjaan_id'
 //                         ])
 //                         ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan_weekly.operator_karyawan_id')
-//                         ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+//                         ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
 //                         ->leftJoin('jenis_operator_detail_pekerjaan','jenis_operator_detail_pekerjaan.id','=','operator_karyawan.jenis_operator_detail_pekerjaan_id')
 //                         ->where('pengerjaan_weekly.id',$id_selanjutnya)
 //                         ->where('pengerjaan_weekly.kode_pengerjaan',$kode_pengerjaan)
@@ -8978,7 +8978,7 @@ class PayrolController extends Controller
                                                       'pengerjaan_weekly.upah_dasar as upah_dasar'
                                                     ])
                                                     ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan_weekly.operator_karyawan_id')
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
                                                     ->where('kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
@@ -9112,7 +9112,7 @@ class PayrolController extends Controller
                                                 'operator_harian_karyawan.jenis_operator_detail_pekerjaan_id as jenis_operator_detail_pekerjaan_id'
                                             ])
                                             ->leftJoin('operator_harian_karyawan','operator_harian_karyawan.id','=','pengerjaan_harian.operator_harian_karyawan_id')
-                                            ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
+                                            ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
                                             ->leftJoin('jenis_operator_detail_pekerjaan','jenis_operator_detail_pekerjaan.id','=','operator_harian_karyawan.jenis_operator_detail_pekerjaan_id')
                                             ->where('pengerjaan_harian.kode_pengerjaan',$kode_pengerjaan)
                                             ->whereRaw($ganjil_genap)
@@ -9289,7 +9289,7 @@ class PayrolController extends Controller
                                                 'operator_harian_karyawan.jenis_operator_detail_pekerjaan_id as jenis_operator_detail_pekerjaan_id'
                                             ])
                                             ->leftJoin('operator_harian_karyawan','operator_harian_karyawan.id','=','pengerjaan_harian.operator_harian_karyawan_id')
-                                            ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
+                                            ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
                                             ->leftJoin('jenis_operator_detail_pekerjaan','jenis_operator_detail_pekerjaan.id','=','operator_harian_karyawan.jenis_operator_detail_pekerjaan_id')
                                             ->whereIn('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',$jenis_operator_id)
                                             ->where('pengerjaan_harian.id',$id_selanjutnya)
@@ -9729,7 +9729,7 @@ class PayrolController extends Controller
                                                         'pengerjaan_harian.upah_dasar_weekly as upah_dasar_weekly',
                                                     ])
                                                     ->leftJoin('operator_harian_karyawan','operator_harian_karyawan.id','=','pengerjaan_harian.operator_harian_karyawan_id')
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
+                                                    ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
                                                     ->where('pengerjaan_harian.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
@@ -9843,7 +9843,7 @@ class PayrolController extends Controller
                                                         'biodata_karyawan.nama as nama',
                                                     ])
                                                     ->leftJoin('operator_supir_rit_karyawan','operator_supir_rit_karyawan.id','=','pengerjaan_supir_rit_weekly.karyawan_supir_rit_id')
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_supir_rit_karyawan.nik')
+                                                    ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_supir_rit_karyawan.nik')
                                                     ->where('pengerjaan_supir_rit_weekly.kode_pengerjaan',$kode_pengerjaan)
                                                     ->whereRaw($ganjil_genap)
                                                     // ->orderBy('biodata_karyawan.nama','asc')
@@ -9894,7 +9894,7 @@ class PayrolController extends Controller
                                                     'biodata_karyawan.nama as nama',
                                                 ])
                                                 ->leftJoin('operator_supir_rit_karyawan','operator_supir_rit_karyawan.id','=','pengerjaan_supir_rit_weekly.karyawan_supir_rit_id')
-                                                ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_supir_rit_karyawan.nik')
+                                                ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_supir_rit_karyawan.nik')
                                                 ->where('pengerjaan_supir_rit_weekly.kode_pengerjaan',$kode_pengerjaan)
                                                 ->where('pengerjaan_supir_rit_weekly.id',$id_selanjutnya)
                                                 ->first();
@@ -11084,7 +11084,7 @@ class PayrolController extends Controller
                                                             'pengerjaan_supir_rit_weekly.total_hasil as total_hasil',
                                                         ])
                                                         ->leftJoin('operator_supir_rit_karyawan','operator_supir_rit_karyawan.id','=','pengerjaan_supir_rit_weekly.karyawan_supir_rit_id')
-                                                        ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_supir_rit_karyawan.nik')
+                                                        ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_supir_rit_karyawan.nik')
                                                         ->where('kode_pengerjaan',$kode_pengerjaan)
                                                         ->orderBy('biodata_karyawan.nama','asc')
                                                         ->get();
