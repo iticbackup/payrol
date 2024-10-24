@@ -65,7 +65,7 @@ WithDrawings
                                                         ]
                                                     )
                                                     ->leftJoin('operator_harian_karyawan','operator_harian_karyawan.id','=','pengerjaan_harian.operator_harian_karyawan_id')
-                                                    ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
+                                                    ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
                                                     ->where('pengerjaan_harian.kode_pengerjaan',$this->kode_pengerjaan)
                                                     ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',$this->id_jenis_pekerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')

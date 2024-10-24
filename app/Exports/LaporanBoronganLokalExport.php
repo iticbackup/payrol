@@ -104,7 +104,7 @@ WithCustomCsvSettings
                                                 'pengerjaan_weekly.bpjs_kesehatan as bpjs_kesehatan',
                                             ])
                                             ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan_weekly.operator_karyawan_id')
-                                            ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                            ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
                                             // ->where('pengerjaan_weekly.kode_payrol',substr($this->kode_pengerjaan,0,2).$kode_jenis_operator_detail.'_'.substr($this->kode_pengerjaan,3))
                                             // ->where('biodata_karyawan.status_karyawan','!=','R')
                                             ->where('pengerjaan_weekly.kode_pengerjaan',$this->kode_pengerjaan)

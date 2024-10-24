@@ -54,7 +54,7 @@ WithDrawings
                                                             'pengerjaan_supir_rit_weekly.pensiun as pensiun',
                                                         ])
                                                         ->leftJoin('operator_supir_rit_karyawan','operator_supir_rit_karyawan.id','=','pengerjaan_supir_rit_weekly.karyawan_supir_rit_id')
-                                                        ->leftJoin('itic_emp.biodata_karyawan','biodata_karyawan.nik','=','operator_supir_rit_karyawan.nik')
+                                                        ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_supir_rit_karyawan.nik')
                                                         ->where('pengerjaan_supir_rit_weekly.kode_pengerjaan',$this->kode_pengerjaan)
                                                         ->orderBy('biodata_karyawan.nama','asc')
                                                         ->get();
