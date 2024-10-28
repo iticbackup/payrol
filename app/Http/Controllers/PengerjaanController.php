@@ -2162,7 +2162,7 @@ class PengerjaanController extends Controller
                                                     'biodata_karyawan.nama as nama',
                                                     'operator_karyawan.nik as nik',
                                                     'biodata_karyawan.pin as pin',
-                                                    'biodata_karyawan.tanggal as tanggal',
+                                                    'biodata_karyawan.tanggal_masuk as tanggal',
                                                     'operator_karyawan.tunjangan_kerja_id as tunjangan_kerja_id'
                                                     ])
                                                     ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
@@ -3125,7 +3125,7 @@ class PengerjaanController extends Controller
         //                                                     ->select('tanggal')
         //                                                     ->where('nik',$nik)
         //                                                     ->first();
-        $awal  = new DateTime($data['karyawan_masa_kerja']->tanggal);
+        $awal  = new DateTime($data['karyawan']->tanggal);
         $akhir = new DateTime(); // Waktu sekarang
         $diff  = $awal->diff($akhir);
         $data['masa_kerja'] = $diff->y.' Tahun '.$diff->m.' Bulan '.$diff->d.' Hari';
@@ -7912,6 +7912,7 @@ class PengerjaanController extends Controller
                                                     'biodata_karyawan.nama as nama',
                                                     'operator_karyawan.nik as nik',
                                                     'biodata_karyawan.pin as pin',
+                                                    'biodata_karyawan.tanggal_masuk as tanggal',
                                                     'operator_karyawan.tunjangan_kerja_id as tunjangan_kerja_id'
                                                     ])
                                                     ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
@@ -8046,11 +8047,11 @@ class PengerjaanController extends Controller
         }
 
         //Hitung Masa Kerja
-        $data['karyawan_masa_kerja'] = DB::connection('emp')->table('log_posisi')
-                                                            ->select('tanggal')
-                                                            ->where('nik',$nik)
-                                                            ->first();
-        $awal  = new DateTime($data['karyawan_masa_kerja']->tanggal);
+        // $data['karyawan_masa_kerja'] = DB::connection('emp')->table('log_posisi')
+        //                                                     ->select('tanggal')
+        //                                                     ->where('nik',$nik)
+        //                                                     ->first();
+        $awal  = new DateTime($data['karyawan']->tanggal);
         $akhir = new DateTime(); // Waktu sekarang
         $diff  = $awal->diff($akhir);
         $data['masa_kerja'] = $diff->y.' Tahun '.$diff->m.' Bulan '.$diff->d.' Hari';
@@ -8236,8 +8237,8 @@ class PengerjaanController extends Controller
         }
 
         //lihat tanggal masuk
-        $data['log_posisi'] = $this->logPosisi->select('tanggal')->where('nik',$nik)->first();
-		$selisih_tanggal_masuk=strtotime($bulan_kemarin)-strtotime($data['log_posisi']['tanggal']);
+        // $data['log_posisi'] = $this->logPosisi->select('tanggal')->where('nik',$nik)->first();
+		$selisih_tanggal_masuk=strtotime($bulan_kemarin)-strtotime($data['karyawan']->tanggal);
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
@@ -8744,6 +8745,7 @@ class PengerjaanController extends Controller
                                                     'biodata_karyawan.nama as nama',
                                                     'operator_karyawan.nik as nik',
                                                     'biodata_karyawan.pin as pin',
+                                                    'biodata_karyawan.tanggal_masuk as tanggal',
                                                     'operator_karyawan.tunjangan_kerja_id as tunjangan_kerja_id'
                                                     ])
                                                     ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
