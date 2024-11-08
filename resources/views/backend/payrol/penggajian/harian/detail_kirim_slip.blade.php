@@ -24,6 +24,10 @@
 
     <div class="row">
         <div class="col-12">
+            <div class="alert alert-danger border-0" role="alert">
+                <strong>Informasi!</strong> Sistem Slip Gaji Elektronik dilakukan mengirim email dari sistem Payroll maksimal <b>50</b> ke penerima dan diberi waktu jeda maksimal 15 Menit agar tidak terjadi overload.
+                Jika Sudah lebih dari 15 menit bisa dilakukan pengiriman kembali.
+            </div>
             <form id="kirim_slip" method="post" class="card" enctype="multipart/form-data">
                 @csrf
                 <div class="card-header">
@@ -206,7 +210,7 @@
                                 @endphp
                                 <tr>
                                     <td>
-                                        {{ $key+1 }}
+                                        {{ $loop->iteration + $pengerjaan_harians->firstItem() - 1 }}
                                         <input type="hidden" name="id[]" value="{{ $pengerjaan_harian->id }}">
                                         <input type="hidden" name="nominal_gaji[]" value="{{ $total_gaji_diterima }}">
                                     </td>
@@ -230,6 +234,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    {{ $pengerjaan_harians->links('vendor.pagination.paginate_custom1') }}
                 </div>
             </form>
         </div>

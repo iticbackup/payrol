@@ -30,6 +30,10 @@
 
     <div class="row">
         <div class="col-12">
+            <div class="alert alert-danger border-0" role="alert">
+                <strong>Informasi!</strong> Sistem Slip Gaji Elektronik dilakukan mengirim email dari sistem Payroll maksimal <b>50</b> ke penerima dan diberi waktu jeda maksimal 15 Menit agar tidak terjadi overload.
+                Jika Sudah lebih dari 15 menit bisa dilakukan pengiriman kembali.
+            </div>
             <form id="kirim_slip" method="POST" class="card" enctype="multipart/form-data">
                 @csrf
                 <div class="card-header">
@@ -463,7 +467,7 @@
                             @endphp
                                 <tr>
                                     <td>
-                                        {{ $key+1 }}
+                                        {{ $loop->iteration + $pengerjaan_weeklys->firstItem() - 1 }}
                                         <input type="hidden" name="id[]" value="{{ $pengerjaan_weekly->id }}">
                                         <input type="hidden" name="nominal_gaji[]" value="{{ $total_gaji_diterima }}">
                                     </td>
@@ -491,12 +495,12 @@
                                 </tr>
                             @endforeach
                                 <tr>
-                                    <td colspan="3" class="text-center" style="font-weight: bold">Total Gaji</td>
+                                    <td colspan="4" class="text-center" style="font-weight: bold">Total Gaji</td>
                                     <td style="font-weight: bold">{{ 'Rp. '.number_format(array_sum($total_all_gaji),0,',','.') }}</td>
                                 </tr>
                         </tbody>
                     </table>
-                    {{-- {{ $pengerjaan_weeklys->links('vendor.pagination.paginate_custom1') }} --}}
+                    {{ $pengerjaan_weeklys->links('vendor.pagination.paginate_custom1') }}
                 </div>
             </form>
         </div>

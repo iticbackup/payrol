@@ -24,6 +24,10 @@
 
     <div class="row">
         <div class="col-12">
+            <div class="alert alert-danger border-0" role="alert">
+                <strong>Informasi!</strong> Sistem Slip Gaji Elektronik dilakukan mengirim email dari sistem Payroll maksimal <b>50</b> ke penerima dan diberi waktu jeda maksimal 15 Menit agar tidak terjadi overload.
+                Jika Sudah lebih dari 15 menit bisa dilakukan pengiriman kembali.
+            </div>
             <form id="kirim_slip" method="POST" enctype="multipart/form-data">
                 @csrf
             <div class="card">

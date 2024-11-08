@@ -71,6 +71,8 @@ class PayrolController extends Controller
         $this->umkBoronganAmbri = $umkBoronganAmbri;
         $this->jenisOperatorDetailPengerjaan = $jenisOperatorDetailPengerjaan;
         $this->kirim_gaji = $kirim_gaji;
+
+        $this->sendLimit = 50;
     }
 
     public function borongan(Request $request)
@@ -11110,8 +11112,9 @@ class PayrolController extends Controller
         $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
         // dd($data);
         $data['pengerjaan_weeklys'] = $this->pengerjaanWeekly->where('kode_pengerjaan',$kode_pengerjaan)
-                                                            // ->limit(2)
-                                                            ->get();
+                                                            // ->limit($this->sendLimit)
+                                                            // ->get();
+                                                            ->paginate($this->sendLimit);
 
         return view('backend.payrol.penggajian.borongan.detail_kirim_slip',$data);
     }
@@ -11180,8 +11183,9 @@ class PayrolController extends Controller
     {
         $pengerjaan_weeklys = $this->pengerjaanWeekly->where('kode_pengerjaan',$kode_pengerjaan)
                                                     ->whereIn('id',$request->id)
+                                                    // ->limit(50)
                                                     ->get();
-        
+        // dd($pengerjaan_weeklys);
         foreach ($pengerjaan_weeklys as $key => $pengerjaan_weekly) {
             $data['id'] = $pengerjaan_weekly->id;
             $data['kode_pengerjaan'] = $kode_pengerjaan;
@@ -11340,7 +11344,7 @@ class PayrolController extends Controller
 
         $data['pengerjaan_harians'] = $this->pengerjaanHarian->where('kode_pengerjaan',$kode_pengerjaan)
                                                             // ->limit(1)
-                                                            ->get();
+                                                            ->paginate($this->sendLimit);
         
         return view('backend.payrol.penggajian.harian.detail_kirim_slip',$data);
     }
@@ -11512,7 +11516,8 @@ class PayrolController extends Controller
     {
         $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
         $data['pengerjaan_rit_weeklys'] = $this->pengerjaanRitWeekly->where('kode_pengerjaan',$kode_pengerjaan)
-                                                                    ->get();
+                                                                    // ->get();
+                                                                    ->paginate($this->sendLimit);
         // dd($data);
         return view('backend.payrol.penggajian.supir_rit.detail_kirim_slip',$data);
     }

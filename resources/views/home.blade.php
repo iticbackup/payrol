@@ -44,7 +44,7 @@
                 {{-- <button type="button" class="btn-close align-self-center" data-bs-dismiss="alert" aria-label="Close"></button> --}}
             </div>
         </div>
-        <div class="col-12 col-lg-6 col-xl"> 
+        <div class="col-12 col-lg-6 col-xl-3"> 
             <div class="card">
                 <div class="card-body">
                     <div class="row align-items-center">
@@ -56,7 +56,7 @@
                 </div>
             </div>
         </div>  
-        <div class="col-12 col-lg-6 col-xl"> 
+        <div class="col-12 col-lg-6 col-xl-3"> 
             <div class="card">
                 <div class="card-body">
                     <div class="row align-items-center">
@@ -68,7 +68,7 @@
                 </div>
             </div>                     
         </div>
-        <div class="col-12 col-lg-6 col-xl"> 
+        <div class="col-12 col-lg-6 col-xl-3"> 
             <div class="card">
                 <div class="card-body">
                     <div class="row align-items-center">
@@ -80,7 +80,7 @@
                 </div>
             </div>                     
         </div>
-        <div class="col-12 col-lg-6 col-xl"> 
+        <div class="col-12 col-lg-6 col-xl-3"> 
             <div class="card">
                 <div class="card-body">
                     <div class="row align-items-center">
@@ -91,8 +91,125 @@
                     </div>
                 </div>
             </div>                     
-        </div>                    
+        </div>
+        <div class="col-12 col-lg-12 col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Periode 2024</h4>
+                </div>
+                <div class="card-body">
+                    <div id="total_gaji_karyawan_periode" class="apex-charts"></div>
+                </div>
+            </div>
+        </div>
     </div>
+@endsection
+@section('script')
+<script src="{{ URL::asset('public/assets/plugins/apex-charts/apexcharts.min.js') }}"></script>
+<script>
+    
+    const rupiah = (number)=>{
+        return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR"
+        }).format(number);
+    }
+
+    var options = {
+        chart: {
+            height: 320,
+            type: 'bar',
+            stacked: false,
+            toolbar: {
+                show: true,
+                autoSelected: 'zoom'
+            },
+        },
+        colors: ['#31511E', '#FF6600', '#6256CA'],
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            curve: 'smooth',
+            width: [1.5, 1.5],
+            // dashArray: [0, 4],
+            lineCap: 'round',
+        },
+        grid: {
+            padding: {
+                left: 0,
+                right: 0
+            },
+            strokeDashArray: 3,
+        },
+        markers: {
+            size: 0,
+            hover: {
+                size: 0
+            }
+        },
+        series: [
+            {
+                name: 'Laporan Gaji Bulanan Borongan',
+                data: @json($total_gaji_karyawan_borongan)
+            },
+            {
+                name: 'Laporan Gaji Bulanan Harian',
+                data: @json($total_gaji_karyawan_harian)
+            },
+            {
+                name: 'Laporan Gaji Bulanan Supir RIT',
+                data: @json($total_gaji_karyawan_supir_rit)
+            },
+        ],
+
+        xaxis: {
+            type: 'month',
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep',
+                'Okt', 'Nov', 'Des'
+            ],
+            axisBorder: {
+                show: true,
+            },
+            axisTicks: {
+                show: true,
+            },
+        },
+        yaxis: {
+            labels: {
+                formatter: function (value) {
+                return rupiah(value);
+                }
+            },
+        },
+        fill: {
+            type: "gradient",
+            gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.4,
+                opacityTo: 0.3,
+                stops: [0, 90, 100]
+            }
+        },
+
+        tooltip: {
+            x: {
+                format: 'dd/MM/yy HH:mm'
+            },
+        },
+        legend: {
+            position: 'top',
+            horizontalAlign: 'right'
+        },
+    }
+
+    var chart = new ApexCharts(
+        document.querySelector("#total_gaji_karyawan_periode"),
+        options
+    );
+
+    chart.render();
+</script>
 @endsection
 
 {{-- @section('content')
