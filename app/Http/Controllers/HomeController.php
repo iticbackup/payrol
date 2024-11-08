@@ -20,7 +20,7 @@ class HomeController extends Controller
         KaryawanOperator $karyawan_operator,
         KaryawanOperatorHarian $karyawan_operator_harian,
         RitKaryawan $rit_karyawan,
-        KirimGaji $kirim_gaji,
+        KirimGaji $kirim_gaji
     )
     {
         $this->middleware('auth');
