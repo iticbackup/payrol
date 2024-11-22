@@ -85,6 +85,9 @@
                     </li>
                 </ul>
             </li>
+            {{-- <li class="{{ Request::is('laporan') ? 'active' : '' }}">
+                <a href="{{ route('laporan') }}" class="{{ Request::is('laporan') ? 'active' : '' }}"><i class="mdi mdi-home"></i> Detail Laporan</a>
+            </li> --}}
             {{-- <li class="menu-label mt-0">Laporan</li> --}}
             <li>
                 <a href="javascript: void(0);"> <i data-feather="file-text"

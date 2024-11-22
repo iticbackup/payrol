@@ -69,6 +69,16 @@
                                                 <td>Rp. {{ number_format($karyawan_harian->upah_dasar_weekly,0,',','.') }}</td>
                                                 <input type="hidden" name="tunjangan_kerja" value="{{ $karyawan_harian->tunjangan_kerja_nominal->nominal }}">
                                             </tr>
+                                            @if ($new_data_pengerjaan->akhir_bulan == $akhir_bulan)
+                                            <tr>
+                                                <td>Tunjangan Kerja</td>
+                                                <td class="text-center">:</td>
+                                                <td>
+                                                    <input type="hidden" name="tunjangan_kerja" value="{{ $tunjangan_kerja }}" id="">
+                                                    {{ 'Rp. '.number_format($tunjangan_kerja,0,',','.') }}
+                                                </td>
+                                            </tr>
+                                            @endif
                                             @php
                                                 if (!empty($karyawan_harian->plus_1)) {
                                                     $explode_plus_1 = explode("|",$karyawan_harian->plus_1);

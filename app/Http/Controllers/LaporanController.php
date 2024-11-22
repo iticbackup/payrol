@@ -9,6 +9,7 @@ use App\Exports\BoronganMultiSheets;
 use App\Exports\LaporanBoronganLokalExport;
 use App\Exports\LaporanHarianExport;
 use App\Exports\LaporanSupirRitExport;
+use App\Exports\RekapLaporanPayrolExport;
 
 use App\Models\NewDataPengerjaan;
 use App\Models\JenisOperator;
@@ -26,6 +27,116 @@ use Excel;
 
 class LaporanController extends Controller
 {
+
+    public function laporan(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = NewDataPengerjaan::select('date','tanggal','status')->groupBy('date','tanggal','status')->get();
+            return DataTables::of($data)
+                            ->addIndexColumn()
+                            ->addColumn('tanggal_dibuat', function($row){
+                                return $row->date;
+                            })
+                            ->addColumn('tanggal_penggajian', function($row){
+                                $explode_tanggal_pengerjaans = explode("#",$row->tanggal);
+                                foreach ($explode_tanggal_pengerjaans as $key => $explode_tanggal_pengerjaan) {
+                                    if ($key != 0) {
+                                        $hasil_tanggal_pengerjaan[] = Carbon::parse($explode_tanggal_pengerjaan)->isoFormat('D MMMM');
+                                    }
+                                }
+                                return $hasil_tanggal_pengerjaan;
+                            })
+                            ->addColumn('status', function($row){
+                                if ($row->status == 'y') {
+                                    return '<span class="badge badge-outline-primary">Progress</span>';
+                                }else{
+                                    return '<span class="badge badge-outline-success">Selesai</span>';
+                                }
+                                return '-';
+                            })
+                            ->addColumn('action', function($row){
+                                $new_data_pengerjaans = NewDataPengerjaan::where('date',$row->date)->orderBy('kode_pengerjaan','asc')->get();
+                                $btn = '';
+                                $btn .= '<div>';
+                                foreach ($new_data_pengerjaans as $key => $new_data_pengerjaan) {
+                                    $explode_kode_pengerjaan = explode('_',$new_data_pengerjaan->kode_pengerjaan);
+                                    $jenis_operator = JenisOperator::select('id','kode_operator')->where('kode_operator',$explode_kode_pengerjaan[0])->first();
+                                    switch ($explode_kode_pengerjaan[0]) {
+                                        case 'PB':
+                                            $btn .= '<a href='.route('laporan.download',['id_jenis_operator' => $jenis_operator->id, 'kode_pengerjaan' => $new_data_pengerjaan->kode_pengerjaan]).' class="btn btn-outline-primary">Download Laporan Borongan '.$explode_kode_pengerjaan[1].'_'.$explode_kode_pengerjaan[2].'</a>';
+                                            break;
+                                        case 'PH':
+                                            $btn .= '<a href='.route('laporan.download',['id_jenis_operator' => $jenis_operator->id, 'kode_pengerjaan' => $new_data_pengerjaan->kode_pengerjaan]).' class="btn btn-outline-primary">Download Laporan Harian '.$explode_kode_pengerjaan[1].'_'.$explode_kode_pengerjaan[2].'</a>';
+                                            break;
+                                        case 'PS':
+                                            $btn .= '<a href='.route('laporan.download',['id_jenis_operator' => $jenis_operator->id, 'kode_pengerjaan' => $new_data_pengerjaan->kode_pengerjaan]).' class="btn btn-outline-primary">Download Laporan Supir RIT '.$explode_kode_pengerjaan[1].'_'.$explode_kode_pengerjaan[2].'</a>';
+                                            break;
+                                        
+                                        default:
+                                            # code...
+                                            break;
+                                    }
+                                }
+                                $btn .= '</div>';
+                                // $explode_jenis_operator = explode('_',$row->kode_pengerjaan);
+                                // $jenis_operator = JenisOperator::where('kode_operator',$explode_jenis_operator[0])->first();
+                                // $jenis_operator_details = JenisOperatorDetail::where('jenis_operator_id',$jenis_operator->id)->where('status','y')->get();
+
+                                // $btn = '';
+                                // $btn .= '<div>';
+                                // $btn .=     '<a href='.$row->kode_pengerjaan.' class="btn btn-outline-success">Download Laporan</a>';
+                                // $btn .= '</div>';
+                                return $btn;
+                            })
+                            ->rawColumns(['action','status'])
+                            ->make(true);
+        }
+
+        return view('backend.payrol.penggajian.index');
+    }
+
+    public function laporan_excel($id_jenis_operator,$kode_pengerjaan)
+    {
+        // dd($id_jenis_operator,$kode_pengerjaan);
+        if ($id_jenis_operator == 1) {
+            $data['kode_pengerjaan'] = $kode_pengerjaan;
+            $data['new_data_pengerjaan'] = NewDataPengerjaan::where('kode_pengerjaan',$kode_pengerjaan)->first();
+            $data['explode_tanggal_pengerjaans'] = explode('#',$data['new_data_pengerjaan']['tanggal']);
+
+            $exp_tanggals = array_filter($data['explode_tanggal_pengerjaans']);
+            $a = count($exp_tanggals);
+            $exp_tgl_awal = explode('-', $exp_tanggals[1]);
+            $exp_tgl_akhir = explode('-', $exp_tanggals[$a]);
+
+            $data['pengerjaan_borongan_weeklys'] = PengerjaanWeekly::select([
+                                                                        'pengerjaan_weekly.kode_payrol as kode_payrol',
+                                                                        'operator_karyawan.nik as nik',
+                                                                        'biodata_karyawan.nama as nama',
+                                                                        'pengerjaan_weekly.operator_karyawan_id as operator_karyawan_id',
+                                                                        'pengerjaan_weekly.plus_1 as plus_1',
+                                                                        'pengerjaan_weekly.plus_2 as plus_2',
+                                                                        'pengerjaan_weekly.plus_3 as plus_3',
+                                                                        'pengerjaan_weekly.uang_makan as uang_makan',
+                                                                        'pengerjaan_weekly.tunjangan_kerja as tunjangan_kerja',
+                                                                        'pengerjaan_weekly.tunjangan_kehadiran as tunjangan_kehadiran',
+                                                                        'pengerjaan_weekly.minus_1 as minus_1',
+                                                                        'pengerjaan_weekly.minus_2 as minus_2',
+                                                                        'pengerjaan_weekly.jht as jht',
+                                                                        'pengerjaan_weekly.bpjs_kesehatan as bpjs_kesehatan',
+                                                                    ])
+                                                                    ->leftJoin('operator_karyawan','operator_karyawan.id','=','pengerjaan_weekly.operator_karyawan_id')
+                                                                    ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                                    ->where('pengerjaan_weekly.kode_pengerjaan',$kode_pengerjaan)
+                                                                    ->where('operator_karyawan.jenis_operator_id',$id_jenis_operator)
+                                                                    ->where('operator_karyawan.status','Y')
+                                                                    ->orderBy('biodata_karyawan.nama','asc')
+                                                                    ->get();
+            // return view('backend.laporan.borongan.excel_lp_borongan',$data);
+            return Excel::download(new RekapLaporanPayrolExport(1), 'Laporan Payrol.xlsx');
+            // return Excel::download(new RekapLaporanPayrolExport(), 'Laporan Payrol.xlsx');
+        }
+    }
+
     public function laporan_borongan_index(Request $request)
     {
         if ($request->ajax()) {
@@ -103,6 +214,7 @@ class LaporanController extends Controller
                                         $btn_jenis_operator = $btn_jenis_operator.='</div>';
                                     }
                                 }
+                                
                                 // $btn_jenis_operator = $btn_jenis_operator.='<div class="button-items">';
                                 // foreach ($jenis_operator_details as $key => $jenis_operator_detail) {
                                 //     if ($jenis_operator_detail->jenis_operator_id == 1) {

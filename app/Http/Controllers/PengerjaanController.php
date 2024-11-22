@@ -12530,7 +12530,7 @@ class PengerjaanController extends Controller
         // dd($data['karyawan_harian']);
         $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
         $data['explode_tanggal_pengerjaans'] = explode('#',$data['new_data_pengerjaan']['tanggal']);
-
+        
         if (empty($data['karyawan_harian']['plus_1'])) {
             $plus_1=null;
             $ket_plus_1=null;
@@ -12623,6 +12623,7 @@ class PengerjaanController extends Controller
         }
 
         $data['tunjangan_kerjas'] = $this->tunjanganKerja->select('nominal')->where('id',$data['karyawan_harian']['tunjangan_kerja_id'])->first();
+        // dd($data['tunjangan_kerjas']);
         if(empty($data['tunjangan_kerjas'])){
             $data['tunjangan_kerja'] = 0;
         }else{
@@ -12998,6 +12999,7 @@ class PengerjaanController extends Controller
                                                           'biodata_karyawan.nama as nama',  
                                                           'biodata_karyawan.pin as pin',
                                                           'biodata_karyawan.tanggal_masuk as tanggal',
+                                                          'operator_supir_rit_karyawan.tunjangan_kerja_id as tunjangan_kerja_id',
                                                           'pengerjaan_supir_rit_weekly.karyawan_supir_rit_id as karyawan_supir_rit_id',
                                                           'pengerjaan_supir_rit_weekly.total_hasil as total_hasil',
                                                           'pengerjaan_supir_rit_weekly.tunjangan_kerja as tunjangan_kerja',
@@ -13103,6 +13105,8 @@ class PengerjaanController extends Controller
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
         }
         $data['tunjangan_kerjas'] = $this->tunjanganKerja->select('nominal')->where('id',$data['karyawan_supir_rit']['tunjangan_kerja_id'])->first();
+        // dd($data['tunjangan_kerjas']);
+
         if(empty($data['tunjangan_kerjas'])){
             $data['tunjangan_kerja'] = 0;
         }else{

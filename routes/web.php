@@ -196,6 +196,8 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::prefix('laporan')->group(function () {
+        Route::get('/', [App\Http\Controllers\LaporanController::class, 'laporan'])->name('laporan');
+        Route::get('download/{id_jenis_operator}/{kode_pengerjaan}', [App\Http\Controllers\LaporanController::class, 'laporan_excel'])->name('laporan.download');
         Route::prefix('borongan')->group(function () {
             Route::get('/', [App\Http\Controllers\LaporanController::class, 'laporan_borongan_index'])->name('laporan.borongan');
             Route::get('export/{id_jenis_pekerjaan}/{id}/{kode_pengerjaan}', [App\Http\Controllers\LaporanController::class, 'laporan_borongan_export'])->name('laporan.borongan.export');
