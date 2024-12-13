@@ -11182,8 +11182,8 @@ class PayrolController extends Controller
     public function borongan_kirim_slip_gaji(Request $request,$kode_pengerjaan)
     {
         $pengerjaan_weeklys = $this->pengerjaanWeekly->where('kode_pengerjaan',$kode_pengerjaan)
-                                                    ->whereIn('id',[11365])
-                                                    // ->whereIn('id',$request->id)
+                                                    // ->whereIn('id',[11365])
+                                                    ->whereIn('id',$request->id)
                                                     // ->limit(50)
                                                     ->get();
         // dd($pengerjaan_weeklys);
@@ -11192,7 +11192,6 @@ class PayrolController extends Controller
             $data['id'] = $pengerjaan_weekly->id;
             $data['kode_pengerjaan'] = $kode_pengerjaan;
             // $data['nama'] = $pengerjaan_weekly->operator_karyawan->nama;
-
             $new_data_pengerjaan = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
             $explode_tanggal_pengerjaans = explode('#', $new_data_pengerjaan['tanggal']);
             $exp_tanggals = array_filter($explode_tanggal_pengerjaans);
