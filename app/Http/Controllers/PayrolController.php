@@ -11182,9 +11182,11 @@ class PayrolController extends Controller
     public function borongan_kirim_slip_gaji(Request $request,$kode_pengerjaan)
     {
         $pengerjaan_weeklys = $this->pengerjaanWeekly->where('kode_pengerjaan',$kode_pengerjaan)
-                                                    ->whereIn('id',$request->id)
+                                                    ->whereIn('id',[11365])
+                                                    // ->whereIn('id',$request->id)
                                                     // ->limit(50)
                                                     ->get();
+        // dd($pengerjaan_weeklys);
         // dd($pengerjaan_weeklys);
         foreach ($pengerjaan_weeklys as $key => $pengerjaan_weekly) {
             $data['id'] = $pengerjaan_weekly->id;
@@ -11204,11 +11206,17 @@ class PayrolController extends Controller
             $kirim_gaji = $this->kirim_gaji->where('pengerjaan_id',$pengerjaan_weekly->id)
                                             ->where('nik',$pengerjaan_weekly->operator_karyawan->nik)
                                             ->first();
+                                            // dd($kirim_gaji);
             if (empty($kirim_gaji)) {
                 $pdf = Pdf::loadView('backend.payrol.penggajian.borongan.pdf_cek_gaji2',$data);
                 $pdf->setPaper(array(0,0,560,380));   
                 $pdf->setEncryption(Carbon::create($pengerjaan_weekly->operator_karyawan->biodata_karyawan->tgl_lahir)->format('dmY'),Carbon::create($pengerjaan_weekly->operator_karyawan->biodata_karyawan->tgl_lahir)->format('dmY'));
                 
+                // Mail::send('backend.payrol.penggajian.email_kirim_gaji',$data, function($message) use($data,$pdf,$pengerjaan_weekly){
+                //     $message->to('rioanugrah999@gmail.com')
+                //             ->subject('Laporan Slip Gaji '.$pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y'))
+                //             ->attachData($pdf->output(), 'Laporan Slip Gaji '.$pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y').'.pdf');
+                // });
                 Mail::send('backend.payrol.penggajian.email_kirim_gaji',$data, function($message) use($data,$pdf,$pengerjaan_weekly){
                     $message->to(strtolower($pengerjaan_weekly->operator_karyawan->biodata_karyawan->email))
                             ->subject('Laporan Slip Gaji '.$pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y'))
@@ -11221,6 +11229,7 @@ class PayrolController extends Controller
                     [
                         'kode_pengerjaan' => $kode_pengerjaan,
                         'nik' => $pengerjaan_weekly->operator_karyawan->nik,
+                        'pengerjaan_id' => $pengerjaan_weekly->id,
                     ],
                     [
                         'kode_payrol' => $pengerjaan_weekly->kode_payrol,
@@ -11237,6 +11246,7 @@ class PayrolController extends Controller
                 [
                     'kode_pengerjaan' => $kode_pengerjaan,
                     'nik' => $pengerjaan_weekly->operator_karyawan->nik,
+                    'pengerjaan_id' => $pengerjaan_weekly->id,
                 ],
                 [
                     'kode_payrol' => $pengerjaan_weekly->kode_payrol,
