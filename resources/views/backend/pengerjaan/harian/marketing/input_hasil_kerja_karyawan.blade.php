@@ -62,9 +62,12 @@
                                                 <td>Upah 1 Hari</td>
                                                 <td class="text-center">:</td>
                                                 <td>
-                                                    Rp. {{ number_format($karyawan_harian->upah_dasar, 0, ',', '.') }}
+                                                    Rp. {{ number_format($upah_dasar_karyawan, 0, ',', '.') }}
                                                     <input type="hidden" name="upah_dasar"
-                                                        value="{{ $karyawan_harian->upah_dasar }}" id="">
+                                                        value="{{ round($upah_dasar_karyawan) }}" id="">
+                                                    {{-- Rp. {{ number_format($karyawan_harian->upah_dasar, 0, ',', '.') }}
+                                                    <input type="hidden" name="upah_dasar"
+                                                        value="{{ $karyawan_harian->upah_dasar }}" id=""> --}}
                                                 </td>
                                             </tr>
                                             <tr>

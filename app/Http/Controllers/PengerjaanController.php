@@ -1483,6 +1483,25 @@ class PengerjaanController extends Controller
         $data['masa_kerja_hari'] = $diff->d;
         //End Hitung Masa Kerja
 
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                }
+            }
+        }
+
         // echo 'Selisih waktu: ';
         // echo $diff->y . ' tahun, ';
         // echo $diff->m . ' bulan, ';
@@ -2309,6 +2328,25 @@ class PengerjaanController extends Controller
         $data['masa_kerja_hari'] = $diff->d;
         //End Hitung Masa Kerja
 
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                }
+            }
+        }
+
         // echo 'Selisih waktu: ';
         // echo $diff->y . ' tahun, ';
         // echo $diff->m . ' bulan, ';
@@ -3132,6 +3170,25 @@ class PengerjaanController extends Controller
         $data['masa_kerja_tahun'] = $diff->y;
         $data['masa_kerja_hari'] = $diff->d;
         //End Hitung Masa Kerja
+
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                }
+            }
+        }
 
         // echo 'Selisih waktu: ';
         // echo $diff->y . ' tahun, ';
@@ -3967,6 +4024,25 @@ class PengerjaanController extends Controller
         $data['masa_kerja_hari'] = $diff->d;
         //End Hitung Masa Kerja
 
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                }
+            }
+        }
+
         // echo 'Selisih waktu: ';
         // echo $diff->y . ' tahun, ';
         // echo $diff->m . ' bulan, ';
@@ -4794,6 +4870,25 @@ class PengerjaanController extends Controller
         $data['masa_kerja_hari'] = $diff->d;
         //End Hitung Masa Kerja
 
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                }
+            }
+        }
+
         // echo 'Selisih waktu: ';
         // echo $diff->y . ' tahun, ';
         // echo $diff->m . ' bulan, ';
@@ -5616,6 +5711,25 @@ class PengerjaanController extends Controller
         $data['masa_kerja_hari'] = $diff->d;
         //End Hitung Masa Kerja
 
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                }
+            }
+        }
+
         // echo 'Selisih waktu: ';
         // echo $diff->y . ' tahun, ';
         // echo $diff->m . ' bulan, ';
@@ -6401,6 +6515,25 @@ class PengerjaanController extends Controller
         $data['masa_kerja_tahun'] = $diff->y;
         $data['masa_kerja_hari'] = $diff->d;
         //End Hitung Masa Kerja
+
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                }
+            }
+        }
 
         // echo 'Selisih waktu: ';
         // echo $diff->y . ' tahun, ';
@@ -7230,6 +7363,25 @@ class PengerjaanController extends Controller
         $data['masa_kerja_hari'] = $diff->d;
         //End Hitung Masa Kerja
 
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                }
+            }
+        }
+
         // echo 'Selisih waktu: ';
         // echo $diff->y . ' tahun, ';
         // echo $diff->m . ' bulan, ';
@@ -8058,6 +8210,25 @@ class PengerjaanController extends Controller
         $data['masa_kerja_tahun'] = $diff->y;
         $data['masa_kerja_hari'] = $diff->d;
         //End Hitung Masa Kerja
+
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                }
+            }
+        }
 
         // echo 'Selisih waktu: ';
         // echo $diff->y . ' tahun, ';
@@ -8893,6 +9064,25 @@ class PengerjaanController extends Controller
         $data['masa_kerja_hari'] = $diff->d;
         //End Hitung Masa Kerja
 
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                }
+            }
+        }
+
         // echo 'Selisih waktu: ';
         // echo $diff->y . ' tahun, ';
         // echo $diff->m . ' bulan, ';
@@ -9343,6 +9533,27 @@ class PengerjaanController extends Controller
         $data['masa_kerja'] = $diff->y.' Tahun '.$diff->m.' Bulan '.$diff->d.' Hari';
         $data['masa_kerja_tahun'] = $diff->y;
         $data['masa_kerja_hari'] = $diff->d;
+
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                }
+            }
+        }
+
+        // dd(number_format($data['upah_dasar_karyawan'],0,',','.'));
 
         // dd($data['masa_kerja_tahun']);
 
@@ -10027,6 +10238,25 @@ class PengerjaanController extends Controller
         $data['masa_kerja_tahun'] = $diff->y;
         $data['masa_kerja_hari'] = $diff->d;
 
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                }
+            }
+        }
+
         $tgl_current_active = Carbon::now()->format('d');
         $bln_active = Carbon::now()->format('m');
         $bln_current_active = $month;
@@ -10465,6 +10695,25 @@ class PengerjaanController extends Controller
         $data['masa_kerja_tahun'] = $diff->y;
         $data['masa_kerja_hari'] = $diff->d;
 
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                }
+            }
+        }
+
         $tgl_current_active = Carbon::now()->format('d');
         $bln_active = Carbon::now()->format('m');
         $bln_current_active = $month;
@@ -10898,6 +11147,25 @@ class PengerjaanController extends Controller
         $data['masa_kerja_tahun'] = $diff->y;
         $data['masa_kerja_hari'] = $diff->d;
 
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                }
+            }
+        }
+
         $tgl_current_active = Carbon::now()->format('d');
         $bln_active = Carbon::now()->format('m');
         $bln_current_active = $month;
@@ -11326,6 +11594,25 @@ class PengerjaanController extends Controller
         $data['masa_kerja_tahun'] = $diff->y;
         $data['masa_kerja_hari'] = $diff->d;
 
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                }
+            }
+        }
+
         $tgl_current_active = Carbon::now()->format('d');
         $bln_active = Carbon::now()->format('m');
         $bln_current_active = $month;
@@ -11751,6 +12038,25 @@ class PengerjaanController extends Controller
         $data['masa_kerja'] = $diff->y.' Tahun '.$diff->m.' Bulan '.$diff->d.' Hari';
         $data['masa_kerja_tahun'] = $diff->y;
         $data['masa_kerja_hari'] = $diff->d;
+
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                }
+            }
+        }
 
         $tgl_current_active = Carbon::now()->format('d');
         $bln_active = Carbon::now()->format('m');
@@ -12179,6 +12485,25 @@ class PengerjaanController extends Controller
         $data['masa_kerja_tahun'] = $diff->y;
         $data['masa_kerja_hari'] = $diff->d;
 
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                }
+            }
+        }
+
         $tgl_current_active = Carbon::now()->format('d');
         $bln_active = Carbon::now()->format('m');
         $bln_current_active = $month;
@@ -12606,6 +12931,25 @@ class PengerjaanController extends Controller
         $data['masa_kerja_tahun'] = $diff->y;
         $data['masa_kerja_hari'] = $diff->d;
 
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                }
+            }
+        }
+
         $tgl_current_active = Carbon::now()->format('d');
         $bln_active = Carbon::now()->format('m');
         $bln_current_active = $month;
@@ -12855,6 +13199,8 @@ class PengerjaanController extends Controller
             $input['bpjs_kesehatan'] = 0;
         }
 
+
+
         $pengerjaan_harian_karyawan = $this->pengerjaanHarian->where('operator_harian_karyawan_id',$request->operator_harian_karyawan_id)
                                                     ->where('kode_pengerjaan',$kode_pengerjaan)
                                                     // ->update($input)
@@ -13088,6 +13434,25 @@ class PengerjaanController extends Controller
         $data['masa_kerja'] = $diff->y.' Tahun '.$diff->m.' Bulan '.$diff->d.' Hari';
         $data['masa_kerja_tahun'] = $diff->y;
         $data['masa_kerja_hari'] = $diff->d;
+
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                }
+            }
+        }
 
         $tgl_current_active = Carbon::now()->format('d');
         $bln_active = Carbon::now()->format('m');

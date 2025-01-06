@@ -64,9 +64,12 @@
                                                 $upah_dasar = array_sum($upah);
                                                 ?>
                                                 <td>
-                                                    Rp. {{ number_format($upah_dasar, 0, ',', '.') }}
+                                                    {{-- Rp. {{ number_format($upah_dasar, 0, ',', '.') }}
                                                     <input type="hidden" name="upah_dasar" value="{{ round($upah_dasar) }}"
-                                                        id="">
+                                                        id=""> --}}
+                                                    Rp. {{ number_format($upah_dasar_karyawan, 0, ',', '.') }}
+                                                    <input type="hidden" name="upah_dasar"
+                                                        value="{{ round($upah_dasar_karyawan) }}" id="">
                                                 </td>
                                             </tr>
                                             <tr>

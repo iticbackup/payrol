@@ -59,15 +59,18 @@
                                                 <td>Upah 1 Hari</td>
                                                 <td class="text-center">:</td>
                                                 <td>
-                                                    Rp. {{ number_format($karyawan_harian->upah_dasar,0,',','.') }}
-                                                    <input type="hidden" name="upah_dasar" value="{{ $karyawan_harian->upah_dasar }}" id="">
+                                                    Rp. {{ number_format($upah_dasar_karyawan, 0, ',', '.') }}
+                                                    <input type="hidden" name="upah_dasar"
+                                                        value="{{ round($upah_dasar_karyawan) }}" id="">
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>Upah Dasar</td>
                                                 <td class="text-center">:</td>
-                                                <td>Rp. {{ number_format($karyawan_harian->upah_dasar_weekly,0,',','.') }}</td>
-                                                <input type="hidden" name="tunjangan_kerja" value="{{ $karyawan_harian->tunjangan_kerja_nominal->nominal }}">
+                                                <td>
+                                                    Rp. {{ number_format($karyawan_harian->upah_dasar_weekly,0,',','.') }}
+                                                    <input type="hidden" name="tunjangan_kerja" value="{{ $karyawan_harian->tunjangan_kerja_nominal->nominal }}">
+                                                </td>
                                             </tr>
                                             @if ($new_data_pengerjaan->akhir_bulan == $akhir_bulan)
                                             <tr>
