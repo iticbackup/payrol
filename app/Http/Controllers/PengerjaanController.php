@@ -9344,6 +9344,8 @@ class PengerjaanController extends Controller
         $data['masa_kerja_tahun'] = $diff->y;
         $data['masa_kerja_hari'] = $diff->d;
 
+        // dd($data['masa_kerja_tahun']);
+
         $tgl_current_active = Carbon::now()->format('d');
         $bln_active = Carbon::now()->format('m');
         $bln_current_active = $month;
@@ -10083,7 +10085,7 @@ class PengerjaanController extends Controller
                                     ->whereBetween('scan_date',[$bulan_kemarin,$bulan_sekarang])
                                     ->where('status',3)
                                     ->get();
-        // dd($data['terlambats']);
+        // dd($data);
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
@@ -10093,7 +10095,7 @@ class PengerjaanController extends Controller
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
         $data['telat_4'] = $telat_4;
-        $data['telat_5'] = $telat_4;
+        $data['telat_5'] = $telat_5;
         foreach ($data['terlambats'] as $key => $terlambat) {
             $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
             $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
@@ -10136,7 +10138,7 @@ class PengerjaanController extends Controller
                                     // ->where('status',9)
                                     // ->where('status',10)
                                     ->get();
-        // dd($data['pulang_awals']);
+        // dd($data);
         $pulang_1=0; //pulang awal < 4 jam
 		$pulang_2=0; //tpulang awal > 4 jam
         $data['pulang_1'] = $pulang_1;
@@ -10185,6 +10187,8 @@ class PengerjaanController extends Controller
                 $data['ijin_l4']=$ijin_l4;
             }
         }
+
+        // dd($data);
 
         //lihat tanggal masuk
 

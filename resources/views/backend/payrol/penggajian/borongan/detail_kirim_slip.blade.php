@@ -63,6 +63,7 @@
                         <thead>
                             <tr>
                                 <th>No</th>
+                                <th>ID</th>
                                 <th>Nama Karyawan</th>
                                 <th>Email Karyawan</th>
                                 <th>Jenis Pengerjaan</th>
@@ -472,6 +473,7 @@
                                         <input type="hidden" name="nominal_gaji[]" value="{{ $total_gaji_diterima }}">
                                     </td>
                                     {{-- <td>{{ ($pengerjaan_weeklys->perPage() * ($pengerjaan_weeklys->currentPage() - 1)) + $loop->iteration }}</td> --}}
+                                    <td>{{ $pengerjaan_weekly->id }}</td>
                                     <td>{{ $pengerjaan_weekly->operator_karyawan->biodata_karyawan->nik.' - '.$pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama }}</td>
                                     <td>{{ $pengerjaan_weekly->operator_karyawan->biodata_karyawan->email }}</td>
                                     <td>{{ $pengerjaan_weekly->operator_karyawan->jenis_operator->jenis_operator.' - '.$pengerjaan_weekly->operator_karyawan->jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan }}</td>

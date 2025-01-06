@@ -15,6 +15,7 @@ class BPJSJHT extends Model
     
     public $fillable = [
         'id',
+        'urutan',
         'keterangan',
         'nominal',
         'masa_kerja',

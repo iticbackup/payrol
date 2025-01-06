@@ -845,7 +845,7 @@
                                                         <div class="col-sm-10">
                                                             <select name="jht" class="form-control" id="">
                                                                 <option value="">-- Pilih --</option>
-                                                                @if ($masa_kerja_tahun >= 15)
+                                                                {{-- @if ($masa_kerja_tahun >= 15)
                                                                     <option value="99274">Masa Kerja &nbsp;&nbsp;0 - 10
                                                                         Tahun | Rp. 99.274</option>
                                                                     <option value="100774">Masa Kerja 10 - 15 Tahun | Rp.
@@ -869,7 +869,16 @@
                                                                     <option value="102274">Masa Kerja
                                                                         &nbsp;&nbsp;&nbsp;&nbsp;> 15 Tahun | Rp. 102.274
                                                                     </option>
-                                                                @endif
+                                                                @endif --}}
+                                                                @foreach ($jhts as $jht)
+                                                                    @if ($masa_kerja_tahun > 15)
+                                                                    <option value="{{ $jht->nominal }}" {{ $jht->urutan == 3 ? 'selected' : null }}>{{ $jht->keterangan }} | Rp. {{ number_format($jht->nominal,0,',','.') }}</option>
+                                                                    @elseif($masa_kerja_tahun >= 10 && $masa_kerja_tahun <= 15 && $masa_kerja_hari >= 1)
+                                                                    <option value="{{ $jht->nominal }}" {{ $jht->urutan == 2 ? 'selected' : null }}>{{ $jht->keterangan }} | Rp. {{ number_format($jht->nominal,0,',','.') }}</option>
+                                                                    @elseif($masa_kerja_tahun <= 10 || $masa_kerja_hari >= 1)
+                                                                    <option value="{{ $jht->nominal }}" {{ $jht->urutan == 1 ? 'selected' : null }}>{{ $jht->keterangan }} | Rp. {{ number_format($jht->nominal,0,',','.') }}</option>
+                                                                    @endif
+                                                                @endforeach
                                                                 {{-- @foreach ($jhts as $jht)
                                                             <option value="{{ $jht->nominal }}" {{ $masa_kerja_tahun >= 15 ?  }}>{{ $jht->keterangan.' | Rp. '.number_format($jht->nominal,0,',','.') }}</option>
                                                             @endforeach --}}
