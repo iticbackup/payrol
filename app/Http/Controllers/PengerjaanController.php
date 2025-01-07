@@ -13289,6 +13289,7 @@ class PengerjaanController extends Controller
                                                                     'pengerjaan_supir_rit.hasil_kerja_1 as hasil_kerja_1',
                                                                     'pengerjaan_supir_rit.dpb as dpb',
                                                                     'operator_supir_rit_karyawan.rit_posisi_id as rit_posisi_id',
+                                                                    'biodata_karyawan.tanggal_masuk as tanggal_masuk',
                                                                 ])
                                                                 ->leftJoin('operator_supir_rit_karyawan','operator_supir_rit_karyawan.id','=','pengerjaan_supir_rit.karyawan_supir_rit_id')
                                                                 ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_supir_rit_karyawan.nik')
@@ -13297,7 +13298,7 @@ class PengerjaanController extends Controller
                                                                 ->where('operator_supir_rit_karyawan.status','y')
                                                                 ->orderBy('biodata_karyawan.nama','asc')
                                                                 ->get();
-        // dd($data);
+        
         foreach ($data['pengerjaan_supir_rit_dailys'] as $key => $pengerjaan_supir_rit_daily) {
             // $umk_rit = RitUMK::where('rit_posisi_id', $pengerjaan_supir_rit_daily->rit_posisi_id)->first();
             $operator_karyawan_supir_rit = $this->ritKaryawan->where('nik',$pengerjaan_supir_rit_daily->nik)->where('status','y')->first();
@@ -13313,16 +13314,58 @@ class PengerjaanController extends Controller
                 $dpb = 0;
             }
 
+            $awal = new DateTime($pengerjaan_supir_rit_daily->tanggal_masuk);
+            $akhir = new DateTime(); // Waktu sekarang
+            $diff = $awal->diff($akhir);
+            $data['masa_kerja'] = $diff->y.' Tahun '.$diff->m.' Bulan '.$diff->d.' Hari';
+            $data['masa_kerja_tahun'] = $diff->y;
+            $data['masa_kerja_hari'] = $diff->d;
+
+            $data['jhts'] = $this->bpjsJht->where('status','y')->get();
+            $data['bpjs_kesehatan'] = $this->bpjsKesehatan->select('nominal')->where('status','y')->first();
+
+            $upah_dasar_karyawan = [];
+            foreach ($data['jhts'] as $key => $jht) {
+                if ($data['masa_kerja_tahun'] > 15) {
+                    if ($jht->urutan == 3) {
+                        $upah_dasar_karyawan = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    }
+                }
+                elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                    if ($jht->urutan == 2) {
+                        $upah_dasar_karyawan = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    }
+                }
+                elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                    if ($jht->urutan == 1) {
+                        $upah_dasar_karyawan = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    }
+                }
+            }
+            // $ritUmk = $this->ritUmk->find($request->hasil_kerja_1[$key]);
+
+            // dd($ritUmk);
+
+            // dd(round($upah_dasar_karyawan));
+            if ($dpb == 7) {
+                $upah_dasar = round($upah_dasar_karyawan);
+            }else{
+                $upah_dasar = round($upah_dasar_karyawan)/$request->rit[$key];
+            }
+
+            // dd($upah_dasar);
+
             $pengerjaan_supir_rit_weekly = $this->pengerjaanRitWeekly->where('kode_pengerjaan',$kode_pengerjaan)
                                                             ->where('karyawan_supir_rit_id',$pengerjaan_supir_rit_daily->karyawan_supir_rit_id)
                                                             ->update([
                                                                 'total_hasil' => $operator_karyawan_supir_rit->upah_dasar,
                                                             ]);
-
+            
             $pengerjaan_supir_rit_daily->update([
                 'hasil_kerja_1' => $hasil_kerja_1,
                 'dpb' => $dpb,
-                'upah_dasar' => $operator_karyawan_supir_rit->upah_dasar*$request->rit[$key],
+                // 'upah_dasar' => $operator_karyawan_supir_rit->upah_dasar*$request->rit[$key],
+                'upah_dasar' => $upah_dasar,
             ]);
             // dd($dpb);
         }
