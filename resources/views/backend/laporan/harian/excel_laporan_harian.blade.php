@@ -320,9 +320,40 @@
                             // dd($total_hasil_kerja);
                         }
                         array_push($total_hari_kerja,$total_all_hasil_kerja);
+
+                        $data['jhtss'] = \App\Models\BPJSJHT::where('status','y')->get();
+                        $data['bpjs_kesehatan'] = \App\Models\BPJSKesehatan::select('nominal')->where('status','y')->first();
+
+                        $awal  = new DateTime($pengerjaan_harian->tanggal);
+                        $akhir = new DateTime(); // Waktu sekarang
+                        $diff  = $awal->diff($akhir);
+                        $data['masa_kerja'] = $diff->y.' Tahun '.$diff->m.' Bulan '.$diff->d.' Hari';
+                        $data['masa_kerja_tahun'] = $diff->y;
+                        $data['masa_kerja_hari'] = $diff->d;
+
+                        $data['upah_dasar_karyawan'] = [];
+                        foreach ($data['jhtss'] as $key => $jhts) {
+                            if ($data['masa_kerja_tahun'] > 15) {
+                                if ($jhts->urutan == 3) {
+                                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                                }
+                            }
+                            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                                if ($jhts->urutan == 2) {
+                                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                                }
+                            }
+                            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                                if ($jhts->urutan == 1) {
+                                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                                }
+                            }
+                        }
+
                     @endphp
                     <td style="text-align: center; border: 1px solid black;">{{ $total_all_hasil_kerja }}</td>
-                    <td style="text-align: right; border: 1px solid black;">{{ $pengerjaan_harian->upah_dasar }}</td>
+                    {{-- <td style="text-align: right; border: 1px solid black;">{{ $pengerjaan_harian->upah_dasar }}</td> --}}
+                    <td style="text-align: right; border: 1px solid black;">{{ round($data['upah_dasar_karyawan']) }}</td>
                     <td style="text-align: right; border: 1px solid black;">{{ $pengerjaan_harian->upah_dasar_weekly }}</td>
                     <td style="text-align: right; border: 1px solid black;">{{ $plus_1 }}</td>
                     <td style="text-align: right; border: 1px solid black;">{{ $plus_2 }}</td>
