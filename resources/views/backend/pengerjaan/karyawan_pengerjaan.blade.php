@@ -238,6 +238,13 @@
                 checkboxes[i].checked = source.checked;
             }
         }
+
+        function toggle_25(source) {
+            checkboxes = document.getElementsByName('checkbox_25[]');
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
     </script>
     <script>
         $('#form-simpan').submit(function(e) {

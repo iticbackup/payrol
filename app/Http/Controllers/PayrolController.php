@@ -23,6 +23,7 @@ use App\Models\KirimGaji;
 use App\Models\UMKBoronganLokal;
 use App\Models\UMKBoronganEkspor;
 use App\Models\UMKBoronganAmbri;
+use App\Models\UMKBoronganStempel;
 use App\Models\JenisOperatorDetailPengerjaan;
 use \Carbon\Carbon;
 use DataTables;
@@ -52,6 +53,7 @@ class PayrolController extends Controller
         UMKBoronganLokal $umkBoronganLokal,
         UMKBoronganEkspor $umkBoronganEkspor,
         UMKBoronganAmbri $umkBoronganAmbri,
+        UMKBoronganStempel $umkBoronganStempel,
         JenisOperatorDetailPengerjaan $jenisOperatorDetailPengerjaan,
         KirimGaji $kirim_gaji
     ){
@@ -69,6 +71,7 @@ class PayrolController extends Controller
         $this->umkBoronganLokal = $umkBoronganLokal;
         $this->umkBoronganEkspor = $umkBoronganEkspor;
         $this->umkBoronganAmbri = $umkBoronganAmbri;
+        $this->umkBoronganStempel = $umkBoronganStempel;
         $this->jenisOperatorDetailPengerjaan = $jenisOperatorDetailPengerjaan;
         $this->kirim_gaji = $kirim_gaji;
 
@@ -1478,6 +1481,133 @@ class PayrolController extends Controller
                     }else{
                         ${"row1_jenis_produk_5"} = ${"row1_umk_borongan_lokal_5"}['jenis_produk'];
                         ${"row1_hasil_kerja_5"} = ${"row1_explode_hasil_kerja_5"}[1]*${"row1_umk_borongan_lokal_5"}['umk_ambri'];
+                        ${"row1_data_explode_hasil_kerja_5"} = ${"row1_explode_hasil_kerja_5"}[1];
+                        ${"row1_explode_lembur_5"} = explode("|",$row1_pengerjaan['lembur']);
+                        ${"row1_explode_status_lembur_5"} = explode("-",${"row1_explode_lembur_5"}[5]);
+                        if(${"row1_explode_status_lembur_5"}[1] == 'y'){
+                            ${"row1_lembur_5"} = 1.5;
+                        }else{
+                            ${"row1_lembur_5"} = 1;
+                        }
+                    }
+                    // End Hasil Kerja 5
+                }
+
+                if ($row1_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 25) {
+                    // Hasil Kerja 1
+                    ${"row1_explode_hasil_kerja_1"} = explode("|",$row1_pengerjaan['hasil_kerja_1']);
+                    ${"row1_umk_borongan_lokal_1"} = $this->umkBoronganStempel->select('id','jenis_produk','nominal_umk')
+                                                    ->where('id',${"row1_explode_hasil_kerja_1"}[0])
+                                                    ->first();
+                    if(empty(${"row1_umk_borongan_lokal_1"})){
+                        ${"row1_jenis_produk_1"} = '-';
+                        ${"row1_hasil_kerja_1"} = null;
+                        ${"row1_data_explode_hasil_kerja_1"} = '-';
+                        ${"row1_lembur_1"} = 1;
+                        ${"row1_total_hasil_1"} = 0;
+                    }else{
+                        ${"row1_jenis_produk_1"} = ${"row1_umk_borongan_lokal_1"}['jenis_produk'];
+                        ${"row1_hasil_kerja_1"} = ${"row1_explode_hasil_kerja_1"}[1]*${"row1_umk_borongan_lokal_1"}['nominal_umk'];
+                        ${"row1_data_explode_hasil_kerja_1"} = ${"row1_explode_hasil_kerja_1"}[1];
+                        ${"row1_explode_lembur_1"} = explode("|",$row1_pengerjaan['lembur']);
+                        ${"row1_explode_status_lembur_1"} = explode("-",${"row1_explode_lembur_1"}[1]);
+                        if(${"row1_explode_status_lembur_1"}[1] == 'y'){
+                            ${"row1_lembur_1"} = 1.5;
+                        }else{
+                            ${"row1_lembur_1"} = 1;
+                        }
+                    }
+                    // End Hasil Kerja 1
+
+                    // Hasil Kerja 2
+                    ${"row1_explode_hasil_kerja_2"} = explode("|",$row1_pengerjaan['hasil_kerja_2']);
+                    ${"row1_umk_borongan_lokal_2"} = $this->umkBoronganStempel->select('id','jenis_produk','nominal_umk')
+                                                    ->where('id',${"row1_explode_hasil_kerja_2"}[0])
+                                                    ->first();
+                    if(empty(${"row1_umk_borongan_lokal_2"})){
+                        ${"row1_jenis_produk_2"} = '-';
+                        ${"row1_hasil_kerja_2"} = null;
+                        ${"row1_data_explode_hasil_kerja_2"} = '-';
+                        ${"row1_lembur_2"} = 1;
+                        ${"row1_total_hasil_2"} = 0;
+                    }else{
+                        ${"row1_jenis_produk_2"} = ${"row1_umk_borongan_lokal_2"}['jenis_produk'];
+                        ${"row1_hasil_kerja_2"} = ${"row1_explode_hasil_kerja_2"}[1]*${"row1_umk_borongan_lokal_2"}['nominal_umk'];
+                        ${"row1_data_explode_hasil_kerja_2"} = ${"row1_explode_hasil_kerja_2"}[1];
+                        ${"row1_explode_lembur_2"} = explode("|",$row1_pengerjaan['lembur']);
+                        ${"row1_explode_status_lembur_2"} = explode("-",${"row1_explode_lembur_2"}[2]);
+                        if(${"row1_explode_status_lembur_2"}[1] == 'y'){
+                            ${"row1_lembur_2"} = 1.5;
+                        }else{
+                            ${"row1_lembur_2"} = 1;
+                        }
+                    }
+                    // End Hasil Kerja 2
+                    
+                    // Hasil Kerja 3
+                    ${"row1_explode_hasil_kerja_3"} = explode("|",$row1_pengerjaan['hasil_kerja_3']);
+                    ${"row1_umk_borongan_lokal_3"} = $this->umkBoronganStempel->select('id','jenis_produk','nominal_umk')
+                                                    ->where('id',${"row1_explode_hasil_kerja_3"}[0])
+                                                    ->first();
+                    if(empty(${"row1_umk_borongan_lokal_3"})){
+                        ${"row1_jenis_produk_3"} = '-';
+                        ${"row1_hasil_kerja_3"} = null;
+                        ${"row1_data_explode_hasil_kerja_3"} = '-';
+                        ${"row1_lembur_3"} = 1;
+                        ${"row1_total_hasil_3"} = 0;
+                    }else{
+                        ${"row1_jenis_produk_3"} = ${"row1_umk_borongan_lokal_3"}['jenis_produk'];
+                        ${"row1_hasil_kerja_3"} = ${"row1_explode_hasil_kerja_3"}[1]*${"row1_umk_borongan_lokal_3"}['nominal_umk'];
+                        ${"row1_data_explode_hasil_kerja_3"} = ${"row1_explode_hasil_kerja_3"}[1];
+                        ${"row1_explode_lembur_3"} = explode("|",$row1_pengerjaan['lembur']);
+                        ${"row1_explode_status_lembur_3"} = explode("-",${"row1_explode_lembur_3"}[3]);
+                        if(${"row1_explode_status_lembur_3"}[1] == 'y'){
+                            ${"row1_lembur_3"} = 1.5;
+                        }else{
+                            ${"row1_lembur_3"} = 1;
+                        }
+                    }
+                    // End Hasil Kerja 3
+
+                    // Hasil Kerja 4
+                    ${"row1_explode_hasil_kerja_4"} = explode("|",$row1_pengerjaan['hasil_kerja_4']);
+                    ${"row1_umk_borongan_lokal_4"} = $this->umkBoronganStempel->select('id','jenis_produk','nominal_umk')
+                                                    ->where('id',${"row1_explode_hasil_kerja_4"}[0])
+                                                    ->first();
+                    if(empty(${"row1_umk_borongan_lokal_4"})){
+                        ${"row1_jenis_produk_4"} = '-';
+                        ${"row1_hasil_kerja_4"} = null;
+                        ${"row1_data_explode_hasil_kerja_4"} = '-';
+                        ${"row1_lembur_4"} = 1;
+                        ${"row1_total_hasil_4"} = 0;
+                    }else{
+                        ${"row1_jenis_produk_4"} = ${"row1_umk_borongan_lokal_4"}['jenis_produk'];
+                        ${"row1_hasil_kerja_4"} = ${"row1_explode_hasil_kerja_4"}[1]*${"row1_umk_borongan_lokal_4"}['nominal_umk'];
+                        ${"row1_data_explode_hasil_kerja_4"} = ${"row1_explode_hasil_kerja_4"}[1];
+                        ${"row1_explode_lembur_4"} = explode("|",$row1_pengerjaan['lembur']);
+                        ${"row1_explode_status_lembur_4"} = explode("-",${"row1_explode_lembur_4"}[4]);
+                        if(${"row1_explode_status_lembur_4"}[1] == 'y'){
+                            ${"row1_lembur_4"} = 1.5;
+                        }else{
+                            ${"row1_lembur_4"} = 1;
+                        }
+                    }
+                    // End Hasil Kerja 4
+
+                    // Hasil Kerja 5
+                    ${"row1_explode_hasil_kerja_5"} = explode("|",$row1_pengerjaan['hasil_kerja_5']);
+                    ${"row1_umk_borongan_lokal_5"} = $this->umkBoronganStempel->select('id','jenis_produk','nominal_umk')
+                                                    ->where('id',${"row1_explode_hasil_kerja_5"}[0])
+                                                    ->first();
+                    if(empty(${"row1_umk_borongan_lokal_5"})){
+                        ${"row1_jenis_produk_5"} = '-';
+                        ${"row1_hasil_kerja_5"} = null;
+                        ${"row1_data_explode_hasil_kerja_5"} = '-';
+                        ${"row1_lembur_5"} = 1;
+                        ${"row1_total_hasil_5"} = 0;
+                    }else{
+                        ${"row1_jenis_produk_5"} = ${"row1_umk_borongan_lokal_5"}['jenis_produk'];
+                        ${"row1_hasil_kerja_5"} = ${"row1_explode_hasil_kerja_5"}[1]*${"row1_umk_borongan_lokal_5"}['nominal_umk'];
                         ${"row1_data_explode_hasil_kerja_5"} = ${"row1_explode_hasil_kerja_5"}[1];
                         ${"row1_explode_lembur_5"} = explode("|",$row1_pengerjaan['lembur']);
                         ${"row1_explode_status_lembur_5"} = explode("-",${"row1_explode_lembur_5"}[5]);
@@ -2905,6 +3035,134 @@ class PayrolController extends Controller
                         }else{
                             ${"row2_jenis_produk_5"} = ${"row2_umk_borongan_lokal_5"}['jenis_produk'];
                             ${"row2_hasil_kerja_5"} = ${"row2_explode_hasil_kerja_5"}[1]*${"row2_umk_borongan_lokal_5"}['umk_ambri'];
+                            ${"row2_data_explode_hasil_kerja_5"} = ${"row2_explode_hasil_kerja_5"}[1];
+                            ${"row2_explode_lembur_5"} = explode("|",$row2_pengerjaan['lembur']);
+                            ${"row2_explode_status_lembur_5"} = explode("-",${"row2_explode_lembur_5"}[5]);
+                            if(${"row2_explode_status_lembur_5"}[1] == 'y'){
+                                ${"row2_lembur_5"} = 1.5;
+                            }else{
+                                ${"row2_lembur_5"} = 1;
+                            }
+                        }
+                        // End Hasil Kerja 5
+                    }
+
+                    //Stempel Kantong
+                    if ($row2_pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 25) {
+                        // Hasil Kerja 1
+                        ${"row2_explode_hasil_kerja_1"} = explode("|",$row2_pengerjaan['hasil_kerja_1']);
+                        ${"row2_umk_borongan_lokal_1"} = $this->umkBoronganStempel->select('id','jenis_produk','nominal_umk')
+                                                        ->where('id',${"row2_explode_hasil_kerja_1"}[0])
+                                                        ->first();
+                        if(empty(${"row2_umk_borongan_lokal_1"})){
+                            ${"row2_jenis_produk_1"} = '-';
+                            ${"row2_hasil_kerja_1"} = null;
+                            ${"row2_data_explode_hasil_kerja_1"} = '-';
+                            ${"row2_lembur_1"} = 1;
+                            ${"row2_total_hasil_1"} = 0;
+                        }else{
+                            ${"row2_jenis_produk_1"} = ${"row2_umk_borongan_lokal_1"}['jenis_produk'];
+                            ${"row2_hasil_kerja_1"} = ${"row2_explode_hasil_kerja_1"}[1]*${"row2_umk_borongan_lokal_1"}['nominal_umk'];
+                            ${"row2_data_explode_hasil_kerja_1"} = ${"row2_explode_hasil_kerja_1"}[1];
+                            ${"row2_explode_lembur_1"} = explode("|",$row2_pengerjaan['lembur']);
+                            ${"row2_explode_status_lembur_1"} = explode("-",${"row2_explode_lembur_1"}[1]);
+                            if(${"row2_explode_status_lembur_1"}[1] == 'y'){
+                                ${"row2_lembur_1"} = 1.5;
+                            }else{
+                                ${"row2_lembur_1"} = 1;
+                            }
+                        }
+                        // End Hasil Kerja 1
+    
+                        // Hasil Kerja 2
+                        ${"row2_explode_hasil_kerja_2"} = explode("|",$row2_pengerjaan['hasil_kerja_2']);
+                        ${"row2_umk_borongan_lokal_2"} = $this->umkBoronganStempel->select('id','jenis_produk','nominal_umk')
+                                                        ->where('id',${"row2_explode_hasil_kerja_2"}[0])
+                                                        ->first();
+                        if(empty(${"row2_umk_borongan_lokal_2"})){
+                            ${"row2_jenis_produk_2"} = '-';
+                            ${"row2_hasil_kerja_2"} = null;
+                            ${"row2_data_explode_hasil_kerja_2"} = '-';
+                            ${"row2_lembur_2"} = 1;
+                            ${"row2_total_hasil_2"} = 0;
+                        }else{
+                            ${"row2_jenis_produk_2"} = ${"row2_umk_borongan_lokal_2"}['jenis_produk'];
+                            ${"row2_hasil_kerja_2"} = ${"row2_explode_hasil_kerja_2"}[1]*${"row2_umk_borongan_lokal_2"}['nominal_umk'];
+                            ${"row2_data_explode_hasil_kerja_2"} = ${"row2_explode_hasil_kerja_2"}[1];
+                            ${"row2_explode_lembur_2"} = explode("|",$row2_pengerjaan['lembur']);
+                            ${"row2_explode_status_lembur_2"} = explode("-",${"row2_explode_lembur_2"}[2]);
+                            if(${"row2_explode_status_lembur_2"}[1] == 'y'){
+                                ${"row2_lembur_2"} = 1.5;
+                            }else{
+                                ${"row2_lembur_2"} = 1;
+                            }
+                        }
+                        // End Hasil Kerja 2
+                        
+                        // Hasil Kerja 3
+                        ${"row2_explode_hasil_kerja_3"} = explode("|",$row2_pengerjaan['hasil_kerja_3']);
+                        ${"row2_umk_borongan_lokal_3"} = $this->umkBoronganStempel->select('id','jenis_produk','nominal_umk')
+                                                        ->where('id',${"row2_explode_hasil_kerja_3"}[0])
+                                                        ->first();
+                        if(empty(${"row2_umk_borongan_lokal_3"})){
+                            ${"row2_jenis_produk_3"} = '-';
+                            ${"row2_hasil_kerja_3"} = null;
+                            ${"row2_data_explode_hasil_kerja_3"} = '-';
+                            ${"row2_lembur_3"} = 1;
+                            ${"row2_total_hasil_3"} = 0;
+                        }else{
+                            ${"row2_jenis_produk_3"} = ${"row2_umk_borongan_lokal_3"}['jenis_produk'];
+                            ${"row2_hasil_kerja_3"} = ${"row2_explode_hasil_kerja_3"}[1]*${"row2_umk_borongan_lokal_3"}['nominal_umk'];
+                            ${"row2_data_explode_hasil_kerja_3"} = ${"row2_explode_hasil_kerja_3"}[1];
+                            ${"row2_explode_lembur_3"} = explode("|",$row2_pengerjaan['lembur']);
+                            ${"row2_explode_status_lembur_3"} = explode("-",${"row2_explode_lembur_3"}[3]);
+                            if(${"row2_explode_status_lembur_3"}[1] == 'y'){
+                                ${"row2_lembur_3"} = 1.5;
+                            }else{
+                                ${"row2_lembur_3"} = 1;
+                            }
+                        }
+                        // End Hasil Kerja 3
+    
+                        // Hasil Kerja 4
+                        ${"row2_explode_hasil_kerja_4"} = explode("|",$row2_pengerjaan['hasil_kerja_4']);
+                        ${"row2_umk_borongan_lokal_4"} = $this->umkBoronganStempel->select('id','jenis_produk','nominal_umk')
+                                                        ->where('id',${"row2_explode_hasil_kerja_4"}[0])
+                                                        ->first();
+                        if(empty(${"row2_umk_borongan_lokal_4"})){
+                            ${"row2_jenis_produk_4"} = '-';
+                            ${"row2_hasil_kerja_4"} = null;
+                            ${"row2_data_explode_hasil_kerja_4"} = '-';
+                            ${"row2_lembur_4"} = 1;
+                            ${"row2_total_hasil_4"} = 0;
+                        }else{
+                            ${"row2_jenis_produk_4"} = ${"row2_umk_borongan_lokal_4"}['jenis_produk'];
+                            ${"row2_hasil_kerja_4"} = ${"row2_explode_hasil_kerja_4"}[1]*${"row2_umk_borongan_lokal_4"}['nominal_umk'];
+                            ${"row2_data_explode_hasil_kerja_4"} = ${"row2_explode_hasil_kerja_4"}[1];
+                            ${"row2_explode_lembur_4"} = explode("|",$row2_pengerjaan['lembur']);
+                            ${"row2_explode_status_lembur_4"} = explode("-",${"row2_explode_lembur_4"}[4]);
+                            if(${"row2_explode_status_lembur_4"}[1] == 'y'){
+                                ${"row2_lembur_4"} = 1.5;
+                            }else{
+                                ${"row2_lembur_4"} = 1;
+                            }
+                        }
+                        // End Hasil Kerja 4
+    
+                        // Hasil Kerja 5
+                        ${"row2_explode_hasil_kerja_5"} = explode("|",$row2_pengerjaan['hasil_kerja_5']);
+                        ${"row2_umk_borongan_lokal_5"} = $this->umkBoronganStempel->select('id','jenis_produk','nominal_umk')
+                                                        ->where('id',${"row2_explode_hasil_kerja_5"}[0])
+                                                        ->first();
+                        if(empty(${"row2_umk_borongan_lokal_5"})){
+                            ${"row2_jenis_produk_5"} = '-';
+                            ${"row2_hasil_kerja_5"} = null;
+                            ${"row2_data_explode_hasil_kerja_5"} = '-';
+                            ${"row2_lembur_5"} = 1;
+                            ${"row2_total_hasil_5"} = 0;
+                        }else{
+                            ${"row2_jenis_produk_5"} = ${"row2_umk_borongan_lokal_5"}['jenis_produk'];
+                            ${"row2_hasil_kerja_5"} = ${"row2_explode_hasil_kerja_5"}[1]*${"row2_umk_borongan_lokal_5"}['nominal_umk'];
                             ${"row2_data_explode_hasil_kerja_5"} = ${"row2_explode_hasil_kerja_5"}[1];
                             ${"row2_explode_lembur_5"} = explode("|",$row2_pengerjaan['lembur']);
                             ${"row2_explode_status_lembur_5"} = explode("-",${"row2_explode_lembur_5"}[5]);

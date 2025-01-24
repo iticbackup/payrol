@@ -250,7 +250,36 @@
                                             $total_hasil_kerja = $explode_hasil_kerja[1] * $umk_borongan_lokal->umk_outer*$lembur;
     
                                         }
+                                        
                                     }
+
+                                    $umk_borongan_lokal_stempel = \App\Models\UMKBoronganStempel::select('id', 'jenis_produk', 'nominal_umk')
+                                                                                                ->where('id', $explode_hasil_kerja[0])
+                                                                                                ->first();
+
+                                    if (empty($umk_borongan_lokal_stempel)) {
+                                        $jenis_produk = '-';
+                                        $hasil_kerja = 0;
+                                        $data_explode_hasil_kerja = '-';
+                                        $lembur = 1;
+                                        $total_hasil_kerja = 0;
+                                        $total_jam = 0;
+                                    }else{
+                                        $jenis_produk = $umk_borongan_lokal_stempel->jenis_produk;
+                                        $hasil_kerja = $explode_hasil_kerja[1];
+                                        $total_jam = $hasil_pengerjaan['total_jam_kerja_' . $keys];
+                                        $explode_lembur = explode('|', $hasil_pengerjaan->lembur);
+                                        $explode_status_lembur = explode('-', $explode_lembur[$keys]);
+                                
+                                        if ($explode_status_lembur[1] == 'y') {
+                                            $lembur = 1.5;
+                                        } else {
+                                            $lembur = 1;
+                                        }
+
+                                        $total_hasil_kerja = $explode_hasil_kerja[1] * $umk_borongan_lokal_stempel->nominal_umk*$lembur;
+                                    }
+
                                 }elseif($kode_id == 2){
                                     $umk_borongan_ekspor = \App\Models\UMKBoronganEkspor::select('id', 'jenis_produk', 'umk_packing', 'umk_kemas', 'umk_pilih_gagang')
                                                                                     ->where('id', $explode_hasil_kerja[0])
@@ -658,6 +687,33 @@
                                     }
                                     $total_hasil_kerja = $explode_hasil_kerja[1] * $umk_borongan_lokal->umk_outer*$lembur;
                                 }
+                            }
+
+                            $umk_borongan_lokal_stempel = \App\Models\UMKBoronganStempel::select('id', 'jenis_produk', 'nominal_umk')
+                                                                                                ->where('id', $explode_hasil_kerja[0])
+                                                                                                ->first();
+                                                                                                
+                            if (empty($umk_borongan_lokal_stempel)) {
+                                $jenis_produk = '-';
+                                $hasil_kerja = 0;
+                                $data_explode_hasil_kerja = '-';
+                                $lembur = 1;
+                                $total_hasil_kerja = 0;
+                                $total_jam = 0;
+                            }else{
+                                $jenis_produk = $umk_borongan_lokal_stempel->jenis_produk;
+                                $hasil_kerja = $explode_hasil_kerja[1];
+                                $total_jam = $hasil_pengerjaan['total_jam_kerja_' . $t];
+                                $explode_lembur = explode('|', $hasil_pengerjaan->lembur);
+                                $explode_status_lembur = explode('-', $explode_lembur[$t]);
+                        
+                                if ($explode_status_lembur[1] == 'y') {
+                                    $lembur = 1.5;
+                                } else {
+                                    $lembur = 1;
+                                }
+
+                                $total_hasil_kerja = $hasil_kerja * $umk_borongan_lokal_stempel->nominal_umk*$lembur;
                             }
                         }
 

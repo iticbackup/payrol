@@ -81,6 +81,16 @@ Route::group(['middleware' => 'auth'], function () {
                 Route::get('{id}/{kode_pengerjaan}/{nik}/input_hasil_karyawan/{month}/{year}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_karyawan_outer_view'])->name('hasil_kerja.outerLokal.view_hasil_karyawan');
                 Route::post('{id}/{kode_pengerjaan}/{nik}/input_hasil_karyawan/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_karyawan_outer_view_simpan'])->name('hasil_kerja.outerLokal.view_hasil_karyawan.simpan');
             });
+
+            Route::prefix('stempel_lokal')->group(function () {
+                Route::get('{id}/{kode_pengerjaan}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_stempel_lokal'])->name('hasil_kerja.stempelLokal');
+                Route::get('{id}/{kode_pengerjaan}/{tanggal}/input_hasil', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_stempel_lokal_view_hasil'])->name('hasil_kerja.stempelLokal.view_hasil');
+                Route::post('{id}/{kode_pengerjaan}/{tanggal}/input_hasil/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_stempel_lokal_view_simpan'])->name('hasil_kerja.stempelLokal.view_hasil.simpan');
+                
+                Route::get('{id}/{kode_pengerjaan}/{nik}/input_hasil_karyawan/{month}/{year}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_karyawan_stempel_lokal_view'])->name('hasil_kerja.stempelLokal.view_hasil_karyawan');
+                Route::post('{id}/{kode_pengerjaan}/{nik}/input_hasil_karyawan/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_karyawan_stempel_lokal_view_simpan'])->name('hasil_kerja.stempelLokal.view_hasil_karyawan.simpan');
+            });
+
             Route::prefix('packing_ekspor')->group(function () {
                 // Route::get('/', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_packing_ekspor'])->name('hasil_kerja.packingEkspor');
                 Route::get('{id}/{kode_pengerjaan}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_packing_ekspor'])->name('hasil_kerja.packingEkspor');
