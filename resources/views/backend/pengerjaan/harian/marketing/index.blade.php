@@ -75,14 +75,15 @@
                                 if ($bulan_explode==$explode_posting[1]) {
                                     $get_bulan=$bulan_explode;
                                     $get_tahun=$explode_posting[0];
-                                }else{
+                                }
+                                else{
                                     if ($explode_posting[1]=="01"){
                                         $get_bulan="12";
                                         $get_tahun=$explode_posting[0]-1;			
                                     }
                                     else{
                                         $get_bulan=$bulan_explode;
-                                        $get_tahun=$explode_date[0];
+                                        $get_tahun=$explode_posting[0];
                                     }
                                 }
                                 

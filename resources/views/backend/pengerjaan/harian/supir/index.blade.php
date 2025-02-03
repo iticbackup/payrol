@@ -82,7 +82,7 @@
                                     }
                                     else{
                                         $get_bulan=$bulan_explode;
-                                        $get_tahun=$explode_date[0];
+                                        $get_tahun=$explode_posting[0];
                                     }
                                 }
                                 
