@@ -146,13 +146,18 @@ Route::group(['middleware' => 'auth'], function () {
                 Route::get('{id}/{kode_pengerjaan}/{nik}/input_hasil_karyawan/{month}/{year}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_karyawan_ambri_isi_ambri_view'])->name('hasil_kerja.isiAmbri.view_hasil_karyawan');
                 Route::post('{id}/{kode_pengerjaan}/{nik}/input_hasil_karyawan/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_karyawan_ambri_isi_ambri_view_simpan'])->name('hasil_kerja.isiAmbri.view_hasil_karyawan.simpan');
             });
+            Route::prefix('harian')->group(function () {
+                Route::post('{id}/{kode_pengerjaan}/tambah_karyawan/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_tambah_karyawan_simpan'])->name('hasil_kerja.harian.tambah_karyawan.simpan');
+            });
             Route::prefix('marketing')->group(function () {
                 Route::get('{id}/{kode_pengerjaan}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_marketing'])->name('hasil_kerja.marketing');
+                Route::get('{id}/{kode_pengerjaan}/tambah_karyawan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_marketing_tambah_karyawan'])->name('hasil_kerja.marketing.tambah_karyawan');
                 Route::get('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_marketing_view'])->name('hasil_kerja.marketing.view');
                 Route::post('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_marketing_simpan'])->name('hasil_kerja.marketing.simpan');
             });
             Route::prefix('ppic_tembakau')->group(function () {
                 Route::get('{id}/{kode_pengerjaan}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_ppic_tembakau'])->name('hasil_kerja.ppicTembakau');
+                Route::get('{id}/{kode_pengerjaan}/tambah_karyawan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_ppic_tembakau_tambah_karyawan'])->name('hasil_kerja.ppicTembakau.tambah_karyawan');
                 Route::get('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_ppic_tembakau_view'])->name('hasil_kerja.ppicTembakau.view');
                 Route::post('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_ppic_tembakau_simpan'])->name('hasil_kerja.ppicTembakau.simpan');
                 // Route::get('/', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_ppic_tembakau'])->name('hasil_kerja.ppicTembakau');
@@ -160,41 +165,55 @@ Route::group(['middleware' => 'auth'], function () {
             Route::prefix('primary_process')->group(function () {
                 // Route::get('/', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_primary_process'])->name('hasil_kerja.primaryProcess');
                 Route::get('{id}/{kode_pengerjaan}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_primary_process'])->name('hasil_kerja.primaryProcess');
+                Route::get('{id}/{kode_pengerjaan}/tambah_karyawan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_primary_process_tambah_karyawan'])->name('hasil_kerja.primaryProcess.tambah_karyawan');
+                // Route::post('{id}/{kode_pengerjaan}/tambah_karyawan/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_tambah_karyawan_simpan'])->name('hasil_kerja.primaryProcess.tambah_karyawan.simpan');
                 Route::get('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_primary_process_view'])->name('hasil_kerja.primaryProcess.view');
                 Route::post('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_primary_process_simpan'])->name('hasil_kerja.primaryProcess.simpan');
             });
             Route::prefix('packing_b')->group(function () {
                 // Route::get('/', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_packingB'])->name('hasil_kerja.packingB');
                 Route::get('{id}/{kode_pengerjaan}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_packing_b'])->name('hasil_kerja.packingB');
+                Route::get('{id}/{kode_pengerjaan}/tambah_karyawan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_packing_b_tambah_karyawan'])->name('hasil_kerja.packingB.tambah_karyawan');
+                // Route::post('{id}/{kode_pengerjaan}/tambah_karyawan/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_tambah_karyawan_simpan'])->name('hasil_kerja.packingB.tambah_karyawan.simpan');
                 Route::get('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_packing_b_view'])->name('hasil_kerja.packingB.view');
                 Route::post('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_packing_b_simpan'])->name('hasil_kerja.packingB.simpan');
             });
             Route::prefix('ambri')->group(function () {
                 // Route::get('/', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_ambri'])->name('hasil_kerja.ambri');
                 Route::get('{id}/{kode_pengerjaan}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_ambri'])->name('hasil_kerja.ambri');
+                Route::get('{id}/{kode_pengerjaan}/tambah_karyawan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_ambri_tambah_karyawan'])->name('hasil_kerja.ambri.tambah_karyawan');
+                // Route::post('{id}/{kode_pengerjaan}/tambah_karyawan/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_tambah_karyawan_simpan'])->name('hasil_kerja.ambri.tambah_karyawan.simpan');
                 Route::get('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_ambri_view'])->name('hasil_kerja.ambri.view');
                 Route::post('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_ambri_simpan'])->name('hasil_kerja.ambri.simpan');
             });
             Route::prefix('umum')->group(function () {
                 // Route::get('/', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_umum'])->name('hasil_kerja.umum');
                 Route::get('{id}/{kode_pengerjaan}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_umum'])->name('hasil_kerja.umum');
+                Route::get('{id}/{kode_pengerjaan}/tambah_karyawan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_umum_tambah_karyawan'])->name('hasil_kerja.umum.tambah_karyawan');
+                // Route::post('{id}/{kode_pengerjaan}/tambah_karyawan/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_tambah_karyawan_simpan'])->name('hasil_kerja.umum.tambah_karyawan.simpan');
                 Route::get('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_umum_view'])->name('hasil_kerja.umum.view');
                 Route::post('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_umum_simpan'])->name('hasil_kerja.umum.simpan');
             });
             Route::prefix('supir')->group(function () {
                 // Route::get('/', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_supir'])->name('hasil_kerja.supir');
                 Route::get('{id}/{kode_pengerjaan}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_supir'])->name('hasil_kerja.supir');
+                Route::get('{id}/{kode_pengerjaan}/tambah_karyawan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_supir_tambah_karyawan'])->name('hasil_kerja.supir.tambah_karyawan');
+                // Route::post('{id}/{kode_pengerjaan}/tambah_karyawan/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_tambah_karyawan_simpan'])->name('hasil_kerja.supir.tambah_karyawan.simpan');
                 Route::get('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_supir_view'])->name('hasil_kerja.supir.view');
                 Route::post('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_supir_simpan'])->name('hasil_kerja.supir.simpan');
             });
             Route::prefix('satpam')->group(function () {
                 // Route::get('/', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_satpam'])->name('hasil_kerja.satpam');
                 Route::get('{id}/{kode_pengerjaan}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_satpam'])->name('hasil_kerja.satpam');
+                Route::get('{id}/{kode_pengerjaan}/tambah_karyawan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_satpam_tambah_karyawan'])->name('hasil_kerja.satpam.tambah_karyawan');
+                // Route::post('{id}/{kode_pengerjaan}/tambah_karyawan/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_tambah_karyawan_simpan'])->name('hasil_kerja.satpam.tambah_karyawan.simpan');
                 Route::get('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_satpam_view'])->name('hasil_kerja.satpam.view');
                 Route::post('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_satpam_simpan'])->name('hasil_kerja.satpam.simpan');
             });
             Route::prefix('supir_rit')->group(function () {
                 Route::get('{kode_pengerjaan}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_supir_rit'])->name('hasil_kerja.supir_rit');
+                Route::get('{id}/{kode_pengerjaan}/tambah_karyawan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_supir_rit_tambah_karyawan'])->name('hasil_kerja.supir_rit.tambah_karyawan');
+                // Route::post('{id}/{kode_pengerjaan}/tambah_karyawan/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_tambah_karyawan_simpan'])->name('hasil_kerja.supir_rit.tambah_karyawan.simpan');
                 Route::get('{kode_pengerjaan}/{tanggal}/input', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_supir_rit_input'])->name('hasil_kerja.supir_rit.input');
                 Route::post('{kode_pengerjaan}/{tanggal}/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_supir_rit_simpan'])->name('hasil_kerja.supir_rit.simpan');
 

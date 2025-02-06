@@ -10195,6 +10195,99 @@ class PengerjaanController extends Controller
         // dd($pengerjaan_weekly);
     }
 
+    public function hasil_kerja_harian_tambah_karyawan_simpan(Request $request, $id, $kode_pengerjaan)
+    {
+        // dd($request->all());
+        $new_data_pengerjaan = $this->newDataPengerjaan->select('tanggal')->where('kode_pengerjaan',$kode_pengerjaan)->first();
+        // dd(count(array_filter(explode('#',$new_data_pengerjaan->tanggal))));
+        for ($i=1; $i <= 25; $i++) {
+            if ($request['checkbox_'.$i]) {
+                $data_checkbox = $request['checkbox_'.$i];
+                // dd($data_checkbox);
+                $no = 0;
+                $number_id = $no+1;
+                // $data = [];
+                foreach ($data_checkbox as $key => $checkbox) {
+                    $pengerjaan_harians = $this->pengerjaanHarian->orderBy('id','desc')->first();
+                    if (empty($pengerjaan_harians)) {
+                        $pengerjaan_harian = $this->pengerjaanHarian->create([
+                            'id' => $no+1,
+                            'kode_pengerjaan' => $kode_pengerjaan,
+                            'kode_payrol' => $kode_pengerjaan,
+                            'operator_harian_karyawan_id' => $checkbox,
+                            'upah_dasar' => null,
+                            'updah_dasar_weekly' => null,
+                            'hari_kerja' => count(array_filter(explode('#',$new_data_pengerjaan->tanggal))),
+                            'hasil_kerja' => null,
+                            'tunjangan_kerja' => null,
+                            'tunjangan_kehadiran' => null,
+                            'plus_1' => null,
+                            'plus_2' => null,
+                            'plus_3' => null,
+                            'minus_1' => null,
+                            'minus_2' => null,
+                            'minus_3' => null,
+                            'uang_makan' => null,
+                            'lembur' => null,
+                            'jht' => null,
+                            'bpjs_kesehatan' => null,
+                            'pensiun' => null
+                        ]);
+                    }else{
+                        $pengerjaan_harian = $this->pengerjaanHarian->create([
+                            'id' => $pengerjaan_harians->id+1,
+                            'kode_pengerjaan' => $kode_pengerjaan,
+                            'kode_payrol' => $kode_pengerjaan,
+                            'operator_harian_karyawan_id' => $checkbox,
+                            'upah_dasar' => null,
+                            'updah_dasar_weekly' => null,
+                            'hari_kerja' => count(array_filter(explode('#',$new_data_pengerjaan->tanggal))),
+                            'hasil_kerja' => null,
+                            'tunjangan_kerja' => null,
+                            'tunjangan_kehadiran' => null,
+                            'plus_1' => null,
+                            'plus_2' => null,
+                            'plus_3' => null,
+                            'minus_1' => null,
+                            'minus_2' => null,
+                            'minus_3' => null,
+                            'uang_makan' => null,
+                            'lembur' => null,
+                            'jht' => null,
+                            'bpjs_kesehatan' => null,
+                            'pensiun' => null
+                        ]);
+                    }
+                }
+                // dd($data);
+                $no++;
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message_title' => 'Karyawan Pengerjaan Harian Berhasil ditambah'
+        ]);
+    }
+
+    public function hasil_kerja_harian_marketing_tambah_karyawan($id, $kode_pengerjaan)
+    {
+        $data['id'] = $id;
+        $data['kode_pengerjaan'] = $kode_pengerjaan;
+        $data['jenis_operator_detail_pekerjaan'] = $this->jenisOperatorDetailPengerjaan->find(12);
+        $data['karyawan_operator_harians'] = $this->karyawanOperatorHarian->select([
+                                                                        'operator_harian_karyawan.id as id',
+                                                                        'operator_harian_karyawan.nik as nik',
+                                                                        'biodata_karyawan.nama as nama',
+                                                                        ])
+                                                                        ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
+                                                                        ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',12)
+                                                                        ->where('operator_harian_karyawan.status','y')
+                                                                        ->get();
+
+        return view('backend.pengerjaan.harian.tambah_karyawan',$data);
+    }
+
     public function hasil_kerja_harian_marketing($id, $kode_pengerjaan)
     {
         if($id == 1){
@@ -10924,6 +11017,24 @@ class PengerjaanController extends Controller
         // dd($request->all());
     }
 
+    public function hasil_kerja_harian_ppic_tembakau_tambah_karyawan($id, $kode_pengerjaan)
+    {
+        $data['id'] = $id;
+        $data['kode_pengerjaan'] = $kode_pengerjaan;
+        $data['jenis_operator_detail_pekerjaan'] = $this->jenisOperatorDetailPengerjaan->find(13);
+        $data['karyawan_operator_harians'] = $this->karyawanOperatorHarian->select([
+                                                                        'operator_harian_karyawan.id as id',
+                                                                        'operator_harian_karyawan.nik as nik',
+                                                                        'biodata_karyawan.nama as nama',
+                                                                        ])
+                                                                        ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
+                                                                        ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',13)
+                                                                        ->where('operator_harian_karyawan.status','y')
+                                                                        ->get();
+
+        return view('backend.pengerjaan.harian.tambah_karyawan',$data);
+    }
+
     public function hasil_kerja_harian_ppic_tembakau($id, $kode_pengerjaan)
     {
         $data['id'] = $id;
@@ -11381,6 +11492,24 @@ class PengerjaanController extends Controller
         // dd($request->all());
     }
 
+    public function hasil_kerja_harian_primary_process_tambah_karyawan($id, $kode_pengerjaan)
+    {
+        $data['id'] = $id;
+        $data['kode_pengerjaan'] = $kode_pengerjaan;
+        $data['jenis_operator_detail_pekerjaan'] = $this->jenisOperatorDetailPengerjaan->find(14);
+        $data['karyawan_operator_harians'] = $this->karyawanOperatorHarian->select([
+                                                                        'operator_harian_karyawan.id as id',
+                                                                        'operator_harian_karyawan.nik as nik',
+                                                                        'biodata_karyawan.nama as nama',
+                                                                        ])
+                                                                        ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
+                                                                        ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',14)
+                                                                        ->where('operator_harian_karyawan.status','y')
+                                                                        ->get();
+
+        return view('backend.pengerjaan.harian.tambah_karyawan',$data);
+    }
+
     public function hasil_kerja_harian_primary_process($id, $kode_pengerjaan)
     {
         $data['id'] = $id;
@@ -11833,6 +11962,24 @@ class PengerjaanController extends Controller
         // return 'Success';
     }
 
+    public function hasil_kerja_harian_packing_b_tambah_karyawan($id, $kode_pengerjaan)
+    {
+        $data['id'] = $id;
+        $data['kode_pengerjaan'] = $kode_pengerjaan;
+        $data['jenis_operator_detail_pekerjaan'] = $this->jenisOperatorDetailPengerjaan->find(15);
+        $data['karyawan_operator_harians'] = $this->karyawanOperatorHarian->select([
+                                                                        'operator_harian_karyawan.id as id',
+                                                                        'operator_harian_karyawan.nik as nik',
+                                                                        'biodata_karyawan.nama as nama',
+                                                                        ])
+                                                                        ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
+                                                                        ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',15)
+                                                                        ->where('operator_harian_karyawan.status','y')
+                                                                        ->get();
+
+        return view('backend.pengerjaan.harian.tambah_karyawan',$data);
+    }
+
     public function hasil_kerja_harian_packing_b($id, $kode_pengerjaan)
     {
         $data['id'] = $id;
@@ -12280,6 +12427,24 @@ class PengerjaanController extends Controller
         }
     }
 
+    public function hasil_kerja_harian_ambri_tambah_karyawan($id, $kode_pengerjaan)
+    {
+        $data['id'] = $id;
+        $data['kode_pengerjaan'] = $kode_pengerjaan;
+        $data['jenis_operator_detail_pekerjaan'] = $this->jenisOperatorDetailPengerjaan->find(16);
+        $data['karyawan_operator_harians'] = $this->karyawanOperatorHarian->select([
+                                                                        'operator_harian_karyawan.id as id',
+                                                                        'operator_harian_karyawan.nik as nik',
+                                                                        'biodata_karyawan.nama as nama',
+                                                                        ])
+                                                                        ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
+                                                                        ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',16)
+                                                                        ->where('operator_harian_karyawan.status','y')
+                                                                        ->get();
+
+        return view('backend.pengerjaan.harian.tambah_karyawan',$data);
+    }
+
     public function hasil_kerja_harian_ambri($id, $kode_pengerjaan)
     {
         $data['id'] = $id;
@@ -12723,6 +12888,24 @@ class PengerjaanController extends Controller
                 'message_content' => 'Data Tidak Berhasil Disimpan'
             ]);
         }
+    }
+
+    public function hasil_kerja_harian_umum_tambah_karyawan($id, $kode_pengerjaan)
+    {
+        $data['id'] = $id;
+        $data['kode_pengerjaan'] = $kode_pengerjaan;
+        $data['jenis_operator_detail_pekerjaan'] = $this->jenisOperatorDetailPengerjaan->find(17);
+        $data['karyawan_operator_harians'] = $this->karyawanOperatorHarian->select([
+                                                                        'operator_harian_karyawan.id as id',
+                                                                        'operator_harian_karyawan.nik as nik',
+                                                                        'biodata_karyawan.nama as nama',
+                                                                        ])
+                                                                        ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
+                                                                        ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',17)
+                                                                        ->where('operator_harian_karyawan.status','y')
+                                                                        ->get();
+
+        return view('backend.pengerjaan.harian.tambah_karyawan',$data);
     }
 
     public function hasil_kerja_harian_umum($id, $kode_pengerjaan)
@@ -13172,6 +13355,24 @@ class PengerjaanController extends Controller
         }
     }
 
+    public function hasil_kerja_harian_supir_tambah_karyawan($id, $kode_pengerjaan)
+    {
+        $data['id'] = $id;
+        $data['kode_pengerjaan'] = $kode_pengerjaan;
+        $data['jenis_operator_detail_pekerjaan'] = $this->jenisOperatorDetailPengerjaan->find(18);
+        $data['karyawan_operator_harians'] = $this->karyawanOperatorHarian->select([
+                                                                        'operator_harian_karyawan.id as id',
+                                                                        'operator_harian_karyawan.nik as nik',
+                                                                        'biodata_karyawan.nama as nama',
+                                                                        ])
+                                                                        ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
+                                                                        ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',18)
+                                                                        ->where('operator_harian_karyawan.status','y')
+                                                                        ->get();
+
+        return view('backend.pengerjaan.harian.tambah_karyawan',$data);
+    }
+
     public function hasil_kerja_harian_supir($id, $kode_pengerjaan)
     {
         $data['id'] = $id;
@@ -13615,6 +13816,24 @@ class PengerjaanController extends Controller
                 'message_content' => 'Data Tidak Berhasil Disimpan'
             ]);
         }
+    }
+
+    public function hasil_kerja_harian_satpam_tambah_karyawan($id, $kode_pengerjaan)
+    {
+        $data['id'] = $id;
+        $data['kode_pengerjaan'] = $kode_pengerjaan;
+        $data['jenis_operator_detail_pekerjaan'] = $this->jenisOperatorDetailPengerjaan->find(19);
+        $data['karyawan_operator_harians'] = $this->karyawanOperatorHarian->select([
+                                                                        'operator_harian_karyawan.id as id',
+                                                                        'operator_harian_karyawan.nik as nik',
+                                                                        'biodata_karyawan.nama as nama',
+                                                                        ])
+                                                                        ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
+                                                                        ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',19)
+                                                                        ->where('operator_harian_karyawan.status','y')
+                                                                        ->get();
+
+        return view('backend.pengerjaan.harian.tambah_karyawan',$data);
     }
 
     public function hasil_kerja_harian_satpam($id, $kode_pengerjaan)

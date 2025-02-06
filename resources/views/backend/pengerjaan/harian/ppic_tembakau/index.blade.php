@@ -43,6 +43,7 @@
                         <i class="far fa-check-circle text-success"></i>
                         @endif
                     </h5>
+                    <a href="{{ route('hasil_kerja.ppicTembakau.tambah_karyawan',['id' => $jenis_operator_detail_pekerjaan->jenis_operator_detail_id, 'kode_pengerjaan' => $new_data_pengerjaan->kode_pengerjaan ]) }}" class="btn btn-primary">Tambah Karyawan</a>
                 </div>
                 <div class="card-body">
                     <div class="table-container">
