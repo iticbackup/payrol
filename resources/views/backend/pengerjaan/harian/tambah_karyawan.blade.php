@@ -26,6 +26,20 @@
             <div class="card">
                 <div class="card-header">
                     <h5>Tambah Karyawan Harian {{ $jenis_operator_detail_pekerjaan->jenis_posisi_pekerjaan }}</h5>
+                    <div class="alert alert-light mb-0" role="alert">
+                        <h4 class="alert-heading font-18">Informasi!</h4>
+                        <p>
+                            Dipastikan untuk inputan karyawan harian sesuai dengan kategori pengerjaan harian dan kode pengerjaan.
+                            <div class="checkbox checkbox-primary">
+                                <input type="checkbox" disabled checked>
+                                <label for="checkbox">NIK - Nama</label> : Telah Diinput
+                            </div>
+                            <div class="checkbox checkbox-primary">
+                                <input type="checkbox">
+                                <label for="checkbox">NIK - Nama</label> : Belum Diinput
+                            </div>
+                        </p>
+                    </div>
                 </div>
                 <form id="form-simpan" method="POST">
                     @csrf
