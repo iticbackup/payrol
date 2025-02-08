@@ -362,6 +362,33 @@
                                         }
                                     }
 
+                                    #Borongan Stempel Kantong
+                                    if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 25) {
+                                        for ($i=1; $i <= 5 ; $i++) { 
+                                            ${"explode_hasil_kerja_".$i} = explode("|",$pengerjaan['hasil_kerja_'.$i]);
+                                            ${"umk_borongan_lokal_".$i} = \App\Models\UMKBoronganStempel::select('jenis_produk','nominal_umk')->where('id',${"explode_hasil_kerja_".$i}[0])
+                                                                                                        ->first();
+                                            if (empty(${"umk_borongan_lokal_".$i})) {
+                                                ${"jenis_produk_".$i} = '-';
+                                                ${"hasil_kerja_".$i} = null;
+                                                ${"data_explode_hasil_kerja_".$i} = '-';
+                                                ${"lembur_".$i} = 1;
+                                                ${"total_hasil_".$i} = 0;
+                                            }else{
+                                                ${"jenis_produk_".$i} = ${"umk_borongan_lokal_".$i}['jenis_produk'];
+                                                ${"hasil_kerja_".$i} = ${"explode_hasil_kerja_".$i}[1]*${"umk_borongan_lokal_".$i}['nominal_umk'];
+                                                ${"data_explode_hasil_kerja_".$i} = ${"explode_hasil_kerja_".$i}[1];
+                                                ${"explode_lembur_".$i} = explode("|",$pengerjaan['lembur']);
+                                                ${"explode_status_lembur_".$i} = explode("-",${"explode_lembur_".$i}[$i]);
+                                                if(${"explode_status_lembur_".$i}[1] == 'y'){
+                                                    ${"lembur_".$i} = 1.5;
+                                                }else{
+                                                    ${"lembur_".$i} = 1;
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     $total_hasil_kerja = (round(($hasil_kerja_1*$lembur_1)+($hasil_kerja_2*$lembur_2)+($hasil_kerja_3*$lembur_3)+($hasil_kerja_4*$lembur_4)+($hasil_kerja_5*$lembur_5)))-$pengerjaan['uang_lembur'];
                                     $total_lembur = $pengerjaan['uang_lembur'];
 
