@@ -410,8 +410,8 @@
                                 }
                                 // $hasil_upah = $total_hasil_kerja * $lembur;
                                 // dd($total_hasil_kerja);
-                                $hasil_upah = round($total_hasil_kerja);
-                                // $hasil_upah = $total_hasil_kerja;
+                                // $hasil_upah = round($total_hasil_kerja);
+                                $hasil_upah = $total_hasil_kerja;
                                 array_push($upah_hasil_kerja, $hasil_upah);
                                 // array_push($total_hasil_kerjas_1,$hasil_kerja);
                                 // dd($total_hasil_kerjas_1);
@@ -577,6 +577,7 @@
                     <td style="text-align: right; border: 1px solid black">{{ round($minus_1) }}</td>
                     <td style="text-align: right; border: 1px solid black">{{ round($minus_2) }}</td>
                     <td style="text-align: right; border: 1px solid black">{{ round($total_potongan) }}</td>
+                    {{-- <td style="text-align: right; border: 1px solid black">{{ $upah_dterima }}</td> --}}
                     <td style="text-align: right; border: 1px solid black">{{ round($upah_dterima) }}</td>
                     <td style="text-align: right;">{{ $keterangan_1 }}</td>
                     <td style="text-align: right;">{{ $keterangan_2 }}</td>
