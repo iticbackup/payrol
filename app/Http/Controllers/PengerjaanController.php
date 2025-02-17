@@ -13999,17 +13999,26 @@ class PengerjaanController extends Controller
                     $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
                 }
             }
-            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 0){
                 if ($jht->urutan == 2) {
                     $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
                 }
             }
-            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 0){
                 if ($jht->urutan == 1) {
                     $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
                 }
             }
+            if ($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15) {
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                }
+            }
         }
+
+        // $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+
+        // dd($data);
 
         $tgl_current_active = Carbon::now()->format('d');
         $bln_active = Carbon::now()->format('m');
