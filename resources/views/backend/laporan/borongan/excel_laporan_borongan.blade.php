@@ -543,22 +543,23 @@
                         
                         $upah_dterima = $total_gaji - $total_potongan;
                         
-                        array_push($total_row_upah_hasil_kerja,$hasil_total_upah);
-                        array_push($total_row_plus_1,$plus_1);
-                        array_push($total_row_plus_2,$plus_2);
-                        array_push($total_row_plus_3,$plus_3);
-                        array_push($total_row_uang_makan,$uang_makan);
-                        array_push($total_row_tunj_kerja,$tunjangan_kerja);
-                        array_push($total_row_tunj_kehadiran,$tunjangan_kehadiran);
-                        array_push($total_row_all_plus,$total_plus);
-                        array_push($total_row_gaji,$total_gaji);
-                        array_push($total_row_jht,$jht);
-                        array_push($total_row_bpjs_kesehatan,$bpjs_kesehatan);
+                        array_push($total_row_upah_hasil_kerja,round($hasil_total_upah));
+                        array_push($total_row_plus_1,round($plus_1));
+                        array_push($total_row_plus_2,round($plus_2));
+                        array_push($total_row_plus_3,round($plus_3));
+                        array_push($total_row_uang_makan,round($uang_makan));
+                        array_push($total_row_tunj_kerja,round($tunjangan_kerja));
+                        array_push($total_row_tunj_kehadiran,round($tunjangan_kehadiran));
+                        array_push($total_row_all_plus,round($total_plus));
+                        array_push($total_row_gaji,round($total_gaji));
+                        array_push($total_row_jht,round($jht));
+                        array_push($total_row_bpjs_kesehatan,round($bpjs_kesehatan));
                         array_push($total_row_pensiun,0);
-                        array_push($total_row_minus_1,$minus_1);
-                        array_push($total_row_minus_2,$minus_2);
-                        array_push($total_row_all_potongan,$total_potongan);
-                        array_push($total_row_upah_diterima,$upah_dterima);
+                        array_push($total_row_minus_1,round($minus_1));
+                        array_push($total_row_minus_2,round($minus_2));
+                        array_push($total_row_all_potongan,round($total_potongan));
+                        array_push($total_row_upah_diterima,round($upah_dterima));
+                        // array_push($total_row_upah_diterima,$upah_dterima);
                         // echo json_encode(array_sum($upah_hasil_kerja));
                         
                     @endphp
