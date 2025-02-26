@@ -1692,7 +1692,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
-        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
         // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
@@ -2532,7 +2532,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
-        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
         // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
@@ -3375,7 +3375,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
-        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
         // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
@@ -4228,7 +4228,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
-        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
         // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
@@ -5001,6 +5001,8 @@ class PengerjaanController extends Controller
             // }
         }
 
+        // dd($data);
+
         //jumlah status pulang awal
         $data['pulang_awals'] = $this->presensiInfo->where('pin',$data['karyawan']['pin'])
                                     ->whereBetween('scan_date',[$bulan_kemarin,$bulan_sekarang])
@@ -5067,7 +5069,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
-        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
         // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
@@ -5914,7 +5916,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
-        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
         // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
@@ -6754,7 +6756,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
-        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {$total_potongan_tk=0;}
 
         // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
@@ -7560,7 +7562,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
-        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
         // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
@@ -8407,7 +8409,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
-        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
         // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
@@ -9255,7 +9257,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
-        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
         // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
@@ -10108,7 +10110,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
-        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
         // if ($data['pengerjaan_weekly']['tunjangan_kehadiran'] == 75000) {
@@ -10623,6 +10625,8 @@ class PengerjaanController extends Controller
             }
         }
 
+        // dd($data);
+
         //jumlah ijin saat jam kerja
         $data['keluar_masuks'] = $this->keluarMasuk->where('nik',$data['karyawan_harian']['nik'])
                                     ->whereBetween('tanggal_ijin',[$bulan_kemarin,$bulan_sekarang])
@@ -10659,7 +10663,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
-        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
         // if ($data['pengerjaan_harian_weekly']['tunjangan_kerja'] == 75000) {
@@ -11380,7 +11384,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
-        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
         
         // dd($total_potongan_tk);
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
@@ -11859,7 +11863,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
-        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
         // if ($data['pengerjaan_harian_weekly']['tunjangan_kerja'] == 75000) {
@@ -12324,7 +12328,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($ijin_15*25000)+($ijin_k4*40000)+
-        ($ijin_l4*75000)+($pulang_1*40000)+($pulang_2*75000)+($telat_1*15000)+($telat_2*25000)+($telat_3*30000)+($telat_4*40000)+$div_tk;
+        ($ijin_l4*75000)+($pulang_1*40000)+($pulang_2*75000)+($telat_1*15000)+($telat_2*25000)+($telat_3*30000)+($telat_4*40000)+($telat_5*75000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
         // if ($data['pengerjaan_harian_weekly']['tunjangan_kerja'] == 75000) {
@@ -12787,7 +12791,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
-        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
         // if ($data['pengerjaan_harian_weekly']['tunjangan_kerja'] == 75000) {
@@ -13252,7 +13256,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
-        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
         // if ($data['pengerjaan_harian_weekly']['tunjangan_kerja'] == 75000) {
@@ -13714,7 +13718,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
-        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
         // dd($total_potongan_tk);
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
@@ -14193,7 +14197,7 @@ class PengerjaanController extends Controller
 		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
-        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+$div_tk;
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
         // if ($data['pengerjaan_harian_weekly']['tunjangan_kerja'] == 75000) {

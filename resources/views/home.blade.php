@@ -95,7 +95,7 @@
         <div class="col-12 col-lg-12 col-xl-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Periode 2024</h4>
+                    <h4 class="card-title">Periode {{ date('Y') }}</h4>
                 </div>
                 <div class="card-body">
                     <div id="total_gaji_karyawan_periode" class="apex-charts"></div>
