@@ -323,7 +323,8 @@
                                             array_push($total_all_jht, $jht);
                                             array_push($total_all_bpjs_kesehatan, $bpjs_kesehatan);
                                             array_push($total_all_pensiun, $pensiun);
-                                            array_push($total_all_upah_diterima, $total_upah_diterima);
+                                            array_push($total_all_upah_diterima, round($total_upah_diterima));
+                                            // array_push($total_all_upah_diterima, $total_upah_diterima);
                                         @endphp
                                         <td style="text-align: right">Rp. {{ number_format($hasil_upah_dasar, 0, ',', '.') }}</td>
                                         <td style="text-align: right">Rp. {{ number_format($plus_1, 0, ',', '.') }}</td>

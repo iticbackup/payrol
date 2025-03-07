@@ -302,8 +302,8 @@ class LaporanController extends Controller
         // foreach ($data['jenis_operator_detail_pengerjaans'] as $key => $value) {
         // }
         
-        // return view('backend.laporan.borongan.excel_laporan_borongan',$data);
-        return Excel::download(new LaporanBoronganLokalExport($id_jenis_pekerjaan,$id,$kode_pengerjaan,$baris_akhir), 'Laporan Borongan '.$data['jenis_operator_detail_pengerjaan']['jenis_posisi_pekerjaan'].' '.Carbon::parse($exp_tgl_awal[0] . '-' . $exp_tgl_awal[1] . '-' . $exp_tgl_awal[2])->isoFormat('D MMMM').' sd '.Carbon::parse($exp_tgl_akhir[0] . '-' . $exp_tgl_akhir[1] . '-' . $exp_tgl_akhir[2])->isoFormat('D MMMM YYYY').'.xlsx');
+        return view('backend.laporan.borongan.excel_laporan_borongan',$data);
+        // return Excel::download(new LaporanBoronganLokalExport($id_jenis_pekerjaan,$id,$kode_pengerjaan,$baris_akhir), 'Laporan Borongan '.$data['jenis_operator_detail_pengerjaan']['jenis_posisi_pekerjaan'].' '.Carbon::parse($exp_tgl_awal[0] . '-' . $exp_tgl_awal[1] . '-' . $exp_tgl_awal[2])->isoFormat('D MMMM').' sd '.Carbon::parse($exp_tgl_akhir[0] . '-' . $exp_tgl_akhir[1] . '-' . $exp_tgl_akhir[2])->isoFormat('D MMMM YYYY').'.xlsx');
         // return Excel::download(new LaporanBoronganLokalExport($id_jenis_pekerjaan,$id,$kode_pengerjaan), 'Laporan Borongan '.$data['jenis_operator_detail_pengerjaan']['jenis_posisi_pekerjaan'].' '.$kode_pengerjaan.'.xlsx');
         // return Excel::download(new BoronganMultiSheets($id,$kode_pengerjaan), 'Laporan Borongan Lokal '.$kode_pengerjaan.'.xlsx');
         // return Excel::download(new LaporanBoronganLokalExport($id,$kode_pengerjaan), 'Laporan Borongan Lokal '.$kode_pengerjaan.'.xlsx');

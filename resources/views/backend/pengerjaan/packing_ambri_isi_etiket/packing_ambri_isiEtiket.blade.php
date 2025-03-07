@@ -464,7 +464,8 @@
                                         <td style="text-align: right">{{ number_format($total_hasil_tg,0,',','.') }}</td>
                                         <?php 
                                             $total_gaji_diterima = $total_hasil_tg-($minus_1+$minus_2+$pengerjaan->jht+$pengerjaan->bpjs_kesehatan);
-                                            array_push($total_all_gaji_diterima,$total_gaji_diterima);
+                                            array_push($total_all_gaji_diterima,round($total_gaji_diterima));
+                                            // array_push($total_all_gaji_diterima,$total_gaji_diterima);
                                         ?>
                                         <td style="text-align: right">{{ number_format($minus_1,0,',','.') }}</td>
                                         <td style="text-align: right">{{ number_format($minus_2,0,',','.') }}</td>
