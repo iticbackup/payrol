@@ -295,7 +295,7 @@ class LaporanController extends Controller
                                             // ->where('pengerjaan_weekly.kode_payrol',substr($kode_pengerjaan,0,2).$kode_jenis_operator_detail.'_'.substr($kode_pengerjaan,3))
                                             // ->where('biodata_karyawan.status_karyawan','!=','R')
                                             ->where('operator_karyawan.jenis_operator_detail_pekerjaan_id',$id_jenis_pekerjaan)
-                                            ->where('operator_karyawan.status','Y')
+                                            // ->where('operator_karyawan.status','Y')
                                             ->orderBy('biodata_karyawan.nama','asc')
                                             ->get();
         $baris_akhir = $data['pengerjaan_borongan_weeklys']->count()+10;
