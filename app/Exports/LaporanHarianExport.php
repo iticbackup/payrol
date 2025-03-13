@@ -45,6 +45,7 @@ WithDrawings
                                                             'pengerjaan_harian.id as id',
                                                             'operator_harian_karyawan.nik as nik',
                                                             'biodata_karyawan.nama as nama',
+                                                            'biodata_karyawan.tanggal_masuk as tanggal',
                                                             'pengerjaan_harian.operator_harian_karyawan_id as operator_harian_karyawan_id',
                                                             'pengerjaan_harian.upah_dasar as upah_dasar',
                                                             'pengerjaan_harian.upah_dasar_weekly as upah_dasar_weekly',
