@@ -198,7 +198,7 @@
                                     @foreach ($hasil_pengerjaans as $hasil_pengerjaan)
                                     @php
                                         $explode_hasil_kerja_1 = explode("|",$hasil_pengerjaan->hasil_kerja_1);
-                                        $umk_borongan_lokal_1 = \App\Models\UMKBoronganStempel::select('id','jenis_produk','nominal_umk')->where('id',$explode_hasil_kerja_1[0])->where('status','Y')->first();
+                                        $umk_borongan_lokal_1 = \App\Models\UMKBoronganStempel::select('id','jenis_produk','nominal_umk')->where('id',$explode_hasil_kerja_1[0])->first();
                                         if(empty($umk_borongan_lokal_1)){
                                             $jenis_produk_1 = '-';
                                             $hasil_kerja_1 = null;
@@ -225,7 +225,7 @@
                                         }
 
                                         $explode_hasil_kerja_2 = explode("|",$hasil_pengerjaan->hasil_kerja_2);
-                                        $umk_borongan_lokal_2 = \App\Models\UMKBoronganStempel::select('id','jenis_produk','nominal_umk')->where('id',$explode_hasil_kerja_2[0])->where('status','Y')->first();
+                                        $umk_borongan_lokal_2 = \App\Models\UMKBoronganStempel::select('id','jenis_produk','nominal_umk')->where('id',$explode_hasil_kerja_2[0])->first();
                                         if(empty($umk_borongan_lokal_2)){
                                             $jenis_produk_2 = '-';
                                             $hasil_kerja_2 = null;
@@ -250,7 +250,7 @@
                                         }
 
                                         $explode_hasil_kerja_3 = explode("|",$hasil_pengerjaan->hasil_kerja_3);
-                                        $umk_borongan_lokal_3 = \App\Models\UMKBoronganStempel::select('id','jenis_produk','nominal_umk')->where('id',$explode_hasil_kerja_3[0])->where('status','Y')->first();
+                                        $umk_borongan_lokal_3 = \App\Models\UMKBoronganStempel::select('id','jenis_produk','nominal_umk')->where('id',$explode_hasil_kerja_3[0])->first();
                                         if(empty($umk_borongan_lokal_3)){
                                             $jenis_produk_3 = '-';
                                             $hasil_kerja_3 = null;
@@ -275,7 +275,7 @@
                                         }
 
                                         $explode_hasil_kerja_4 = explode("|",$hasil_pengerjaan->hasil_kerja_4);
-                                        $umk_borongan_lokal_4 = \App\Models\UMKBoronganStempel::select('id','jenis_produk','nominal_umk')->where('id',$explode_hasil_kerja_4[0])->where('status','Y')->first();
+                                        $umk_borongan_lokal_4 = \App\Models\UMKBoronganStempel::select('id','jenis_produk','nominal_umk')->where('id',$explode_hasil_kerja_4[0])->first();
                                         if(empty($umk_borongan_lokal_4)){
                                             $jenis_produk_4 = '-';
                                             $hasil_kerja_4 = null;
@@ -300,7 +300,7 @@
                                         }
 
                                         $explode_hasil_kerja_5 = explode("|",$hasil_pengerjaan->hasil_kerja_5);
-                                        $umk_borongan_lokal_5 = \App\Models\UMKBoronganStempel::select('id','jenis_produk','nominal_umk')->where('id',$explode_hasil_kerja_5[0])->where('status','Y')->first();
+                                        $umk_borongan_lokal_5 = \App\Models\UMKBoronganStempel::select('id','jenis_produk','nominal_umk')->where('id',$explode_hasil_kerja_5[0])->first();
                                         if(empty($umk_borongan_lokal_5)){
                                             $jenis_produk_5 = '-';
                                             $hasil_kerja_5 = null;
@@ -324,7 +324,8 @@
                                             }
                                         }
 
-                                        $hasil_upah = round(($hasil_kerja_1*$lembur_1)+($hasil_kerja_2*$lembur_2)+($hasil_kerja_3*$lembur_3)+($hasil_kerja_4*$lembur_4)+($hasil_kerja_5*$lembur_5));
+                                        $hasil_upah = ($hasil_kerja_1*$lembur_1)+($hasil_kerja_2*$lembur_2)+($hasil_kerja_3*$lembur_3)+($hasil_kerja_4*$lembur_4)+($hasil_kerja_5*$lembur_5);
+                                        // $hasil_upah = round(($hasil_kerja_1*$lembur_1)+($hasil_kerja_2*$lembur_2)+($hasil_kerja_3*$lembur_3)+($hasil_kerja_4*$lembur_4)+($hasil_kerja_5*$lembur_5));
                                         array_push($upah,$hasil_upah);
                                         array_push($nama_jenis_produk_1,$jenis_produk_1);
                                         array_push($nama_jenis_produk_2,$jenis_produk_2);
