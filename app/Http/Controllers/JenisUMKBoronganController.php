@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 use App\Models\UMKBoronganLokal;
+use App\Models\UMKBoronganLokalStempel;
 use App\Models\UMKBoronganEkspor;
 use App\Models\UMKBoronganAmbri;
 
@@ -15,6 +16,12 @@ use DataTables;
 
 class JenisUMKBoronganController extends Controller
 {
+    function __construct(
+        UMKBoronganLokalStempel $umkBoronganStempel
+    ){
+        $this->umkBoronganStempel = $umkBoronganStempel;
+    }
+
     public function lokal(Request $request)
     {
         if ($request->ajax()) {
@@ -216,6 +223,170 @@ class JenisUMKBoronganController extends Controller
         }
         return $validator->errors()->all();
         // return 'Lokal Simpan';
+    }
+
+    public function lokal_umk_stempel(Request $request)
+    {
+        $data = $this->umkBoronganStempel->all();
+
+        return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('status', function($row){
+                    if($row->status == 'Y'){
+                        return '<span class="text-success">Aktif</span>';
+                    }else{
+                        return '<span class="text-secondary">Tidak Aktif</span>';
+                    }
+                })
+                ->addColumn('action', function($row){
+                    $btn = '<button type="button" onclick="edit_stempel(`'.$row->id.'`)" class="btn btn-warning btn-icon">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                            <button type="button" onclick="hapus_stempel(`'.$row->id.'`)" class="btn btn-danger btn-icon">
+                                <i class="fa fa-trash"></i>
+                            </button>';
+                    return $btn;
+                })
+                ->rawColumns(['action','status'])
+                ->make(true);
+    }
+
+    public function lokal_umk_stempel_simpan(Request $request)
+    {
+        $rules = [
+            'stempel_jenis_produk' => 'required|unique:borongan_umk_stempel',
+            'stempel_nominal_umk' => 'required',
+            'stempel_target_pengerjaan' => 'required',
+            'stempel_tahun_aktif' => 'required',
+            'stempel_status' => 'required',
+        ];
+
+        $messages = [
+            'stempel_jenis_produk.required'  => 'Jenis Produk wajib diisi.',
+            'stempel_jenis_produk.unique'  => 'Jenis Produk sudah ada.',
+            'stempel_nominal_umk.required'  => 'Nominal UMK wajib diisi.',
+            'stempel_target_pengerjaan.required'  => 'Target Pengerjaan wajib diisi.',
+            'stempel_tahun_aktif.required'  => 'Tahun Aktif wajib diisi.',
+            'stempel_status.required'  => 'Status wajib diisi.',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->passes()) {
+            $norut = $this->umkBoronganStempel->max('id');
+
+            if(empty($norut)){
+                $id = 1;
+            }else{
+                $id = $norut+1;
+            }
+
+            $input['id'] = $id;
+            $input['jenis_produk'] = $request->stempel_jenis_produk;
+            $input['nominal_umk'] = $request->stempel_nominal_umk;
+            $input['target_pengerjaan'] = $request->stempel_target_pengerjaan;
+            $input['tahun_aktif'] = $request->stempel_tahun_aktif;
+            $input['status'] = $request->stempel_status;
+
+            $simpanUmkBoronganStempel = $this->umkBoronganStempel->create($input);
+
+            if($simpanUmkBoronganStempel){
+                $message_title="Berhasil !";
+                $message_content="UMK Borongan Stempel ".$input['jenis_produk']." Berhasil Dibuat";
+                $message_type="success";
+                $message_succes = true;
+            }
+
+            $array_message = array(
+                'success' => $message_succes,
+                'message_title' => $message_title,
+                'message_content' => $message_content,
+                'message_type' => $message_type,
+            );
+            return response()->json($array_message);
+        }
+
+        return response()->json(
+            [
+                'success' => false,
+                'error' => $validator->errors()->all()
+            ]
+        );
+    }
+
+    public function lokal_umk_stempel_detail($id)
+    {
+        $umkBoronganStempel = $this->umkBoronganStempel->find($id);
+        if(empty($umkBoronganStempel)){
+            return response()->json([
+                'success' => false,
+                'message_title' => 'Gagal!',
+                'message_content' => 'UMK Borongan Stempel Tidak Tersedia',
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $umkBoronganStempel
+        ],200);
+    }
+
+    public function lokal_umk_stempel_update(Request $request, $id)
+    {
+        $umkBoronganStempel = $this->umkBoronganStempel->find($id);
+
+        if(empty($umkBoronganStempel)){
+            return response()->json([
+                'success' => false,
+                'message_title' => 'Gagal!',
+                'message_content' => 'UMK Borongan Stempel Tidak Tersedia',
+            ]);
+        }
+
+        $input['jenis_produk'] = $request->edit_stempel_jenis_produk;
+        $input['nominal_umk'] = $request->edit_stempel_nominal_umk;
+        $input['target_pengerjaan'] = $request->edit_stempel_target_pengerjaan;
+        $input['tahun_aktif'] = $request->edit_stempel_tahun_aktif;
+        $input['status'] = $request->edit_stempel_status;
+
+        $umkBoronganStempel->update($input);
+
+        if($umkBoronganStempel){
+            $message_title="Berhasil !";
+            $message_content="UMK Borongan Stempel ".$input['jenis_produk']." Berhasil Diupdate";
+            $message_type="success";
+            $message_succes = true;
+        }
+
+        $array_message = array(
+            'success' => $message_succes,
+            'message_title' => $message_title,
+            'message_content' => $message_content,
+            'message_type' => $message_type,
+        );
+        return response()->json($array_message);
+    }
+
+    public function lokal_umk_stempel_delete($id)
+    {
+        $umkBoronganStempel = $this->umkBoronganStempel->find($id);
+
+        if(empty($umkBoronganStempel)){
+            return response()->json([
+                'success' => false,
+                'message_title' => 'Gagal!',
+                'message_content' => 'UMK Borongan Stempel Tidak Tersedia',
+            ]);
+        }
+
+        $umkBoronganStempel->delete();
+
+        return response()->json([
+            'message_title' => 'Berhasil !',
+            'message_content' => 'Data Berhasil Dihapus',
+            'message_type' => 'success',
+            'message_success' => true
+        ]);
     }
 
     public function ekspor(Request $request)

@@ -36,7 +36,7 @@
             <div class="card">
                 <div class="card-header">
                     <button type="button" class="btn btn-primary" onclick="buat()" data-bs-toggle="modal"
-                        data-bs-target="#exampleModalCenter"><i class="fas fa-plus"></i> Tambah Data</button>
+                        data-bs-target="#exampleModalCenterBuat"><i class="fas fa-plus"></i> Tambah Data</button>
                     {{-- <a href="{{ route('operator_karyawan.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah Data</a> --}}
                     <button type="button" class="btn btn-primary" onclick="reload()"><i class="fas fa-undo"></i>
                         Refresh</button>
@@ -54,6 +54,37 @@
                                 <th>Tahun Aktif</th>
                                 <th>Status</th>
                                 <th>Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h5>UMK Borongan Stempel</h5>
+    @include('backend.jenis_umk_borongan.lokal.stempel.modalBuat')
+    @include('backend.jenis_umk_borongan.lokal.stempel.modalEdit')
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <button type="button" class="btn btn-primary" onclick="buat_stempel()" data-bs-toggle="modal"
+                        data-bs-target="#exampleModalCenterBuatStempel"><i class="fas fa-plus"></i> Tambah Data</button>
+                    <button type="button" class="btn btn-primary" onclick="reloadUmkStempel()"><i class="fas fa-undo"></i>
+                        Refresh</button>
+                </div>
+                <div class="card-body">
+                    <table id="datatableUmkStempel" class="table table-bordered dt-responsive nowrap"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Jenis Produk</th>
+                                <th>Nominal UMK</th>
+                                <th>Target Pengerjaan</th>
+                                <th>Tahun</th>
+                                <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                     </table>
@@ -128,12 +159,53 @@
             ]
         });
 
+        var table_umk_stempel = $('#datatableUmkStempel').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('jenis_umk_borongan.lokal_umk_stempel') }}",
+            columns: [{
+                    data: 'jenis_produk',
+                    name: 'jenis_produk'
+                },
+                {
+                    data: 'nominal_umk',
+                    name: 'nominal_umk'
+                },
+                {
+                    data: 'target_pengerjaan',
+                    name: 'target_pengerjaan'
+                },
+                {
+                    data: 'tahun_aktif',
+                    name: 'tahun_aktif'
+                },
+                {
+                    data: 'status',
+                    name: 'status'
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                },
+            ]
+        });
+
         function buat() {
             $('.modalBuat').modal();
         }
 
+        function buat_stempel() {
+            $('.modalBuatStempel').modal();
+        }
+
         function reload() {
             table.ajax.reload();
+        }
+
+        function reloadUmkStempel() {
+            table_umk_stempel.ajax.reload();
         }
 
         function edit(id) {
@@ -157,6 +229,34 @@
                     $('#edit_status').val(result.data.status);
 
                     $('.modalEdit').modal('show');
+                },
+                error: function(request, status, error) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: error,
+                    });
+                }
+            });
+        }
+
+        function edit_stempel(id) {
+            var url = '{{ route('jenis_umk_borongan.lokal_umk_stempel_detail', ':id') }}';
+            url = url.replace(':id', id);
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                contentType: "application/json;  charset=utf-8",
+                cache: false,
+                success: (result) => {
+                    // alert(result);
+                    $('#edit_stempel_id').val(result.data.id);
+                    $('#edit_stempel_jenis_produk').val(result.data.jenis_produk);
+                    $('#edit_stempel_nominal_umk').val(result.data.nominal_umk);
+                    $('#edit_stempel_tahun_aktif').val(result.data.tahun_aktif);
+                    $('#edit_stempel_status').val(result.data.status);
+
+                    $('.modalEditStempel').modal('show');
                 },
                 error: function(request, status, error) {
                     iziToast.error({
@@ -194,6 +294,50 @@
                                 message: result.message_content
                             });
                             table.ajax.reload();
+                        } else {
+                            iziToast.error({
+                                title: result.success,
+                                message: result.error
+                            });
+                        }
+                    },
+                    error: function(request, status, error) {
+                        iziToast.error({
+                            title: 'Error',
+                            message: error,
+                        });
+                    }
+                });
+            })
+        }
+
+        function hapus_stempel(id) {
+            var url = '{{ route('jenis_umk_borongan.lokal_umk_stempel_delete', ':id') }}';
+            url = url.replace(':id', id);
+
+            Swal.fire({
+                title: "Apa kamu yakin?",
+                text: "Anda tidak akan dapat mengembalikan ini!",
+                type: "warning",
+                showCancelButton: !0,
+                confirmButtonColor: "$success",
+                cancelButtonColor: "$danger",
+                confirmButtonText: "Yes, delete it!"
+            }).then(function(t) {
+                t.value && 
+                // Swal.fire("Deleted!", "Your file has been deleted.", "success")
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    contentType: "application/json;  charset=utf-8",
+                    cache: false,
+                    success: (result) => {
+                        if (result.success != false) {
+                            iziToast.success({
+                                title: result.message_title,
+                                message: result.message_content
+                            });
+                            table_umk_stempel.ajax.reload(null, false);
                         } else {
                             iziToast.error({
                                 title: result.success,
@@ -263,6 +407,75 @@
                         });
                         $('.modalEdit').modal('hide');
                         table.ajax.reload();
+                    } else {
+                        iziToast.error({
+                            title: result.success,
+                            message: result.error
+                        });
+                    }
+                },
+                error: function(request, status, error) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: error,
+                    });
+                }
+            });
+        });
+
+        $('#form-simpan-stempel').submit(function(e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            // $('#image-input-error').text('');
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('jenis_umk_borongan.lokal_umk_stempel_simpan') }}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: (result) => {
+                    if (result.success != false) {
+                        iziToast.success({
+                            title: result.message_title,
+                            message: result.message_content
+                        });
+                        this.reset();
+                        table_umk_stempel.ajax.reload(null, false);
+                        $('.modalBuatStempel').modal('hide');
+                    } else {
+                        iziToast.error({
+                            title: result.success,
+                            message: result.error
+                        });
+                    }
+                },
+                error: function(request, status, error) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: error,
+                    });
+                }
+            });
+        });
+
+        $('#form-update-stempel').submit(function(e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            // $('#image-input-error').text('');
+            $.ajax({
+                type: 'POST',
+                url: "{{ url('jenis_umk_borongan/lokal_stempel/') }}"+'/'+$('#edit_stempel_id').val()+'/update',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: (result) => {
+                    if (result.success != false) {
+                        iziToast.success({
+                            title: result.message_title,
+                            message: result.message_content
+                        });
+                        $('.modalEditStempel').modal('hide');
+                        table_umk_stempel.ajax.reload(null, false);
                     } else {
                         iziToast.error({
                             title: result.success,

@@ -27,6 +27,13 @@ Auth::routes([
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+    Route::prefix('testing')->group(function () {
+        Route::get('borongan', [App\Http\Controllers\TestingController::class, 'test_import_excel_borongan']);
+        Route::post('borongan/simpan', [App\Http\Controllers\TestingController::class, 'test_import_excel_borongan_simpan'])->name('test_import_excel_borongan_simpan');
+        // Route::get('borongan/{kodePengerjaan}/{jenisOperatorDetailId}/{jenisOperatorDetailPekerjaanId}/download', [App\Http\Controllers\TestingController::class, 'test_export_excel_borongan'])->name('test_export_excel_borongan_download');
+    });
+
     // Route::prefix('periodes')->group(function() {
     //     Route::get('/', [App\Http\Controllers\PeriodeController::class, 'index'])->name('periode');
     // });
@@ -51,6 +58,8 @@ Route::group(['middleware' => 'auth'], function () {
                 Route::get('{id}/{kode_pengerjaan}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_packing'])->name('hasil_kerja.packingLokal');
                 Route::get('{id}/{kode_pengerjaan}/{tanggal}/input_hasil', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_packing_view_hasil'])->name('hasil_kerja.packingLokal.view_hasil');
                 Route::post('{id}/{kode_pengerjaan}/{tanggal}/input_hasil/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_packing_view_simpan'])->name('hasil_kerja.packingLokal.view_hasil.simpan');
+                Route::get('{id}/{kode_pengerjaan}/{jenisOperatorDetailId}/{jenisOperatorDetailPekerjaanId}/download', [App\Http\Controllers\PengerjaanController::class, 'export_excel_borongan'])->name('hasil_kerja.export_excel_borongan_packing');
+                Route::post('{id}/{kode_pengerjaan}/{jenisOperatorDetailId}/{jenisOperatorDetailPekerjaanId}/upload', [App\Http\Controllers\PengerjaanController::class, 'import_excel_borongan'])->name('hasil_kerja.import_excel_borongan_packing');
                 
                 Route::get('{id}/{kode_pengerjaan}/{nik}/input_hasil_karyawan/{month}/{year}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_karyawan_packing_view'])->name('hasil_kerja.packingLokal.view_hasil_karyawan');
                 Route::post('{id}/{kode_pengerjaan}/{nik}/input_hasil_karyawan/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_karyawan_packing_view_simpan'])->name('hasil_kerja.packingLokal.view_hasil_karyawan.simpan');
@@ -335,6 +344,13 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('{id}', [App\Http\Controllers\JenisUMKBoronganController::class, 'lokal_detail'])->name('jenis_umk_borongan.lokal.detail');
             Route::post('update', [App\Http\Controllers\JenisUMKBoronganController::class, 'lokal_update'])->name('jenis_umk_borongan.lokal.update');
             Route::get('{id}/delete', [App\Http\Controllers\JenisUMKBoronganController::class, 'lokal_delete'])->name('jenis_umk_borongan.lokal.delete');
+        });
+        Route::prefix('lokal_stempel')->group(function () {
+            Route::get('/', [App\Http\Controllers\JenisUMKBoronganController::class, 'lokal_umk_stempel'])->name('jenis_umk_borongan.lokal_umk_stempel');
+            Route::get('{id}', [App\Http\Controllers\JenisUMKBoronganController::class, 'lokal_umk_stempel_detail'])->name('jenis_umk_borongan.lokal_umk_stempel_detail');
+            Route::post('simpan', [App\Http\Controllers\JenisUMKBoronganController::class, 'lokal_umk_stempel_simpan'])->name('jenis_umk_borongan.lokal_umk_stempel_simpan');
+            Route::post('{id}/update', [App\Http\Controllers\JenisUMKBoronganController::class, 'lokal_umk_stempel_update'])->name('jenis_umk_borongan.lokal_umk_stempel_update');
+            Route::get('{id}/delete', [App\Http\Controllers\JenisUMKBoronganController::class, 'lokal_umk_stempel_delete'])->name('jenis_umk_borongan.lokal_umk_stempel_delete');
         });
         Route::prefix('ekspor')->group(function () {
             Route::get('/', [App\Http\Controllers\JenisUMKBoronganController::class, 'ekspor'])->name('jenis_umk_borongan.ekspor');

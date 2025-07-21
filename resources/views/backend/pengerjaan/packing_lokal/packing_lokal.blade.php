@@ -19,16 +19,16 @@
     <style>
         @media (max-width: 1518px) {
 
-            .table-container { 
+            .table-container {
                 /* width: 100% !important; */
-                overflow-x: scroll; 
+                overflow-x: scroll;
                 width: 65%;
             }
 
             /* .layouts {
-                margin-left: 26%; 
-                margin-right: 9%
-            } */
+                                margin-left: 26%;
+                                margin-right: 9%
+                            } */
 
             /* th, td {min-width: 200px; } */
         }
@@ -37,25 +37,23 @@
 
 @section('content')
     @component('components.breadcrumb')
-    @slot('li_1')
-        Data Hasil Kerja
-    @endslot
-    @slot('li_3')
-        @yield('title')
-    @endslot
-    @slot('title')
-        @yield('title')
-    @endslot
+        @slot('li_1')
+            Data Hasil Kerja
+        @endslot
+        @slot('li_3')
+            @yield('title')
+        @endslot
+        @slot('title')
+            @yield('title')
+        @endslot
     @endcomponent
 
     @php
-        if($id == 1){
+        if ($id == 1) {
             $kode_jenis_operator_detail = 'L';
-        }
-        elseif($id == 2){
+        } elseif ($id == 2) {
             $kode_jenis_operator_detail = 'E';
-        }
-        elseif($id == 3){
+        } elseif ($id == 3) {
             $kode_jenis_operator_detail = 'A';
         }
 
@@ -63,7 +61,7 @@
 
         if ($new_data_pengerjaan->akhir_bulan == $akhir_bulan) {
             $colspan_plus = 6;
-        }else{
+        } else {
             $colspan_plus = 4;
         }
 
@@ -71,14 +69,55 @@
 
     <div class="row">
         <div class="col-md-12">
+            {{-- <div class="modal fade" id="modalBoronganPacking" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-xs">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Upload File Hasil Pengerjaan Borongan
+                                Packing</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="{{ route('hasil_kerja.import_excel_borongan_packing', ['id' => $id, 'jenisOperatorDetailId' => 1, 'jenisOperatorDetailPekerjaanId' => 1, 'kode_pengerjaan' => $new_data_pengerjaan->kode_pengerjaan]) }}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="">Upload File Pengerjaan Borongan</label>
+                                    <input type="file" name="upload_file_pengerjaan_borongan" class="form-control"
+                                        id="">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div> --}}
+            @if ($message = Session::get('success'))
+            <div class="alert alert-success border-0" role="alert">
+                <strong>Berhasil!</strong> {{ $message }}
+            </div>
+            @endif
+            @if ($message = Session::get('error'))
+            <div class="alert alert-danger border-0" role="alert">
+                <strong>Gagal!</strong> {{ $message }}
+            </div>
+            @endif
             <div class="card">
                 <div class="card-header">
                     <h5>
                         Kode ID : {{ $new_data_pengerjaan->kode_pengerjaan }}
                         @if ($new_data_pengerjaan->status == 'n')
-                        <i class="far fa-check-circle text-success"></i>
+                            <i class="far fa-check-circle text-success"></i>
                         @endif
                     </h5>
+                    {{-- <a href="{{ route('hasil_kerja.export_excel_borongan_packing', ['id' => $id, 'jenisOperatorDetailId' => 1, 'jenisOperatorDetailPekerjaanId' => 1, 'kode_pengerjaan' => $new_data_pengerjaan->kode_pengerjaan]) }}" class="btn btn-primary">Download Template</a>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#modalBoronganPacking">
+                        Upload File Pengerjaan
+                    </button> --}}
                 </div>
                 <div class="card-body">
                     <div class="table-container">
@@ -98,21 +137,26 @@
                                 </tr>
                                 <tr>
                                     @foreach ($explode_tanggal_pengerjaans as $key => $explode_tanggal_pengerjaan)
-                                    @if ($key != 0)
-                                        @if ($new_data_pengerjaan->status == 'n')
-                                        <th class="text-center">{{ \Carbon\Carbon::parse($explode_tanggal_pengerjaan)->isoFormat('D MMMM') }}</th>
-                                        @else
-                                        <th class="text-center"><a href="javascript:void()" onclick="window.open('{{ route('hasil_kerja.packingLokal.view_hasil',['id' => $id, 'kode_pengerjaan' => $kode_pengerjaan, 'tanggal' => $explode_tanggal_pengerjaan]) }}','','width=1200,height=555,left=80,top=80,location=yes, menubar=no, status=no,toolbar=no, scrollbars=yes, resizable=yes')" class="text-primary">{{ \Carbon\Carbon::parse($explode_tanggal_pengerjaan)->isoFormat('D MMMM') }}</a></th>
+                                        @if ($key != 0)
+                                            @if ($new_data_pengerjaan->status == 'n')
+                                                <th class="text-center">
+                                                    {{ \Carbon\Carbon::parse($explode_tanggal_pengerjaan)->isoFormat('D MMMM') }}
+                                                </th>
+                                            @else
+                                                <th class="text-center"><a href="javascript:void()"
+                                                        onclick="window.open('{{ route('hasil_kerja.packingLokal.view_hasil', ['id' => $id, 'kode_pengerjaan' => $kode_pengerjaan, 'tanggal' => $explode_tanggal_pengerjaan]) }}','','width=1200,height=555,left=80,top=80,location=yes, menubar=no, status=no,toolbar=no, scrollbars=yes, resizable=yes')"
+                                                        class="text-primary">{{ \Carbon\Carbon::parse($explode_tanggal_pengerjaan)->isoFormat('D MMMM') }}</a>
+                                                </th>
+                                            @endif
                                         @endif
-                                    @endif
                                     @endforeach
                                     <th rowspan="2" class="text-center">PLUS 1</th>
                                     <th rowspan="2" class="text-center">PLUS 2</th>
                                     <th rowspan="2" class="text-center">PLUS 3</th>
                                     <th rowspan="2" class="text-center">U Makan</th>
                                     @if ($new_data_pengerjaan->akhir_bulan == $akhir_bulan)
-                                    <th rowspan="2" class="text-center">T Kerja</th>
-                                    <th rowspan="2" class="text-center">Kehadiran</th>
+                                        <th rowspan="2" class="text-center">T Kerja</th>
+                                        <th rowspan="2" class="text-center">Kehadiran</th>
                                     @endif
                                     <th rowspan="2" class="text-center">MIN 1</th>
                                     <th rowspan="2" class="text-center">MIN 2</th>
@@ -121,17 +165,17 @@
                                 </tr>
                                 <tr>
                                     @foreach ($explode_tanggal_pengerjaans as $key => $explode_tanggal_pengerjaan)
-                                    @if ($key != 0)
-                                    <th style="font-size: 8pt" class="text-center">
-                                        <table style="width: 100%">
-                                            <tr>
-                                                <th>Jenis</th>
-                                                <th>Jumlah</th>
-                                                <th>Jam</th>
-                                            </tr>
-                                        </table>
-                                    </th>
-                                    @endif
+                                        @if ($key != 0)
+                                            <th style="font-size: 8pt" class="text-center">
+                                                <table style="width: 100%">
+                                                    <tr>
+                                                        <th>Jenis</th>
+                                                        <th>Jumlah</th>
+                                                        <th>Jam</th>
+                                                    </tr>
+                                                </table>
+                                            </th>
+                                        @endif
                                     @endforeach
                                 </tr>
                             </thead>
@@ -160,211 +204,215 @@
                                     $operator_karyawans = [];
                                 @endphp
                                 @foreach ($pengerjaans as $key => $pengerjaan)
-                                <?php 
-                                // dd($pengerjaan);
-                                array_push($operator_karyawans,$pengerjaan->operator_karyawan_id);
-                                    $hasil_pengerjaans = \App\Models\Pengerjaan::select([
-                                                                                    'kode_payrol',
-                                                                                    'tanggal_pengerjaan',
-                                                                                    'operator_karyawan_id',
-                                                                                    'hasil_kerja_1',
-                                                                                    'hasil_kerja_2',
-                                                                                    'hasil_kerja_3',
-                                                                                    'hasil_kerja_4',
-                                                                                    'hasil_kerja_5',
-                                                                                    'total_jam_kerja_1',
-                                                                                    'total_jam_kerja_2',
-                                                                                    'total_jam_kerja_3',
-                                                                                    'total_jam_kerja_4',
-                                                                                    'total_jam_kerja_5',
-                                                                                    'lembur'
-                                                                                ])
-                                                                                ->where('operator_karyawan_id',$pengerjaan->operator_karyawan_id)
-                                                                                ->where('kode_payrol',substr($kode_pengerjaan,0,2).$kode_jenis_operator_detail.'_'.substr($kode_pengerjaan,3))
-                                                                                // ->where('tanggal_pengerjaan',implode($cek_date))
-                                                                                ->orderBy('tanggal_pengerjaan','asc')
-                                                                                ->get();
-                                                                                // dd($hasil_pengerjaans);
+                                    <?php
+                                    // dd($pengerjaan);
+                                    array_push($operator_karyawans, $pengerjaan->operator_karyawan_id);
+                                    $hasil_pengerjaans = \App\Models\Pengerjaan::select(['kode_payrol', 'tanggal_pengerjaan', 'operator_karyawan_id', 'hasil_kerja_1', 'hasil_kerja_2', 'hasil_kerja_3', 'hasil_kerja_4', 'hasil_kerja_5', 'total_jam_kerja_1', 'total_jam_kerja_2', 'total_jam_kerja_3', 'total_jam_kerja_4', 'total_jam_kerja_5', 'lembur'])
+                                        ->where('operator_karyawan_id', $pengerjaan->operator_karyawan_id)
+                                        ->where('kode_payrol', substr($kode_pengerjaan, 0, 2) . $kode_jenis_operator_detail . '_' . substr($kode_pengerjaan, 3))
+                                        // ->where('tanggal_pengerjaan',implode($cek_date))
+                                        ->orderBy('tanggal_pengerjaan', 'asc')
+                                        ->get();
+                                    // dd($hasil_pengerjaans);
                                     // dd($pengerjaan->operator_karyawan->jenis_operator_detail_pengerjaan);
                                     // dd($pengerjaan->pengerjaan);
                                     // dd('id = '.$pengerjaan->operator_karyawan->jenis_operator_detail_pengerjaan->id.','.' kode_pengerjaan = '.$kode_pengerjaan.' tanggal = '.$hasil_pengerjaans[1]['tanggal_pengerjaan']);
                                     $month = \Carbon\Carbon::now()->format('m');
                                     $year = \Carbon\Carbon::now()->format('Y');
-                                ?>
+                                    ?>
                                     <tr>
-                                        <td class="text-center">{{ $key+1 }}</td>
+                                        <td class="text-center">{{ $key + 1 }}</td>
                                         <td class="text-center">{{ $pengerjaan->nik }}</td>
                                         {{-- <td><a href="{{ route('hasil_kerja.packingLokal.view_hasil_karyawan',['id' => $pengerjaan->operator_karyawan->jenis_operator_detail_pengerjaan->id, 'kode_pengerjaan' => $kode_pengerjaan, 'nik' => $pengerjaan->nik]) }}" class="text-primary">{{ $pengerjaan->nama }}</a></td> --}}
                                         @if ($new_data_pengerjaan->status == 'n')
-                                        <td>{{ $pengerjaan->nama }}</td>
+                                            <td>{{ $pengerjaan->nama }}</td>
                                         @else
-                                        <td><a href="javascript:void(0)" onclick="window.open('{{ route('hasil_kerja.packingLokal.view_hasil_karyawan',['id' => $pengerjaan->operator_karyawan->jenis_operator_detail_pengerjaan->jenis_operator_detail_id, 'kode_pengerjaan' => $kode_pengerjaan, 'nik' => $pengerjaan->nik, 'month' => $month, 'year' => $year]) }}','','width=1200,height=555,left=80,top=80,location=yes, menubar=no, status=no,toolbar=no, scrollbars=yes, resizable=yes')" class="text-primary">{{ $pengerjaan->nama }}</a></td>
+                                            <td><a href="javascript:void(0)"
+                                                    onclick="window.open('{{ route('hasil_kerja.packingLokal.view_hasil_karyawan', ['id' => $pengerjaan->operator_karyawan->jenis_operator_detail_pengerjaan->jenis_operator_detail_id, 'kode_pengerjaan' => $kode_pengerjaan, 'nik' => $pengerjaan->nik, 'month' => $month, 'year' => $year]) }}','','width=1200,height=555,left=80,top=80,location=yes, menubar=no, status=no,toolbar=no, scrollbars=yes, resizable=yes')"
+                                                    class="text-primary">{{ $pengerjaan->nama }}</a></td>
                                         @endif
-                                        <?php 
-                                            $upah = array();
+                                        <?php
+                                        $upah = [];
                                         ?>
                                         @foreach ($hasil_pengerjaans as $hasil_pengerjaan)
-                                        <?php 
-                                            $explode_hasil_kerja_1 = explode("|",$hasil_pengerjaan->hasil_kerja_1);
-                                            $umk_borongan_lokal_1 = \App\Models\UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$explode_hasil_kerja_1[0])->first();
-                                            if(empty($umk_borongan_lokal_1)){
+                                            <?php
+                                            $explode_hasil_kerja_1 = explode('|', $hasil_pengerjaan->hasil_kerja_1);
+                                            $umk_borongan_lokal_1 = \App\Models\UMKBoronganLokal::select('id', 'jenis_produk', 'umk_packing', 'umk_bandrol', 'umk_inner', 'umk_outer')->where('id', $explode_hasil_kerja_1[0])->first();
+                                            if (empty($umk_borongan_lokal_1)) {
                                                 $jenis_produk_1 = '-';
                                                 $hasil_kerja_1 = 0;
                                                 $data_explode_hasil_kerja_1 = '-';
                                                 $lembur_1 = 1;
                                                 $icon_lembur_1 = null;
-                                            }else{
+                                            } else {
                                                 $jenis_produk_1 = $umk_borongan_lokal_1->jenis_produk;
-                                                $hasil_kerja_1 = $explode_hasil_kerja_1[1]*$umk_borongan_lokal_1->umk_packing;
+                                                $hasil_kerja_1 = $explode_hasil_kerja_1[1] * $umk_borongan_lokal_1->umk_packing;
                                                 $data_explode_hasil_kerja_1 = $explode_hasil_kerja_1[1];
-    
-                                                $explode_lembur_1 = explode("|",$hasil_pengerjaan->lembur);
-                                                $explode_status_lembur_1 = explode("-",$explode_lembur_1[1]);
-    
-                                                if($explode_status_lembur_1[1] == 'y'){
+                                            
+                                                $explode_lembur_1 = explode('|', $hasil_pengerjaan->lembur);
+                                                $explode_status_lembur_1 = explode('-', $explode_lembur_1[1]);
+                                            
+                                                if ($explode_status_lembur_1[1] == 'y') {
                                                     $lembur_1 = 1.5;
                                                     $icon_lembur_1 = "<span class='badge badge-soft-success'>L</span>";
-                                                }else{
+                                                } else {
                                                     $lembur_1 = 1;
                                                     $icon_lembur_1 = null;
                                                 }
                                             }
-    
-                                            $explode_hasil_kerja_2 = explode("|",$hasil_pengerjaan->hasil_kerja_2);
-                                            $umk_borongan_lokal_2 = \App\Models\UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$explode_hasil_kerja_2[0])->first();
-                                            if(empty($umk_borongan_lokal_2)){
+                                            
+                                            $explode_hasil_kerja_2 = explode('|', $hasil_pengerjaan->hasil_kerja_2);
+                                            $umk_borongan_lokal_2 = \App\Models\UMKBoronganLokal::select('id', 'jenis_produk', 'umk_packing', 'umk_bandrol', 'umk_inner', 'umk_outer')->where('id', $explode_hasil_kerja_2[0])->first();
+                                            if (empty($umk_borongan_lokal_2)) {
                                                 $jenis_produk_2 = '-';
                                                 $hasil_kerja_2 = 0;
                                                 $data_explode_hasil_kerja_2 = '-';
                                                 $lembur_2 = 1;
                                                 $icon_lembur_2 = null;
-                                            }else{
+                                            } else {
                                                 $jenis_produk_2 = $umk_borongan_lokal_2->jenis_produk;
-                                                $hasil_kerja_2 = $explode_hasil_kerja_2[1]*$umk_borongan_lokal_2->umk_packing;
+                                                $hasil_kerja_2 = $explode_hasil_kerja_2[1] * $umk_borongan_lokal_2->umk_packing;
                                                 $data_explode_hasil_kerja_2 = $explode_hasil_kerja_2[1];
-    
-                                                $explode_lembur_2 = explode("|",$hasil_pengerjaan->lembur);
-                                                $explode_status_lembur_2 = explode("-",$explode_lembur_2[2]);
-    
-                                                if($explode_status_lembur_2[1] == 'y'){
+                                            
+                                                $explode_lembur_2 = explode('|', $hasil_pengerjaan->lembur);
+                                                $explode_status_lembur_2 = explode('-', $explode_lembur_2[2]);
+                                            
+                                                if ($explode_status_lembur_2[1] == 'y') {
                                                     $lembur_2 = 1.5;
                                                     $icon_lembur_2 = "<span class='badge badge-soft-success'>L</span>";
-                                                }else{
+                                                } else {
                                                     $lembur_2 = 1;
                                                     $icon_lembur_2 = null;
                                                 }
                                             }
-    
-                                            $explode_hasil_kerja_3 = explode("|",$hasil_pengerjaan->hasil_kerja_3);
-                                            $umk_borongan_lokal_3 = \App\Models\UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$explode_hasil_kerja_3[0])->first();
-                                            if(empty($umk_borongan_lokal_3)){
+                                            
+                                            $explode_hasil_kerja_3 = explode('|', $hasil_pengerjaan->hasil_kerja_3);
+                                            $umk_borongan_lokal_3 = \App\Models\UMKBoronganLokal::select('id', 'jenis_produk', 'umk_packing', 'umk_bandrol', 'umk_inner', 'umk_outer')->where('id', $explode_hasil_kerja_3[0])->first();
+                                            if (empty($umk_borongan_lokal_3)) {
                                                 $jenis_produk_3 = '-';
                                                 $hasil_kerja_3 = 0;
                                                 $data_explode_hasil_kerja_3 = '-';
                                                 $lembur_3 = 1;
                                                 $icon_lembur_3 = null;
-                                            }else{
+                                            } else {
                                                 $jenis_produk_3 = $umk_borongan_lokal_3->jenis_produk;
-                                                $hasil_kerja_3 = $explode_hasil_kerja_3[1]*$umk_borongan_lokal_3->umk_packing;
+                                                $hasil_kerja_3 = $explode_hasil_kerja_3[1] * $umk_borongan_lokal_3->umk_packing;
                                                 $data_explode_hasil_kerja_3 = $explode_hasil_kerja_3[1];
-    
-                                                $explode_lembur_3 = explode("|",$hasil_pengerjaan->lembur);
-                                                $explode_status_lembur_3 = explode("-",$explode_lembur_3[3]);
-                                                if($explode_status_lembur_3[1] == 'y'){
+                                            
+                                                $explode_lembur_3 = explode('|', $hasil_pengerjaan->lembur);
+                                                $explode_status_lembur_3 = explode('-', $explode_lembur_3[3]);
+                                                if ($explode_status_lembur_3[1] == 'y') {
                                                     $lembur_3 = 1.5;
                                                     $icon_lembur_3 = "<span class='badge badge-soft-success'>L</span>";
-                                                }else{
+                                                } else {
                                                     $lembur_3 = 1;
                                                     $icon_lembur_3 = null;
                                                 }
                                             }
-    
-                                            $explode_hasil_kerja_4 = explode("|",$hasil_pengerjaan->hasil_kerja_4);
-                                            $umk_borongan_lokal_4 = \App\Models\UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$explode_hasil_kerja_4[0])->first();
-                                            if(empty($umk_borongan_lokal_4)){
+                                            
+                                            $explode_hasil_kerja_4 = explode('|', $hasil_pengerjaan->hasil_kerja_4);
+                                            $umk_borongan_lokal_4 = \App\Models\UMKBoronganLokal::select('id', 'jenis_produk', 'umk_packing', 'umk_bandrol', 'umk_inner', 'umk_outer')->where('id', $explode_hasil_kerja_4[0])->first();
+                                            if (empty($umk_borongan_lokal_4)) {
                                                 $jenis_produk_4 = '-';
                                                 $hasil_kerja_4 = 0;
                                                 $data_explode_hasil_kerja_4 = '-';
                                                 $lembur_4 = 1;
                                                 $icon_lembur_4 = null;
-                                            }else{
+                                            } else {
                                                 $jenis_produk_4 = $umk_borongan_lokal_4->jenis_produk;
-                                                $hasil_kerja_4 = $explode_hasil_kerja_4[1]*$umk_borongan_lokal_4->umk_packing;
+                                                $hasil_kerja_4 = $explode_hasil_kerja_4[1] * $umk_borongan_lokal_4->umk_packing;
                                                 $data_explode_hasil_kerja_4 = $explode_hasil_kerja_4[1];
-    
-                                                $explode_lembur_4 = explode("|",$hasil_pengerjaan->lembur);
-                                                $explode_status_lembur_4 = explode("-",$explode_lembur_4[4]);
-    
-                                                if($explode_status_lembur_4[1] == 'y'){
+                                            
+                                                $explode_lembur_4 = explode('|', $hasil_pengerjaan->lembur);
+                                                $explode_status_lembur_4 = explode('-', $explode_lembur_4[4]);
+                                            
+                                                if ($explode_status_lembur_4[1] == 'y') {
                                                     $lembur_4 = 1.5;
                                                     $icon_lembur_4 = "<span class='badge badge-soft-success'>L</span>";
-                                                }else{
+                                                } else {
                                                     $lembur_4 = 1;
                                                     $icon_lembur_4 = null;
                                                 }
                                             }
-    
-                                            $explode_hasil_kerja_5 = explode("|",$hasil_pengerjaan->hasil_kerja_5);
-                                            $umk_borongan_lokal_5 = \App\Models\UMKBoronganLokal::select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$explode_hasil_kerja_5[0])->first();
-                                            if(empty($umk_borongan_lokal_5)){
+                                            
+                                            $explode_hasil_kerja_5 = explode('|', $hasil_pengerjaan->hasil_kerja_5);
+                                            $umk_borongan_lokal_5 = \App\Models\UMKBoronganLokal::select('id', 'jenis_produk', 'umk_packing', 'umk_bandrol', 'umk_inner', 'umk_outer')->where('id', $explode_hasil_kerja_5[0])->first();
+                                            if (empty($umk_borongan_lokal_5)) {
                                                 $jenis_produk_5 = '-';
                                                 $hasil_kerja_5 = 0;
                                                 $data_explode_hasil_kerja_5 = '-';
                                                 $lembur_5 = 1;
                                                 $icon_lembur_5 = null;
-                                            }else{
+                                            } else {
                                                 $jenis_produk_5 = $umk_borongan_lokal_5->jenis_produk;
-                                                $hasil_kerja_5 = $explode_hasil_kerja_5[1]*$umk_borongan_lokal_5->umk_packing;
+                                                $hasil_kerja_5 = $explode_hasil_kerja_5[1] * $umk_borongan_lokal_5->umk_packing;
                                                 $data_explode_hasil_kerja_5 = $explode_hasil_kerja_5[1];
-    
-                                                $explode_lembur_5 = explode("|",$hasil_pengerjaan->lembur);
-                                                $explode_status_lembur_5 = explode("-",$explode_lembur_5[5]);
-    
-                                                if($explode_status_lembur_5[1] == 'y'){
+                                            
+                                                $explode_lembur_5 = explode('|', $hasil_pengerjaan->lembur);
+                                                $explode_status_lembur_5 = explode('-', $explode_lembur_5[5]);
+                                            
+                                                if ($explode_status_lembur_5[1] == 'y') {
                                                     $lembur_5 = 1.5;
                                                     $icon_lembur_5 = "<span class='badge badge-soft-success'>L</span>";
-                                                }else{
+                                                } else {
                                                     $lembur_5 = 1;
                                                     $icon_lembur_5 = null;
                                                 }
                                             }
-    
-                                            $hasil_upah = round(($hasil_kerja_1*$lembur_1)+($hasil_kerja_2*$lembur_2)+($hasil_kerja_3*$lembur_3)+($hasil_kerja_4*$lembur_4)+($hasil_kerja_5*$lembur_5));
+                                            
+                                            $hasil_upah = round($hasil_kerja_1 * $lembur_1 + $hasil_kerja_2 * $lembur_2 + $hasil_kerja_3 * $lembur_3 + $hasil_kerja_4 * $lembur_4 + $hasil_kerja_5 * $lembur_5);
                                             // dd($hasil_upah);
-                                            array_push($upah,$hasil_upah);
+                                            array_push($upah, $hasil_upah);
                                             // dd($upah);
-                                            array_push($nama_jenis_produk_1,$jenis_produk_1);
-                                            array_push($nama_jenis_produk_2,$jenis_produk_2);
-                                            array_push($nama_jenis_produk_3,$jenis_produk_3);
-                                            array_push($nama_jenis_produk_4,$jenis_produk_4);
-                                            array_push($nama_jenis_produk_5,$jenis_produk_5);
-                                        ?>
+                                            array_push($nama_jenis_produk_1, $jenis_produk_1);
+                                            array_push($nama_jenis_produk_2, $jenis_produk_2);
+                                            array_push($nama_jenis_produk_3, $jenis_produk_3);
+                                            array_push($nama_jenis_produk_4, $jenis_produk_4);
+                                            array_push($nama_jenis_produk_5, $jenis_produk_5);
+                                            ?>
                                             <td>
                                                 <table class="table table-bordered" style="width: 100%">
                                                     <tr>
-                                                        <td style="font-size: 8pt; " class="text-danger">{{ $jenis_produk_1 }} {!! $icon_lembur_1 !!}</td>
-                                                        <td style="font-size: 8pt; text-align: right" class="text-primary">{{ $data_explode_hasil_kerja_1 }}</td>
-                                                        <td style="font-size: 8pt; text-align: right">{{ $hasil_pengerjaan->total_jam_kerja_1 }}</td>
+                                                        <td style="font-size: 8pt; " class="text-danger">
+                                                            {{ $jenis_produk_1 }} {!! $icon_lembur_1 !!}</td>
+                                                        <td style="font-size: 8pt; text-align: right"
+                                                            class="text-primary">
+                                                            {{ $data_explode_hasil_kerja_1 }}</td>
+                                                        <td style="font-size: 8pt; text-align: right">
+                                                            {{ $hasil_pengerjaan->total_jam_kerja_1 }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td style="font-size: 8pt; " class="text-danger">{{ $jenis_produk_2 }} {!! $icon_lembur_2 !!}</td>
-                                                        <td style="font-size: 8pt; text-align: right" class="text-primary">{{ $data_explode_hasil_kerja_2 }}</td>
-                                                        <td style="font-size: 8pt; text-align: right">{{ $hasil_pengerjaan->total_jam_kerja_2 }}</td>
+                                                        <td style="font-size: 8pt; " class="text-danger">
+                                                            {{ $jenis_produk_2 }} {!! $icon_lembur_2 !!}</td>
+                                                        <td style="font-size: 8pt; text-align: right"
+                                                            class="text-primary">
+                                                            {{ $data_explode_hasil_kerja_2 }}</td>
+                                                        <td style="font-size: 8pt; text-align: right">
+                                                            {{ $hasil_pengerjaan->total_jam_kerja_2 }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td style="font-size: 8pt; " class="text-danger">{{ $jenis_produk_3 }} {!! $icon_lembur_3 !!}</td>
-                                                        <td style="font-size: 8pt; text-align: right" class="text-primary">{{ $data_explode_hasil_kerja_3 }}</td>
-                                                        <td style="font-size: 8pt; text-align: right">{{ $hasil_pengerjaan->total_jam_kerja_3 }}</td>
+                                                        <td style="font-size: 8pt; " class="text-danger">
+                                                            {{ $jenis_produk_3 }} {!! $icon_lembur_3 !!}</td>
+                                                        <td style="font-size: 8pt; text-align: right"
+                                                            class="text-primary">{{ $data_explode_hasil_kerja_3 }}</td>
+                                                        <td style="font-size: 8pt; text-align: right">
+                                                            {{ $hasil_pengerjaan->total_jam_kerja_3 }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td style="font-size: 8pt; " class="text-danger">{{ $jenis_produk_4 }} {!! $icon_lembur_4 !!}</td>
-                                                        <td style="font-size: 8pt; text-align: right" class="text-primary">{{ $data_explode_hasil_kerja_4 }}</td>
-                                                        <td style="font-size: 8pt; text-align: right">{{ $hasil_pengerjaan->total_jam_kerja_4 }}</td>
+                                                        <td style="font-size: 8pt; " class="text-danger">
+                                                            {{ $jenis_produk_4 }} {!! $icon_lembur_4 !!}</td>
+                                                        <td style="font-size: 8pt; text-align: right"
+                                                            class="text-primary">{{ $data_explode_hasil_kerja_4 }}</td>
+                                                        <td style="font-size: 8pt; text-align: right">
+                                                            {{ $hasil_pengerjaan->total_jam_kerja_4 }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td style="font-size: 8pt; " class="text-danger">{{ $jenis_produk_5 }} {!! $icon_lembur_5 !!}</td>
-                                                        <td style="font-size: 8pt; text-align: right" class="text-primary">{{ $data_explode_hasil_kerja_5 }}</td>
-                                                        <td style="font-size: 8pt; text-align: right">{{ $hasil_pengerjaan->total_jam_kerja_5 }}</td>
+                                                        <td style="font-size: 8pt; " class="text-danger">
+                                                            {{ $jenis_produk_5 }} {!! $icon_lembur_5 !!}</td>
+                                                        <td style="font-size: 8pt; text-align: right"
+                                                            class="text-primary">{{ $data_explode_hasil_kerja_5 }}</td>
+                                                        <td style="font-size: 8pt; text-align: right">
+                                                            {{ $hasil_pengerjaan->total_jam_kerja_5 }}</td>
                                                     </tr>
                                                     {{-- <tr>
                                                         <td style="font-size: 8pt" class="text-danger">{{ $jenis_produk_1 }}</td>
@@ -391,115 +439,123 @@
                                                 <span style="font-size: 8pt" class="text-danger">{{ $jenis_produk_5 }}</span> - <span style="font-size: 8pt" class="text-primary">{{ $data_explode_hasil_kerja_5 }}</span> - <span style="font-size: 8pt">{{ $hasil_pengerjaan->total_jam_kerja_5 }}</span> --}}
                                             </td>
                                         @endforeach
-                                        <?php 
-                                            // dd($upah);
-                                            $total_upah = array_sum($upah);
-                                            array_push($total_all_upah,$total_upah);
-
-                                            if(empty($pengerjaan->uang_makan)){
-                                                $uang_makan = 0;
-                                            }else{
-                                                $uang_makan = $pengerjaan->uang_makan;
-                                            }
-                                            
-                                            // if(empty($pengerjaan->tunjangan_kerja)){
-                                            //     $tunjangan_kerja = 0;
-                                            // }else{
-                                            //     $tunjangan_kerja = number_format($pengerjaan->tunjangan_kerja,0,',','.');
-                                            // }
-                                            $tunjangan_kerja = 0;
-    
-                                            if(empty($pengerjaan->tunjangan_kehadiran)){
-                                                $tunjangan_kehadiran = 0;
-                                            }else{
-                                                $tunjangan_kehadiran = $pengerjaan->tunjangan_kehadiran;
-                                            }
-    
-                                            $explode_plus_1 = explode("|",$pengerjaan->plus_1);
-                                            $explode_plus_2 = explode("|",$pengerjaan->plus_2);
-                                            $explode_plus_3 = explode("|",$pengerjaan->plus_3);
-    
-                                            if($explode_plus_1[0] == ""){
-                                                $plus_1 = 0;
-                                            }else{
-                                                $plus_1 = $explode_plus_1[0];
-                                            }
-    
-                                            if($explode_plus_2[0] == ""){
-                                                $plus_2 = 0;
-                                            }else{
-                                                $plus_2 = $explode_plus_2[0];
-                                            }
-    
-                                            if($explode_plus_3[0] == ""){
-                                                $plus_3 = 0;
-                                            }else{
-                                                $plus_3 = $explode_plus_3[0];
-                                            }
-
-                                            array_push($total_all_plus_1,$plus_1);
-                                            array_push($total_all_plus_2,$plus_2);
-                                            array_push($total_all_plus_3,$plus_3);
-                                            array_push($total_all_uang_makan,$uang_makan);
-                                            array_push($total_all_tunjangan_kerja,$tunjangan_kerja);
-                                            array_push($total_all_tunjangan_kehadiran,$tunjangan_kehadiran);
-
-                                            $total_tg = $total_upah+$plus_1+$plus_2+$plus_3+$uang_makan+$tunjangan_kerja+$tunjangan_kehadiran;
-                                            // dd($tunjangan_kehadiran+$tunjangan_kerja);
-                                            // dd($total_tg);
-                                            array_push($total_all_tg,$total_tg);
-    
-                                            $explode_minus_1 = explode("|",$pengerjaan->minus_1);
-                                            $explode_minus_2 = explode("|",$pengerjaan->minus_2);
-    
-                                            if($explode_minus_1[0] == ""){
-                                                $minus_1 = 0;
-                                            }else{
-                                                $minus_1 = $explode_minus_1[0];
-                                            }
-    
-                                            if($explode_minus_2[0] == ""){
-                                                $minus_2 = 0;
-                                            }else{
-                                                $minus_2 = $explode_minus_2[0];
-                                            }
-
-                                            array_push($total_all_minus_1,$minus_1);
-                                            array_push($total_all_minus_2,$minus_2);
-
-                                            array_push($total_all_jht,$pengerjaan->jht);
-                                            array_push($total_all_bpjs_kesehatan,$pengerjaan->bpjs_kesehatan);
+                                        <?php
+                                        // dd($upah);
+                                        $total_upah = array_sum($upah);
+                                        array_push($total_all_upah, $total_upah);
+                                        
+                                        if (empty($pengerjaan->uang_makan)) {
+                                            $uang_makan = 0;
+                                        } else {
+                                            $uang_makan = $pengerjaan->uang_makan;
+                                        }
+                                        
+                                        // if(empty($pengerjaan->tunjangan_kerja)){
+                                        //     $tunjangan_kerja = 0;
+                                        // }else{
+                                        //     $tunjangan_kerja = number_format($pengerjaan->tunjangan_kerja,0,',','.');
+                                        // }
+                                        $tunjangan_kerja = 0;
+                                        
+                                        if (empty($pengerjaan->tunjangan_kehadiran)) {
+                                            $tunjangan_kehadiran = 0;
+                                        } else {
+                                            $tunjangan_kehadiran = $pengerjaan->tunjangan_kehadiran;
+                                        }
+                                        
+                                        $explode_plus_1 = explode('|', $pengerjaan->plus_1);
+                                        $explode_plus_2 = explode('|', $pengerjaan->plus_2);
+                                        $explode_plus_3 = explode('|', $pengerjaan->plus_3);
+                                        
+                                        if ($explode_plus_1[0] == '') {
+                                            $plus_1 = 0;
+                                        } else {
+                                            $plus_1 = $explode_plus_1[0];
+                                        }
+                                        
+                                        if ($explode_plus_2[0] == '') {
+                                            $plus_2 = 0;
+                                        } else {
+                                            $plus_2 = $explode_plus_2[0];
+                                        }
+                                        
+                                        if ($explode_plus_3[0] == '') {
+                                            $plus_3 = 0;
+                                        } else {
+                                            $plus_3 = $explode_plus_3[0];
+                                        }
+                                        
+                                        array_push($total_all_plus_1, $plus_1);
+                                        array_push($total_all_plus_2, $plus_2);
+                                        array_push($total_all_plus_3, $plus_3);
+                                        array_push($total_all_uang_makan, $uang_makan);
+                                        array_push($total_all_tunjangan_kerja, $tunjangan_kerja);
+                                        array_push($total_all_tunjangan_kehadiran, $tunjangan_kehadiran);
+                                        
+                                        $total_tg = $total_upah + $plus_1 + $plus_2 + $plus_3 + $uang_makan + $tunjangan_kerja + $tunjangan_kehadiran;
+                                        // dd($tunjangan_kehadiran+$tunjangan_kerja);
+                                        // dd($total_tg);
+                                        array_push($total_all_tg, $total_tg);
+                                        
+                                        $explode_minus_1 = explode('|', $pengerjaan->minus_1);
+                                        $explode_minus_2 = explode('|', $pengerjaan->minus_2);
+                                        
+                                        if ($explode_minus_1[0] == '') {
+                                            $minus_1 = 0;
+                                        } else {
+                                            $minus_1 = $explode_minus_1[0];
+                                        }
+                                        
+                                        if ($explode_minus_2[0] == '') {
+                                            $minus_2 = 0;
+                                        } else {
+                                            $minus_2 = $explode_minus_2[0];
+                                        }
+                                        
+                                        array_push($total_all_minus_1, $minus_1);
+                                        array_push($total_all_minus_2, $minus_2);
+                                        
+                                        array_push($total_all_jht, $pengerjaan->jht);
+                                        array_push($total_all_bpjs_kesehatan, $pengerjaan->bpjs_kesehatan);
                                         ?>
-                                        <td style="text-align: right">{{ number_format($total_upah,0,',','.') }}</td>
+                                        <td style="text-align: right">{{ number_format($total_upah, 0, ',', '.') }}</td>
                                         {{-- <td style="text-align: right">{{ $total_upah }}</td> --}}
-                                        <td style="text-align: right">{{ number_format($plus_1,0,',','.') }}</td>
-                                        <td style="text-align: right">{{ number_format($plus_2,0,',','.') }}</td>
-                                        <td style="text-align: right">{{ number_format($plus_3,0,',','.') }}</td>
-                                        <td style="text-align: right">{{ number_format($uang_makan,0,',','.') }}</td>
+                                        <td style="text-align: right">{{ number_format($plus_1, 0, ',', '.') }}</td>
+                                        <td style="text-align: right">{{ number_format($plus_2, 0, ',', '.') }}</td>
+                                        <td style="text-align: right">{{ number_format($plus_3, 0, ',', '.') }}</td>
+                                        <td style="text-align: right">{{ number_format($uang_makan, 0, ',', '.') }}</td>
                                         @if ($new_data_pengerjaan->akhir_bulan == $akhir_bulan)
-                                        <td style="text-align: right">{{ number_format($tunjangan_kerja,0,',','.') }}</td>
-                                        <td style="text-align: right">{{ number_format($tunjangan_kehadiran,0,',','.') }}</td>
+                                            <td style="text-align: right">
+                                                {{ number_format($tunjangan_kerja, 0, ',', '.') }}
+                                            </td>
+                                            <td style="text-align: right">
+                                                {{ number_format($tunjangan_kehadiran, 0, ',', '.') }}</td>
                                         @endif
-                                        <?php 
-                                            $total_hasil_tg = $total_upah+$plus_1+$plus_2+$plus_3+$uang_makan+$tunjangan_kerja+$tunjangan_kehadiran;
+                                        <?php
+                                        $total_hasil_tg = $total_upah + $plus_1 + $plus_2 + $plus_3 + $uang_makan + $tunjangan_kerja + $tunjangan_kehadiran;
+                                        ?>
+                                        <td style="text-align: right">{{ number_format($total_hasil_tg, 0, ',', '.') }}
+                                        </td>
+                                        <?php
+                                        $total_gaji_diterima = $total_hasil_tg - ($minus_1 + $minus_2 + $pengerjaan->jht + $pengerjaan->bpjs_kesehatan);
+                                        array_push($total_all_gaji_diterima, round($total_gaji_diterima));
+                                        // array_push($total_all_gaji_diterima,$total_gaji_diterima);
+                                        ?>
+                                        <td style="text-align: right">{{ number_format($minus_1, 0, ',', '.') }}</td>
+                                        <td style="text-align: right">{{ number_format($minus_2, 0, ',', '.') }}</td>
+                                        <td style="text-align: right">{{ number_format($pengerjaan->jht, 0, ',', '.') }}
+                                        </td>
+                                        <td style="text-align: right">
+                                            {{ number_format($pengerjaan->bpjs_kesehatan, 0, ',', '.') }}</td>
+                                        <td style="text-align: right">
+                                            {{ number_format($total_gaji_diterima, 0, ',', '.') }}
+                                        </td>
+                                        {{-- <?php
+                                        $total_hasil_tg = $total_upah + $pengerjaan->plus_1 + $pengerjaan->plus_2 + $pengerjaan->plus_3 + $pengerjaan->uang_makan + $pengerjaan->tunjangan_kerja + $pengerjaan->tunjangan_kehadiran;
                                         ?>
                                         <td style="text-align: right">{{ number_format($total_hasil_tg,0,',','.') }}</td>
-                                        <?php 
-                                            $total_gaji_diterima = $total_hasil_tg-($minus_1+$minus_2+$pengerjaan->jht+$pengerjaan->bpjs_kesehatan);
-                                            array_push($total_all_gaji_diterima,round($total_gaji_diterima));
-                                            // array_push($total_all_gaji_diterima,$total_gaji_diterima);
-                                        ?>
-                                        <td style="text-align: right">{{ number_format($minus_1,0,',','.') }}</td>
-                                        <td style="text-align: right">{{ number_format($minus_2,0,',','.') }}</td>
-                                        <td style="text-align: right">{{ number_format($pengerjaan->jht,0,',','.') }}</td>
-                                        <td style="text-align: right">{{ number_format($pengerjaan->bpjs_kesehatan,0,',','.') }}</td>
-                                        <td style="text-align: right">{{ number_format($total_gaji_diterima,0,',','.') }}</td>
-                                        {{-- <?php 
-                                            $total_hasil_tg = $total_upah+$pengerjaan->plus_1+$pengerjaan->plus_2+$pengerjaan->plus_3+$pengerjaan->uang_makan+$pengerjaan->tunjangan_kerja+$pengerjaan->tunjangan_kehadiran;
-                                        ?>
-                                        <td style="text-align: right">{{ number_format($total_hasil_tg,0,',','.') }}</td>
-                                        <?php 
-                                            $total_gaji_diterima = $total_hasil_tg-($minus_1+$minus_2+$pengerjaan->jht+$pengerjaan->bpjs_kesehatan);
+                                        <?php
+                                        $total_gaji_diterima = $total_hasil_tg - ($minus_1 + $minus_2 + $pengerjaan->jht + $pengerjaan->bpjs_kesehatan);
                                         ?>
                                         <td style="text-align: right">{{ number_format($pengerjaan->minus_1,0,',','.') }}</td>
                                         <td style="text-align: right">{{ number_format($pengerjaan->minus_2,0,',','.') }}</td>
@@ -516,250 +572,302 @@
                                 <tr>
                                     <td colspan="3" style="text-align: center; font-weight: bold">TOTAL</td>
                                     @foreach ($explode_tanggal_pengerjaans as $key => $explode_tanggal_pengerjaan)
-                                    @if ($key != 0)
-                                    @php
-                                        if($id == 1){
-                                            $kode_jenis_operator_detail = 'L';
-                                        }
-                                        elseif($id == 2){
-                                            $kode_jenis_operator_detail = 'E';
-                                        }
-                                        elseif($id == 3){
-                                            $kode_jenis_operator_detail = 'A';
-                                        }
-                                        $list_jenis_umk_1 = [];
-                                        $list_jenis_umk_2 = [];
-                                        $list_jenis_umk_3 = [];
-                                        $list_jenis_umk_4 = [];
-                                        $list_jenis_umk_5 = [];
-                                        $total_all_hasil_kerja_1 = [];
-                                        $total_all_hasil_kerja_2 = [];
-                                        $total_all_hasil_kerja_3 = [];
-                                        $total_all_hasil_kerja_4 = [];
-                                        $total_all_hasil_kerja_5 = [];
-                                        $total_all_jam_kerja_1 = [];
-                                        $total_all_jam_kerja_2 = [];
-                                        $total_all_jam_kerja_3 = [];
-                                        $total_all_jam_kerja_4 = [];
-                                        $total_all_jam_kerja_5 = [];
-
-                                        $hasil_pengerjaans = \App\Models\Pengerjaan::where('kode_pengerjaan',$kode_pengerjaan)
-                                                                                ->where('kode_payrol',substr($kode_pengerjaan,0,2).$kode_jenis_operator_detail.'_'.substr($kode_pengerjaan,3))
-                                                                                ->where('tanggal_pengerjaan',$explode_tanggal_pengerjaan)
-                                                                                ->whereIn('operator_karyawan_id',$operator_karyawans)
-                                                                                ->get();
-                                                                                // dd($hasil_pengerjaans);
-                                                                                // dd($operator_karyawans);
-                                        foreach ($hasil_pengerjaans as $hp => $hasil_pengerjaan) {
-                                            if (empty($hasil_pengerjaan['hasil_kerja_1'])) {
-                                                $jenis_umk_1 = '-';
-                                                $total_hasil_kerja_1 = '0';
-                                                $total_jam_1 = '0';
-                                            }else{
-                                                $explode_total_hasil_kerja_1 = explode("|",$hasil_pengerjaan['hasil_kerja_1']);
-                                                if ($explode_total_hasil_kerja_1[0]==0) {
-                                                    $jenis_umk_1 = '-';
-                                                    $total_hasil_kerja_1 = 0;
-                                                    $total_jam_1 = 0;
-                                                }else{
-                                                    $list_umk_1 = \App\Models\UMKBoronganLokal::where('id',$explode_total_hasil_kerja_1[0])->first();
-                                                    $jenis_umk_1 = $list_umk_1->jenis_produk;
-                                                    $total_hasil_kerja_1 = $explode_total_hasil_kerja_1[1];
-                                                    $total_jam_1 = $hasil_pengerjaan->total_jam_kerja_1;
+                                        @if ($key != 0)
+                                            @php
+                                                if ($id == 1) {
+                                                    $kode_jenis_operator_detail = 'L';
+                                                } elseif ($id == 2) {
+                                                    $kode_jenis_operator_detail = 'E';
+                                                } elseif ($id == 3) {
+                                                    $kode_jenis_operator_detail = 'A';
                                                 }
-                                            }
-                                            array_push($list_jenis_umk_1,$jenis_umk_1);
-                                            array_push($total_all_hasil_kerja_1,$total_hasil_kerja_1);
-                                            array_push($total_all_jam_kerja_1,$total_jam_1);
-                                            
-                                            if (empty($hasil_pengerjaan['hasil_kerja_2'])) {
-                                                $jenis_umk_2 = '-';
-                                                $total_hasil_kerja_2 = '0';
-                                                $total_jam_2 = '0';
-                                            }else{
-                                                $explode_total_hasil_kerja_2 = explode("|",$hasil_pengerjaan['hasil_kerja_2']);
-                                                if ($explode_total_hasil_kerja_2[0]==0) {
-                                                    $jenis_umk_2 = '-';
-                                                    $total_hasil_kerja_2 = 0;
-                                                    $total_jam_2 = 0;
-                                                }else{
-                                                    $list_umk_2 = \App\Models\UMKBoronganLokal::where('id',$explode_total_hasil_kerja_2[0])->first();
-                                                    $jenis_umk_2 = $list_umk_2->jenis_produk;
-                                                    $total_hasil_kerja_2 = $explode_total_hasil_kerja_2[1];
-                                                    $total_jam_2 = $hasil_pengerjaan->total_jam_kerja_2;
+                                                $list_jenis_umk_1 = [];
+                                                $list_jenis_umk_2 = [];
+                                                $list_jenis_umk_3 = [];
+                                                $list_jenis_umk_4 = [];
+                                                $list_jenis_umk_5 = [];
+                                                $total_all_hasil_kerja_1 = [];
+                                                $total_all_hasil_kerja_2 = [];
+                                                $total_all_hasil_kerja_3 = [];
+                                                $total_all_hasil_kerja_4 = [];
+                                                $total_all_hasil_kerja_5 = [];
+                                                $total_all_jam_kerja_1 = [];
+                                                $total_all_jam_kerja_2 = [];
+                                                $total_all_jam_kerja_3 = [];
+                                                $total_all_jam_kerja_4 = [];
+                                                $total_all_jam_kerja_5 = [];
+
+                                                $hasil_pengerjaans = \App\Models\Pengerjaan::where(
+                                                    'kode_pengerjaan',
+                                                    $kode_pengerjaan,
+                                                )
+                                                    ->where(
+                                                        'kode_payrol',
+                                                        substr($kode_pengerjaan, 0, 2) .
+                                                            $kode_jenis_operator_detail .
+                                                            '_' .
+                                                            substr($kode_pengerjaan, 3),
+                                                    )
+                                                    ->where('tanggal_pengerjaan', $explode_tanggal_pengerjaan)
+                                                    ->whereIn('operator_karyawan_id', $operator_karyawans)
+                                                    ->get();
+                                                // dd($hasil_pengerjaans);
+                                                // dd($operator_karyawans);
+                                                foreach ($hasil_pengerjaans as $hp => $hasil_pengerjaan) {
+                                                    if (empty($hasil_pengerjaan['hasil_kerja_1'])) {
+                                                        $jenis_umk_1 = '-';
+                                                        $total_hasil_kerja_1 = '0';
+                                                        $total_jam_1 = '0';
+                                                    } else {
+                                                        $explode_total_hasil_kerja_1 = explode(
+                                                            '|',
+                                                            $hasil_pengerjaan['hasil_kerja_1'],
+                                                        );
+                                                        if ($explode_total_hasil_kerja_1[0] == 0) {
+                                                            $jenis_umk_1 = '-';
+                                                            $total_hasil_kerja_1 = 0;
+                                                            $total_jam_1 = 0;
+                                                        } else {
+                                                            $list_umk_1 = \App\Models\UMKBoronganLokal::where(
+                                                                'id',
+                                                                $explode_total_hasil_kerja_1[0],
+                                                            )->first();
+                                                            $jenis_umk_1 = $list_umk_1->jenis_produk;
+                                                            $total_hasil_kerja_1 = $explode_total_hasil_kerja_1[1];
+                                                            $total_jam_1 = $hasil_pengerjaan->total_jam_kerja_1;
+                                                        }
+                                                    }
+                                                    array_push($list_jenis_umk_1, $jenis_umk_1);
+                                                    array_push($total_all_hasil_kerja_1, $total_hasil_kerja_1);
+                                                    array_push($total_all_jam_kerja_1, $total_jam_1);
+
+                                                    if (empty($hasil_pengerjaan['hasil_kerja_2'])) {
+                                                        $jenis_umk_2 = '-';
+                                                        $total_hasil_kerja_2 = '0';
+                                                        $total_jam_2 = '0';
+                                                    } else {
+                                                        $explode_total_hasil_kerja_2 = explode(
+                                                            '|',
+                                                            $hasil_pengerjaan['hasil_kerja_2'],
+                                                        );
+                                                        if ($explode_total_hasil_kerja_2[0] == 0) {
+                                                            $jenis_umk_2 = '-';
+                                                            $total_hasil_kerja_2 = 0;
+                                                            $total_jam_2 = 0;
+                                                        } else {
+                                                            $list_umk_2 = \App\Models\UMKBoronganLokal::where(
+                                                                'id',
+                                                                $explode_total_hasil_kerja_2[0],
+                                                            )->first();
+                                                            $jenis_umk_2 = $list_umk_2->jenis_produk;
+                                                            $total_hasil_kerja_2 = $explode_total_hasil_kerja_2[1];
+                                                            $total_jam_2 = $hasil_pengerjaan->total_jam_kerja_2;
+                                                        }
+                                                    }
+                                                    array_push($list_jenis_umk_2, $jenis_umk_2);
+                                                    array_push($total_all_hasil_kerja_2, $total_hasil_kerja_2);
+                                                    array_push($total_all_jam_kerja_2, $total_jam_2);
+
+                                                    if (empty($hasil_pengerjaan['hasil_kerja_3'])) {
+                                                        $jenis_umk_3 = '-';
+                                                        $total_hasil_kerja_3 = '0';
+                                                        $total_jam_3 = '0';
+                                                    } else {
+                                                        $explode_total_hasil_kerja_3 = explode(
+                                                            '|',
+                                                            $hasil_pengerjaan['hasil_kerja_3'],
+                                                        );
+                                                        if ($explode_total_hasil_kerja_3[0] == 0) {
+                                                            $jenis_umk_3 = '-';
+                                                            $total_hasil_kerja_3 = 0;
+                                                            $total_jam_3 = 0;
+                                                        } else {
+                                                            $list_umk_3 = \App\Models\UMKBoronganLokal::where(
+                                                                'id',
+                                                                $explode_total_hasil_kerja_3[0],
+                                                            )->first();
+                                                            $jenis_umk_3 = $list_umk_3->jenis_produk;
+                                                            $total_hasil_kerja_3 = $explode_total_hasil_kerja_3[1];
+                                                            $total_jam_3 = $hasil_pengerjaan->total_jam_kerja_3;
+                                                        }
+                                                    }
+                                                    array_push($list_jenis_umk_3, $jenis_umk_3);
+                                                    array_push($total_all_hasil_kerja_3, $total_hasil_kerja_3);
+                                                    array_push($total_all_jam_kerja_3, $total_jam_3);
+
+                                                    if (empty($hasil_pengerjaan['hasil_kerja_4'])) {
+                                                        $jenis_umk_4 = '-';
+                                                        $total_hasil_kerja_4 = '0';
+                                                        $total_jam_4 = '0';
+                                                    } else {
+                                                        $explode_total_hasil_kerja_4 = explode(
+                                                            '|',
+                                                            $hasil_pengerjaan['hasil_kerja_4'],
+                                                        );
+                                                        if ($explode_total_hasil_kerja_4[0] == 0) {
+                                                            $jenis_umk_4 = '-';
+                                                            $total_hasil_kerja_4 = 0;
+                                                            $total_jam_4 = 0;
+                                                        } else {
+                                                            $list_umk_4 = \App\Models\UMKBoronganLokal::where(
+                                                                'id',
+                                                                $explode_total_hasil_kerja_4[0],
+                                                            )->first();
+                                                            $jenis_umk_4 = $list_umk_4->jenis_produk;
+                                                            $total_hasil_kerja_4 = $explode_total_hasil_kerja_4[1];
+                                                            $total_jam_4 = $hasil_pengerjaan->total_jam_kerja_4;
+                                                        }
+                                                    }
+                                                    array_push($list_jenis_umk_4, $jenis_umk_4);
+                                                    array_push($total_all_hasil_kerja_4, $total_hasil_kerja_4);
+                                                    array_push($total_all_jam_kerja_4, $total_jam_4);
+
+                                                    if (empty($hasil_pengerjaan['hasil_kerja_5'])) {
+                                                        $jenis_umk_5 = '-';
+                                                        $total_hasil_kerja_5 = '0';
+                                                        $total_jam_5 = '0';
+                                                    } else {
+                                                        $explode_total_hasil_kerja_5 = explode(
+                                                            '|',
+                                                            $hasil_pengerjaan['hasil_kerja_5'],
+                                                        );
+                                                        if ($explode_total_hasil_kerja_5[0] == 0) {
+                                                            $jenis_umk_5 = '-';
+                                                            $total_hasil_kerja_5 = 0;
+                                                            $total_jam_5 = 0;
+                                                        } else {
+                                                            $list_umk_5 = \App\Models\UMKBoronganLokal::where(
+                                                                'id',
+                                                                $explode_total_hasil_kerja_5[0],
+                                                            )->first();
+                                                            $jenis_umk_5 = $list_umk_5->jenis_produk;
+                                                            $total_hasil_kerja_5 = $explode_total_hasil_kerja_5[1];
+                                                            $total_jam_5 = $hasil_pengerjaan->total_jam_kerja_5;
+                                                        }
+                                                    }
+                                                    array_push($list_jenis_umk_5, $jenis_umk_5);
+                                                    array_push($total_all_hasil_kerja_5, $total_hasil_kerja_5);
+                                                    array_push($total_all_jam_kerja_5, $total_jam_5);
                                                 }
-                                            }
-                                            array_push($list_jenis_umk_2,$jenis_umk_2);
-                                            array_push($total_all_hasil_kerja_2,$total_hasil_kerja_2);
-                                            array_push($total_all_jam_kerja_2,$total_jam_2);
-    
-                                            if (empty($hasil_pengerjaan['hasil_kerja_3'])) {
-                                                $jenis_umk_3 = '-';
-                                                $total_hasil_kerja_3 = '0';
-                                                $total_jam_3 = '0';
-                                            }else{
-                                                $explode_total_hasil_kerja_3 = explode("|",$hasil_pengerjaan['hasil_kerja_3']);
-                                                if ($explode_total_hasil_kerja_3[0]==0) {
-                                                    $jenis_umk_3 = '-';
-                                                    $total_hasil_kerja_3 = 0;
-                                                    $total_jam_3 = 0;
-                                                }else{
-                                                    $list_umk_3 = \App\Models\UMKBoronganLokal::where('id',$explode_total_hasil_kerja_3[0])->first();
-                                                    $jenis_umk_3 = $list_umk_3->jenis_produk;
-                                                    $total_hasil_kerja_3 = $explode_total_hasil_kerja_3[1];
-                                                    $total_jam_3 = $hasil_pengerjaan->total_jam_kerja_3;
+
+                                                if (empty($list_jenis_umk_1)) {
+                                                    $data_list_jenis_umk_1 = '-';
+                                                } else {
+                                                    $data_list_jenis_umk_1 = $list_jenis_umk_1[0];
                                                 }
-                                            }
-                                            array_push($list_jenis_umk_3,$jenis_umk_3);
-                                            array_push($total_all_hasil_kerja_3,$total_hasil_kerja_3);
-                                            array_push($total_all_jam_kerja_3,$total_jam_3);
-    
-                                            if (empty($hasil_pengerjaan['hasil_kerja_4'])) {
-                                                $jenis_umk_4 = '-';
-                                                $total_hasil_kerja_4 = '0';
-                                                $total_jam_4 = '0';
-                                            }else{
-                                                $explode_total_hasil_kerja_4 = explode("|",$hasil_pengerjaan['hasil_kerja_4']);
-                                                if ($explode_total_hasil_kerja_4[0]==0) {
-                                                    $jenis_umk_4 = '-';
-                                                    $total_hasil_kerja_4 = 0;
-                                                    $total_jam_4 = 0;
-                                                }else{
-                                                    $list_umk_4 = \App\Models\UMKBoronganLokal::where('id',$explode_total_hasil_kerja_4[0])->first();
-                                                    $jenis_umk_4 = $list_umk_4->jenis_produk;
-                                                    $total_hasil_kerja_4 = $explode_total_hasil_kerja_4[1];
-                                                    $total_jam_4 = $hasil_pengerjaan->total_jam_kerja_4;
+
+                                                if (empty($list_jenis_umk_2)) {
+                                                    $data_list_jenis_umk_2 = '-';
+                                                } else {
+                                                    $data_list_jenis_umk_2 = $list_jenis_umk_2[0];
                                                 }
-                                            }
-                                            array_push($list_jenis_umk_4,$jenis_umk_4);
-                                            array_push($total_all_hasil_kerja_4,$total_hasil_kerja_4);
-                                            array_push($total_all_jam_kerja_4,$total_jam_4);
-    
-                                            if (empty($hasil_pengerjaan['hasil_kerja_5'])) {
-                                                $jenis_umk_5 = '-';
-                                                $total_hasil_kerja_5 = '0';
-                                                $total_jam_5 = '0';
-                                            }else{
-                                                $explode_total_hasil_kerja_5 = explode("|",$hasil_pengerjaan['hasil_kerja_5']);
-                                                if ($explode_total_hasil_kerja_5[0]==0) {
-                                                    $jenis_umk_5 = '-';
-                                                    $total_hasil_kerja_5 = 0;
-                                                    $total_jam_5 = 0;
-                                                }else{
-                                                    $list_umk_5 = \App\Models\UMKBoronganLokal::where('id',$explode_total_hasil_kerja_5[0])->first();
-                                                    $jenis_umk_5 = $list_umk_5->jenis_produk;
-                                                    $total_hasil_kerja_5 = $explode_total_hasil_kerja_5[1];
-                                                    $total_jam_5 = $hasil_pengerjaan->total_jam_kerja_5;
+
+                                                if (empty($list_jenis_umk_3)) {
+                                                    $data_list_jenis_umk_3 = '-';
+                                                } else {
+                                                    $data_list_jenis_umk_3 = $list_jenis_umk_3[0];
                                                 }
-                                            }
-                                            array_push($list_jenis_umk_5,$jenis_umk_5);
-                                            array_push($total_all_hasil_kerja_5,$total_hasil_kerja_5);
-                                            array_push($total_all_jam_kerja_5,$total_jam_5);
-                                        }
 
-                                        if (empty($list_jenis_umk_1)) {
-                                            $data_list_jenis_umk_1 = '-';
-                                        }else{
-                                            $data_list_jenis_umk_1 = $list_jenis_umk_1[0];
-                                        }
+                                                if (empty($list_jenis_umk_4)) {
+                                                    $data_list_jenis_umk_4 = '-';
+                                                } else {
+                                                    $data_list_jenis_umk_4 = $list_jenis_umk_4[0];
+                                                }
 
-                                        if (empty($list_jenis_umk_2)) {
-                                            $data_list_jenis_umk_2 = '-';
-                                        }else{
-                                            $data_list_jenis_umk_2 = $list_jenis_umk_2[0];
-                                        }
-
-                                        if (empty($list_jenis_umk_3)) {
-                                            $data_list_jenis_umk_3 = '-';
-                                        }else{
-                                            $data_list_jenis_umk_3 = $list_jenis_umk_3[0];
-                                        }
-
-                                        if (empty($list_jenis_umk_4)) {
-                                            $data_list_jenis_umk_4 = '-';
-                                        }else{
-                                            $data_list_jenis_umk_4 = $list_jenis_umk_4[0];
-                                        }
-
-                                        if (empty($list_jenis_umk_5)) {
-                                            $data_list_jenis_umk_5 = '-';
-                                        }else{
-                                            $data_list_jenis_umk_5 = $list_jenis_umk_5[0];
-                                        }
-                                    @endphp
-                                        <td>
-                                            <table class="table table-bordered" style="width: 100%">
-                                                <tr>
-                                                    <td style="font-size: 8pt; font-weight: bold">{{ $data_list_jenis_umk_1 }}</td>
-                                                    <td style="text-align: right; font-weight: bold; font-size: 8pt">{{ array_sum($total_all_hasil_kerja_1) }}</td>
-                                                    <td style="text-align: right; font-weight: bold; font-size: 8pt">{{ array_sum($total_all_jam_kerja_1) }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="font-size: 8pt; font-weight: bold">{{ $data_list_jenis_umk_2 }}</td>
-                                                    <td style="text-align: right; font-weight: bold; font-size: 8pt">{{ array_sum($total_all_hasil_kerja_2) }}</td>
-                                                    <td style="text-align: right; font-weight: bold; font-size: 8pt">{{ array_sum($total_all_jam_kerja_2) }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="font-size: 8pt; font-weight: bold">{{ $data_list_jenis_umk_3 }}</td>
-                                                    <td style="text-align: right; font-weight: bold; font-size: 8pt">{{ array_sum($total_all_hasil_kerja_3) }}</td>
-                                                    <td style="text-align: right; font-weight: bold; font-size: 8pt">{{ array_sum($total_all_jam_kerja_3) }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="font-size: 8pt; font-weight: bold">{{ $data_list_jenis_umk_4 }}</td>
-                                                    <td style="text-align: right; font-weight: bold; font-size: 8pt">{{ array_sum($total_all_hasil_kerja_4) }}</td>
-                                                    <td style="text-align: right; font-weight: bold; font-size: 8pt">{{ array_sum($total_all_jam_kerja_4) }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="font-size: 8pt; font-weight: bold">{{ $data_list_jenis_umk_5 }}</td>
-                                                    <td style="text-align: right; font-weight: bold; font-size: 8pt">{{ array_sum($total_all_hasil_kerja_5) }}</td>
-                                                    <td style="text-align: right; font-weight: bold; font-size: 8pt">{{ array_sum($total_all_jam_kerja_5) }}</td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    @endif
+                                                if (empty($list_jenis_umk_5)) {
+                                                    $data_list_jenis_umk_5 = '-';
+                                                } else {
+                                                    $data_list_jenis_umk_5 = $list_jenis_umk_5[0];
+                                                }
+                                            @endphp
+                                            <td>
+                                                <table class="table table-bordered" style="width: 100%">
+                                                    <tr>
+                                                        <td style="font-size: 8pt; font-weight: bold">
+                                                            {{ $data_list_jenis_umk_1 }}</td>
+                                                        <td style="text-align: right; font-weight: bold; font-size: 8pt">
+                                                            {{ array_sum($total_all_hasil_kerja_1) }}</td>
+                                                        <td style="text-align: right; font-weight: bold; font-size: 8pt">
+                                                            {{ array_sum($total_all_jam_kerja_1) }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-size: 8pt; font-weight: bold">
+                                                            {{ $data_list_jenis_umk_2 }}</td>
+                                                        <td style="text-align: right; font-weight: bold; font-size: 8pt">
+                                                            {{ array_sum($total_all_hasil_kerja_2) }}</td>
+                                                        <td style="text-align: right; font-weight: bold; font-size: 8pt">
+                                                            {{ array_sum($total_all_jam_kerja_2) }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-size: 8pt; font-weight: bold">
+                                                            {{ $data_list_jenis_umk_3 }}</td>
+                                                        <td style="text-align: right; font-weight: bold; font-size: 8pt">
+                                                            {{ array_sum($total_all_hasil_kerja_3) }}</td>
+                                                        <td style="text-align: right; font-weight: bold; font-size: 8pt">
+                                                            {{ array_sum($total_all_jam_kerja_3) }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-size: 8pt; font-weight: bold">
+                                                            {{ $data_list_jenis_umk_4 }}</td>
+                                                        <td style="text-align: right; font-weight: bold; font-size: 8pt">
+                                                            {{ array_sum($total_all_hasil_kerja_4) }}</td>
+                                                        <td style="text-align: right; font-weight: bold; font-size: 8pt">
+                                                            {{ array_sum($total_all_jam_kerja_4) }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-size: 8pt; font-weight: bold">
+                                                            {{ $data_list_jenis_umk_5 }}</td>
+                                                        <td style="text-align: right; font-weight: bold; font-size: 8pt">
+                                                            {{ array_sum($total_all_hasil_kerja_5) }}</td>
+                                                        <td style="text-align: right; font-weight: bold; font-size: 8pt">
+                                                            {{ array_sum($total_all_jam_kerja_5) }}</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        @endif
                                     @endforeach
                                     <td style="text-align: right; font-weight: bold">
-                                        {{ number_format(array_sum($total_all_upah),0,',','.') }}
+                                        {{ number_format(array_sum($total_all_upah), 0, ',', '.') }}
                                         {{-- {{ array_sum($total_all_upah) }} --}}
                                     </td>
                                     <td style="text-align: right; font-weight: bold">
-                                        {{ number_format(array_sum($total_all_plus_1),0,',','.') }}
+                                        {{ number_format(array_sum($total_all_plus_1), 0, ',', '.') }}
                                     </td>
                                     <td style="text-align: right; font-weight: bold">
-                                        {{ number_format(array_sum($total_all_plus_2),0,',','.') }}
+                                        {{ number_format(array_sum($total_all_plus_2), 0, ',', '.') }}
                                     </td>
                                     <td style="text-align: right; font-weight: bold">
-                                        {{ number_format(array_sum($total_all_plus_3),0,',','.') }}
+                                        {{ number_format(array_sum($total_all_plus_3), 0, ',', '.') }}
                                     </td>
                                     <td style="text-align: right; font-weight: bold">
-                                        {{ number_format(array_sum($total_all_uang_makan),0,',','.') }}
+                                        {{ number_format(array_sum($total_all_uang_makan), 0, ',', '.') }}
                                     </td>
                                     @if ($new_data_pengerjaan->akhir_bulan == $akhir_bulan)
-                                    <td style="text-align: right; font-weight: bold">
-                                        {{ number_format(array_sum($total_all_tunjangan_kerja),0,',','.') }}
-                                    </td>
-                                    <td style="text-align: right; font-weight: bold">
-                                        {{ number_format(array_sum($total_all_tunjangan_kehadiran),0,',','.') }}
-                                    </td>
+                                        <td style="text-align: right; font-weight: bold">
+                                            {{ number_format(array_sum($total_all_tunjangan_kerja), 0, ',', '.') }}
+                                        </td>
+                                        <td style="text-align: right; font-weight: bold">
+                                            {{ number_format(array_sum($total_all_tunjangan_kehadiran), 0, ',', '.') }}
+                                        </td>
                                     @endif
                                     <td style="text-align: right; font-weight: bold">
-                                        {{ number_format(array_sum($total_all_tg),0,',','.') }}
+                                        {{ number_format(array_sum($total_all_tg), 0, ',', '.') }}
                                         {{-- 1 --}}
                                     </td>
                                     <td style="text-align: right; font-weight: bold">
-                                        {{ number_format(array_sum($total_all_minus_1),0,',','.') }}
+                                        {{ number_format(array_sum($total_all_minus_1), 0, ',', '.') }}
                                     </td>
                                     <td style="text-align: right; font-weight: bold">
-                                        {{ number_format(array_sum($total_all_minus_2),0,',','.') }}
+                                        {{ number_format(array_sum($total_all_minus_2), 0, ',', '.') }}
                                     </td>
                                     <td style="text-align: right; font-weight: bold">
-                                        {{ number_format(array_sum($total_all_jht),0,',','.') }}
+                                        {{ number_format(array_sum($total_all_jht), 0, ',', '.') }}
                                     </td>
                                     <td style="text-align: right; font-weight: bold">
-                                        {{ number_format(array_sum($total_all_bpjs_kesehatan),0,',','.') }}
+                                        {{ number_format(array_sum($total_all_bpjs_kesehatan), 0, ',', '.') }}
                                     </td>
                                     <td style="text-align: right; font-weight: bold">
-                                        {{ number_format(array_sum($total_all_gaji_diterima),0,',','.') }}
+                                        {{ number_format(array_sum($total_all_gaji_diterima), 0, ',', '.') }}
                                     </td>
                                     {{-- @php
                                         dd(array_sum($total));

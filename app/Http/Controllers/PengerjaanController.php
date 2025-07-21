@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+
+use App\Imports\BoronganPackingMultipleImport;
+use App\Exports\BoronganPackingMultipleExport;
+use App\Models\TestingBorongan;
+
 use App\Models\NewDataPengerjaan;
 use App\Models\JenisOperator;
 use App\Models\JenisOperatorDetail;
@@ -41,6 +46,7 @@ use DB;
 use DateTime;
 use Validator;
 use DataTables;
+use Excel;
 
 class PengerjaanController extends Controller
 {
@@ -665,6 +671,105 @@ class PengerjaanController extends Controller
         }
         // $data['new_data_pengerjaan'] = NewDataPengerjaan::where('status','n')->orderBy('id','desc')->first();
         return view('backend.pengerjaan.index');
+    }
+
+    public function import_excel_borongan(Request $request,$id,$kode_pengerjaan,$jenis_operator_detail_id,$jenis_operator_detail_pekerjaan_id)
+    {
+        try {
+            $file = $request->file('upload_file_pengerjaan_borongan');
+            $kodePengerjaan = $kode_pengerjaan;
+
+            if($jenis_operator_detail_id == 1){
+                $kode_jenis_operator_detail = 'L';
+            }
+            elseif($jenis_operator_detail_id == 2){
+                $kode_jenis_operator_detail = 'E';
+            }
+            elseif($jenis_operator_detail_id == 3){
+                $kode_jenis_operator_detail = 'A';
+            }
+
+            $kodePayrol = substr($kode_pengerjaan,0,2).$kode_jenis_operator_detail.'_'.substr($kode_pengerjaan,3);
+
+            Excel::import($import = new BoronganPackingMultipleImport($kodePengerjaan,$kodePayrol), $file);
+
+            return redirect()->back()->with('success', 'Upload File Pengerjaan Berhasil Terupload, Silahkan Dicek Kembali');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal mengimport data: '.$e->getMessage());
+        }
+    }
+
+    public function export_excel_borongan($id,$kode_pengerjaan,$jenis_operator_detail_id,$jenis_operator_detail_pekerjaan_id)
+    {
+        if($jenis_operator_detail_id == 1){
+            $kode_jenis_operator_detail = 'L';
+            // dd($jenis_operator_detail_pekerjaan_id);
+            $namaFile = 'Packing';
+            switch ($jenis_operator_detail_pekerjaan_id) {
+                case '1':
+                    $kategoriPekerjaan = 'Packing Lokal';
+                    break;
+                case '2':
+                    $kategoriPekerjaan = 'Bandrol Lokal';
+                    break;
+                case '3':
+                    $kategoriPekerjaan = 'Inner Lokal';
+                    break;
+                case '4':
+                    $kategoriPekerjaan = 'Outer Lokal';
+                    break;
+                case '25':
+                    $kategoriPekerjaan = 'Stempel Lokal';
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+        }
+        elseif($jenis_operator_detail_id == 2){
+            $kode_jenis_operator_detail = 'E';
+            $namaFile = 'Ekspor';
+            switch ($jenis_operator_detail_pekerjaan_id) {
+                case '5':
+                    $kategoriPekerjaan = 'Packing Ekspor';
+                    break;
+                case '6':
+                    $kategoriPekerjaan = 'Kemas Ekspor';
+                    break;
+                case '7':
+                    $kategoriPekerjaan = 'Gagang Ekspor';
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+        }
+        elseif($jenis_operator_detail_id == 3){
+            $kode_jenis_operator_detail = 'A';
+            $namaFile = 'Ambri';
+            switch ($jenis_operator_detail_pekerjaan_id) {
+                case '8':
+                    $kategoriPekerjaan = 'Isi Etiket';
+                    break;
+                case '9':
+                    $kategoriPekerjaan = 'Las Tepi';
+                    break;
+                case '10':
+                    $kategoriPekerjaan = 'Las Pojok';
+                    break;
+                case '11':
+                    $kategoriPekerjaan = 'Isi Ambri';
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+        }
+
+        // dd(substr($kode_pengerjaan,0,2).$kode_jenis_operator_detail.'_'.substr($kode_pengerjaan,3));
+
+        $kodePayrol = substr($kode_pengerjaan,0,2).$kode_jenis_operator_detail.'_'.substr($kode_pengerjaan,3);
+        return Excel::download(new BoronganPackingMultipleExport($kode_pengerjaan,$kodePayrol,$jenis_operator_detail_id,$jenis_operator_detail_pekerjaan_id), 'Template Borongan '.$namaFile.' - '.$kategoriPekerjaan.'.xlsx');
     }
 
     public function b_hasil_kerja_packing(Request $request)
