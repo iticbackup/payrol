@@ -20,10 +20,13 @@ $a = count($exp_tanggals);
 $exp_tgl_awal = explode('-', $exp_tanggals[1]);
 $exp_tgl_akhir = explode('-', $exp_tanggals[$a]);
 
-$pengerjaan_weekly = \App\Models\PengerjaanWeekly::where('kode_pengerjaan', $kode_pengerjaan)->where('id', $id)->first();
+$pengerjaan_weekly = \App\Models\PengerjaanWeekly::where('kode_pengerjaan', $kode_pengerjaan)
+                                                ->where('id', $id)
+                                                ->first();
+                                                // dd($pengerjaan_weekly);
 $pengerjaans = \App\Models\Pengerjaan::where('operator_karyawan_id', $pengerjaan_weekly->operator_karyawan_id)
-    ->where('kode_pengerjaan', $kode_pengerjaan)
-    ->get();
+                                    ->where('kode_pengerjaan', $kode_pengerjaan)
+                                    ->get();
 $total_upah_hasil_kerja = [];
 $total_lembur_kerja = [];
 
@@ -313,7 +316,7 @@ foreach ($pengerjaans as $key => $pengerjaan) {
             }
         }
     }
-
+    
     $total_hasil_kerja = round($hasil_kerja_1 * $lembur_1 + $hasil_kerja_2 * $lembur_2 + $hasil_kerja_3 * $lembur_3 + $hasil_kerja_4 * $lembur_4 + $hasil_kerja_5 * $lembur_5) - $pengerjaan['uang_lembur'];
     $total_lembur = $pengerjaan['uang_lembur'];
 

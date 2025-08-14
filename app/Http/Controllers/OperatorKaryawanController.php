@@ -27,7 +27,7 @@ class OperatorKaryawanController extends Controller
     {
         if ($request->ajax()) {
             if (auth()->user()->roles != 1) {
-                $data = KaryawanOperator::where('jenis_operator_id',1)->where('status','y')->get();
+                $data = KaryawanOperator::where('jenis_operator_id',1)->where('status','Y')->get();
             }else{
                 $data = KaryawanOperator::where('jenis_operator_id',1)->get();
             }

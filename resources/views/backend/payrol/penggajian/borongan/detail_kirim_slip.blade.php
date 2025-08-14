@@ -504,6 +504,7 @@
                                     <td>{{ $pengerjaan_weekly->operator_karyawan->biodata_karyawan->nik.' - '.$pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama }}</td>
                                     <td>{{ $pengerjaan_weekly->operator_karyawan->biodata_karyawan->email }}</td>
                                     <td>{{ $pengerjaan_weekly->operator_karyawan->jenis_operator->jenis_operator.' - '.$pengerjaan_weekly->operator_karyawan->jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan }}</td>
+                                    {{-- <td>{{ $pengerjaan_weekly->operator_karyawan->jenis_operator.' - '.$pengerjaan_weekly->operator_karyawan->jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan }}</td> --}}
                                     <td>{{ 'Rp. '.number_format($total_gaji_diterima,0,',','.') }}</td>
                                     <td>
                                         @if (empty($kirim_gaji))

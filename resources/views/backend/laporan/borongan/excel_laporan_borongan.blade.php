@@ -376,6 +376,7 @@
                                             } else {
                                                 $lembur = 1;
                                             }
+                                            // $total_hasil_kerja = 0;
                                             $total_hasil_kerja = $explode_hasil_kerja[1] * $umk_borongan_ambri->umk_las_tepi*$lembur;
                                         }
 

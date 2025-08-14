@@ -213,7 +213,7 @@
                                                 $icon_lembur_1 = null;
                                             }else{
                                                 $jenis_produk_1 = $umk_borongan_lokal_1->jenis_produk;
-                                                $hasil_kerja_1 = $explode_hasil_kerja_1[1]*$umk_borongan_lokal_1->umk_etiket;
+                                                $hasil_kerja_1 = $explode_hasil_kerja_1[1]*$umk_borongan_lokal_1->umk_las_tepi;
                                                 $data_explode_hasil_kerja_1 = $explode_hasil_kerja_1[1];
     
                                                 $explode_lembur_1 = explode("|",$hasil_pengerjaan->lembur);
@@ -240,7 +240,7 @@
                                                 $icon_lembur_2 = null;
                                             }else{
                                                 $jenis_produk_2 = $umk_borongan_lokal_2->jenis_produk;
-                                                $hasil_kerja_2 = $explode_hasil_kerja_2[1]*$umk_borongan_lokal_2->umk_etiket;
+                                                $hasil_kerja_2 = $explode_hasil_kerja_2[1]*$umk_borongan_lokal_2->umk_las_tepi;
                                                 $data_explode_hasil_kerja_2 = $explode_hasil_kerja_2[1];
     
                                                 $explode_lembur_2 = explode("|",$hasil_pengerjaan->lembur);
@@ -265,7 +265,7 @@
                                                 $icon_lembur_3 = null;
                                             }else{
                                                 $jenis_produk_3 = $umk_borongan_lokal_3->jenis_produk;
-                                                $hasil_kerja_3 = $explode_hasil_kerja_3[1]*$umk_borongan_lokal_3->umk_etiket;
+                                                $hasil_kerja_3 = $explode_hasil_kerja_3[1]*$umk_borongan_lokal_3->umk_las_tepi;
                                                 $data_explode_hasil_kerja_3 = $explode_hasil_kerja_3[1];
     
                                                 $explode_lembur_3 = explode("|",$hasil_pengerjaan->lembur);
@@ -290,7 +290,7 @@
                                                 $icon_lembur_4 = null;
                                             }else{
                                                 $jenis_produk_4 = $umk_borongan_lokal_4->jenis_produk;
-                                                $hasil_kerja_4 = $explode_hasil_kerja_4[1]*$umk_borongan_lokal_4->umk_etiket;
+                                                $hasil_kerja_4 = $explode_hasil_kerja_4[1]*$umk_borongan_lokal_4->umk_las_tepi;
                                                 $data_explode_hasil_kerja_4 = $explode_hasil_kerja_4[1];
     
                                                 $explode_lembur_4 = explode("|",$hasil_pengerjaan->lembur);
@@ -315,7 +315,7 @@
                                                 $icon_lembur_5 = null;
                                             }else{
                                                 $jenis_produk_5 = $umk_borongan_lokal_5->jenis_produk;
-                                                $hasil_kerja_5 = $explode_hasil_kerja_5[1]*$umk_borongan_lokal_5->umk_etiket;
+                                                $hasil_kerja_5 = $explode_hasil_kerja_5[1]*$umk_borongan_lokal_5->umk_las_tepi;
                                                 $data_explode_hasil_kerja_5 = $explode_hasil_kerja_5[1];
     
                                                 $explode_lembur_5 = explode("|",$hasil_pengerjaan->lembur);
