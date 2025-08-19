@@ -1020,7 +1020,7 @@
                                                                 @foreach ($jhts as $jht)
                                                                     @if ($masa_kerja_tahun > 15)
                                                                     <option value="{{ $jht->nominal }}" {{ $jht->urutan == 3 ? 'selected' : null }}>{{ $jht->keterangan }} | Rp. {{ number_format($jht->nominal,0,',','.') }}</option>
-                                                                    @elseif($masa_kerja_tahun >= 10 && $masa_kerja_tahun <= 15 && $masa_kerja_hari >= 1)
+                                                                    @elseif($masa_kerja_tahun >= 10 && $masa_kerja_tahun <= 15)
                                                                     <option value="{{ $jht->nominal }}" {{ $jht->urutan == 2 ? 'selected' : null }}>{{ $jht->keterangan }} | Rp. {{ number_format($jht->nominal,0,',','.') }}</option>
                                                                     @elseif($masa_kerja_tahun <= 10 || $masa_kerja_hari >= 1)
                                                                     <option value="{{ $jht->nominal }}" {{ $jht->urutan == 1 ? 'selected' : null }}>{{ $jht->keterangan }} | Rp. {{ number_format($jht->nominal,0,',','.') }}</option>
