@@ -33,6 +33,8 @@ use App\Models\UMKBoronganAmbri;
 
 use App\Models\RitUMK;
 
+use App\Models\CutOff;
+
 use App\Models\BPJSJHT;
 use App\Models\BPJSKesehatan;
 
@@ -100,7 +102,8 @@ class PengerjaanController extends Controller
         LogPosisi $logPosisi,
         PresensiInfo $presensiInfo,
         KeluarMasuk $keluarMasuk,
-        FtmAttLog $ftmAttLog
+        FtmAttLog $ftmAttLog,
+        CutOff $cutOff
     ){
         $this->newDataPengerjaan = $newDataPengerjaan;
         $this->jenisOperator = $jenisOperator;
@@ -127,6 +130,7 @@ class PengerjaanController extends Controller
         $this->presensiInfo = $presensiInfo;
         $this->keluarMasuk = $keluarMasuk;
         $this->ftmAttLog = $ftmAttLog;
+        $this->cutOff = $cutOff;
     }
     public function index()
     {
@@ -1419,6 +1423,183 @@ class PengerjaanController extends Controller
         ]);
     }
 
+    public function input_bpjs_kesehatan($id, $kode_pengerjaan)
+    {
+        switch ($id) {
+            case '1':
+                $kode_jenis_operator_detail = 'L';
+                break;
+            case '2':
+                $kode_jenis_operator_detail = 'E';
+                break;
+            case '3':
+                $kode_jenis_operator_detail = 'A';
+                break;
+            default:
+                # code...
+                break;
+        }
+
+        $data['id'] = $id;
+        $data['kode_pengerjaan'] = $kode_pengerjaan;
+        // dd(substr($kode_pengerjaan,0,2).$kode_jenis_operator_detail.'_'.substr($kode_pengerjaan,3));
+
+        $data['karyawans'] = $this->karyawanOperator->select([
+                                                    'operator_karyawan.id as id',
+                                                    'biodata_karyawan.nama as nama',
+                                                    'operator_karyawan.nik as nik',
+                                                    'biodata_karyawan.pin as pin',
+                                                    'biodata_karyawan.tanggal_masuk as tanggal',
+                                                    'operator_karyawan.tunjangan_kerja_id as tunjangan_kerja_id',
+                                                    'operator_karyawan.jenis_operator_detail_pekerjaan_id as jenis_operator_detail_pekerjaan_id',
+                                                    'pengerjaan_weekly.bpjs_kesehatan as bpjs_kesehatan'
+                                                    ])
+                                                    ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+                                                    ->leftJoin('pengerjaan_weekly','pengerjaan_weekly.operator_karyawan_id','=','operator_karyawan.id')
+                                                    // ->where('operator_karyawan.nik',$nik)
+                                                    ->where('status','Y')
+                                                    // ->where('biodata_karyawan.status_karyawan',null)
+                                                    ->where('operator_karyawan.jenis_operator_detail_pekerjaan_id',$id)
+                                                    ->where('kode_payrol',substr($kode_pengerjaan,0,2).$kode_jenis_operator_detail.'_'.substr($kode_pengerjaan,3))
+                                                    ->orderBy('nama','asc')
+                                                    ->get();
+                                                    // dd($data);
+
+        $data['bpjs_kesehatan'] = $this->bpjsKesehatan->select('nominal')->where('status','y')->first();
+
+        return view('backend.pengerjaan.bpjs.inputBpjsKesehatan',$data);
+    }
+
+    public function input_bpjs_kesehatan_simpan(Request $request, $id, $kode_pengerjaan)
+    {
+        switch ($id) {
+            case '1':
+                $kode_jenis_operator_detail = 'L';
+                break;
+            case '2':
+                $kode_jenis_operator_detail = 'E';
+                break;
+            case '3':
+                $kode_jenis_operator_detail = 'A';
+                break;
+            default:
+                # code...
+                break;
+        }
+
+        $bpjs_kesehatan = $this->bpjsKesehatan->select('nominal')->where('status','y')->first();
+
+        foreach ($request['operator_karyawan_id'] as $key => $value) {
+            // if ($request['checkbox_'.$id][$key]) {
+            //     $karyawan = $this->pengerjaanWeekly->whereHas('operator_karyawan', function($query) use($id){
+            //                                             $query->where('jenis_operator_detail_pekerjaan_id',$id);
+            //                                         })
+            //                                         // ->where('operator_karyawan_id',$value)
+            //                                         ->where('operator_karyawan_id',$request['checkbox_'.$id][$key])
+            //                                         ->where('kode_payrol',substr($kode_pengerjaan,0,2).$kode_jenis_operator_detail.'_'.substr($kode_pengerjaan,3))
+            //                                         ->first();
+
+            //     $karyawan->update([
+            //         'bpjs_kesehatan' => round((1 / 100) * $bpjs_kesehatan->nominal)
+            //     ]);
+            // }else{
+            //     // $karyawan = $this->pengerjaanWeekly->whereHas('operator_karyawan', function($query) use($id){
+            //     //                                         $query->where('jenis_operator_detail_pekerjaan_id',$id);
+            //     //                                     })
+            //     //                                     // ->where('operator_karyawan_id',$value)
+            //     //                                     // ->where('operator_karyawan_id',$request['checkbox_'.$id][$key])
+            //     //                                     ->where('kode_payrol',substr($kode_pengerjaan,0,2).$kode_jenis_operator_detail.'_'.substr($kode_pengerjaan,3))
+            //     //                                     ->first();
+
+            //     // $karyawan->update([
+            //     //     'bpjs_kesehatan' => 1
+            //     // ]);
+            // }
+
+            if ($value == $request['checkbox_'.$id][$key]) {
+                $karyawan = $this->pengerjaanWeekly->whereHas('operator_karyawan', function($query) use($id){
+                                                    $query->where('jenis_operator_detail_pekerjaan_id',$id);
+                                                })
+                                                // ->where('operator_karyawan_id',$value)
+                                                ->where('operator_karyawan_id',$request['checkbox_'.$id][$key])
+                                                ->where('kode_payrol',substr($kode_pengerjaan,0,2).$kode_jenis_operator_detail.'_'.substr($kode_pengerjaan,3))
+                                                ->first();
+
+                $karyawan->update([
+                    'bpjs_kesehatan' => round((1 / 100) * $bpjs_kesehatan->nominal)
+                ]);
+            }else{
+                $karyawan = $this->pengerjaanWeekly->whereHas('operator_karyawan', function($query) use($id){
+                                                    $query->where('jenis_operator_detail_pekerjaan_id',$id);
+                                                })
+                                                // ->where('operator_karyawan_id',$value)
+                                                // ->where('operator_karyawan_id',$request['checkbox_'.$id][$key])
+                                                ->where('kode_payrol',substr($kode_pengerjaan,0,2).$kode_jenis_operator_detail.'_'.substr($kode_pengerjaan,3))
+                                                ->first();
+
+                $karyawan->update([
+                    'bpjs_kesehatan' => 1
+                ]);
+            }
+
+            // switch ($request['checkbox_'.$id][$key]) {
+            //     case $value:
+            //         $karyawan = $this->pengerjaanWeekly->whereHas('operator_karyawan', function($query) use($id){
+            //                                         $query->where('jenis_operator_detail_pekerjaan_id',$id);
+            //                                     })
+            //                                     // ->where('operator_karyawan_id',$value)
+            //                                     ->where('operator_karyawan_id',$request['checkbox_'.$id][$key])
+            //                                     ->where('kode_payrol',substr($kode_pengerjaan,0,2).$kode_jenis_operator_detail.'_'.substr($kode_pengerjaan,3))
+            //                                     ->first();
+
+            //         $karyawan->update([
+            //             'bpjs_kesehatan' => round((1 / 100) * $bpjs_kesehatan->nominal)
+            //         ]);
+            //         break;
+                
+            //     default:
+            //         $karyawan = $this->pengerjaanWeekly->whereHas('operator_karyawan', function($query) use($id){
+            //                                         $query->where('jenis_operator_detail_pekerjaan_id',$id);
+            //                                     })
+            //                                     // ->where('operator_karyawan_id',$value)
+            //                                     // ->where('operator_karyawan_id',$request['checkbox_'.$id][$key])
+            //                                     ->where('kode_payrol',substr($kode_pengerjaan,0,2).$kode_jenis_operator_detail.'_'.substr($kode_pengerjaan,3))
+            //                                     ->first();
+
+            //         $karyawan->update([
+            //             'bpjs_kesehatan' => 1
+            //         ]);
+            //         break;
+            // }
+
+        }
+
+        // return 'OK';
+
+        // $karyawan = $this->karyawanOperator->select([
+        //                                 'operator_karyawan.id as id',
+        //                                 'biodata_karyawan.nama as nama',
+        //                                 'operator_karyawan.nik as nik',
+        //                                 'biodata_karyawan.pin as pin',
+        //                                 'biodata_karyawan.tanggal_masuk as tanggal',
+        //                                 'operator_karyawan.tunjangan_kerja_id as tunjangan_kerja_id',
+        //                                 'operator_karyawan.jenis_operator_detail_pekerjaan_id as jenis_operator_detail_pekerjaan_id',
+        //                                 'pengerjaan_weekly.bpjs_kesehatan as bpjs_kesehatan'
+        //                                 ])
+        //                                 ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_karyawan.nik')
+        //                                 ->leftJoin('pengerjaan_weekly','pengerjaan_weekly.operator_karyawan_id','=','operator_karyawan.id')
+        //                                 ->where('status','Y')
+        //                                 ->where('operator_karyawan.jenis_operator_detail_pekerjaan_id',$id)
+        //                                 ->where('kode_payrol',substr($kode_pengerjaan,0,2).$kode_jenis_operator_detail.'_'.substr($kode_pengerjaan,3))
+        //                                 ->orderBy('itic_emp_new.biodata_karyawan.nama','asc')
+        //                                 ->first();
+
+        //                                 dd($karyawan);
+
+        
+        // dd(substr($kode_pengerjaan,0,2).$kode_jenis_operator_detail.'_'.substr($kode_pengerjaan,3));
+    }
+
     public function hasil_kerja_karyawan_packing_view($id, $kode_pengerjaan, $nik, $month, $year)
     {
         $data['id'] = $id;
@@ -1461,6 +1642,8 @@ class PengerjaanController extends Controller
         $data['pengerjaans'] = $this->pengerjaan->where('operator_karyawan_id',$data['karyawan']['id'])->where('kode_pengerjaan',$kode_pengerjaan)->get();
         
         $data['upah'] = array();
+
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
 
         foreach ($data['pengerjaans'] as $key => $pengerjaan) {
             $explode_hasil_kerja_1 = explode("|",$pengerjaan->hasil_kerja_1);
@@ -1595,17 +1778,17 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
@@ -2307,6 +2490,8 @@ class PengerjaanController extends Controller
         
         $data['upah'] = array();
 
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
         foreach ($data['pengerjaans'] as $key => $pengerjaan) {
             $explode_hasil_kerja_1 = explode("|",$pengerjaan->hasil_kerja_1);
             $umk_borongan_lokal_1 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$explode_hasil_kerja_1[0])->first();
@@ -2440,17 +2625,17 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
@@ -3150,6 +3335,8 @@ class PengerjaanController extends Controller
         
         $data['upah'] = array();
 
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
         foreach ($data['pengerjaans'] as $key => $pengerjaan) {
             $explode_hasil_kerja_1 = explode("|",$pengerjaan->hasil_kerja_1);
             $umk_borongan_lokal_1 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$explode_hasil_kerja_1[0])->first();
@@ -3283,17 +3470,17 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
@@ -4003,6 +4190,8 @@ class PengerjaanController extends Controller
         
         $data['upah'] = array();
 
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
         foreach ($data['pengerjaans'] as $key => $pengerjaan) {
             $explode_hasil_kerja_1 = explode("|",$pengerjaan->hasil_kerja_1);
             $umk_borongan_lokal_1 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing','umk_bandrol','umk_inner','umk_outer')->where('id',$explode_hasil_kerja_1[0])->first();
@@ -4136,17 +4325,17 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
@@ -4842,6 +5031,8 @@ class PengerjaanController extends Controller
         
         $data['upah'] = array();
 
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
         foreach ($data['pengerjaans'] as $key => $pengerjaan) {
             $explode_hasil_kerja_1 = explode("|",$pengerjaan->hasil_kerja_1);
             $umk_borongan_lokal_1 = $this->umkBoronganStempel->select('id','jenis_produk','nominal_umk')->where('id',$explode_hasil_kerja_1[0])->first();
@@ -4975,17 +5166,17 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
@@ -5690,6 +5881,8 @@ class PengerjaanController extends Controller
         
         $data['upah'] = array();
 
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
         foreach ($data['pengerjaans'] as $key => $pengerjaan) {
             $explode_hasil_kerja_1 = explode("|",$pengerjaan->hasil_kerja_1);
             $umk_borongan_lokal_1 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$explode_hasil_kerja_1[0])->first();
@@ -5823,17 +6016,17 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
@@ -6531,6 +6724,8 @@ class PengerjaanController extends Controller
         
         $data['upah'] = array();
 
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
         foreach ($data['pengerjaans'] as $key => $pengerjaan) {
             $explode_hasil_kerja_1 = explode("|",$pengerjaan->hasil_kerja_1);
             $umk_borongan_lokal_1 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$explode_hasil_kerja_1[0])->first();
@@ -6664,17 +6859,17 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
@@ -7336,6 +7531,8 @@ class PengerjaanController extends Controller
         
         $data['upah'] = array();
 
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
         foreach ($data['pengerjaans'] as $key => $pengerjaan) {
             $explode_hasil_kerja_1 = explode("|",$pengerjaan->hasil_kerja_1);
             $umk_borongan_lokal_1 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing','umk_kemas','umk_pilih_gagang')->where('id',$explode_hasil_kerja_1[0])->first();
@@ -7469,17 +7666,17 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
@@ -8183,6 +8380,8 @@ class PengerjaanController extends Controller
         
         $data['upah'] = array();
 
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
         foreach ($data['pengerjaans'] as $key => $pengerjaan) {
             $explode_hasil_kerja_1 = explode("|",$pengerjaan->hasil_kerja_1);
             $umk_borongan_lokal_1 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$explode_hasil_kerja_1[0])->first();
@@ -8316,17 +8515,17 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
@@ -9031,6 +9230,8 @@ class PengerjaanController extends Controller
         
         $data['upah'] = array();
 
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
         foreach ($data['pengerjaans'] as $key => $pengerjaan) {
             $explode_hasil_kerja_1 = explode("|",$pengerjaan->hasil_kerja_1);
             $umk_borongan_lokal_1 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$explode_hasil_kerja_1[0])->first();
@@ -9164,17 +9365,17 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
@@ -9883,6 +10084,8 @@ class PengerjaanController extends Controller
         
         $data['upah'] = array();
 
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
         foreach ($data['pengerjaans'] as $key => $pengerjaan) {
             $explode_hasil_kerja_1 = explode("|",$pengerjaan->hasil_kerja_1);
             $umk_borongan_lokal_1 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket','umk_las_tepi','umk_las_pojok','umk_ambri')->where('id',$explode_hasil_kerja_1[0])->first();
@@ -10017,17 +10220,17 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
@@ -10500,6 +10703,8 @@ class PengerjaanController extends Controller
         $data['explode_tanggal_pengerjaans'] = explode('#',$data['new_data_pengerjaan']['tanggal']);
         // dd($data['explode_tanggal_pengerjaans']);
 
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
         if (empty($data['karyawan_harian']['plus_1'])) {
             $plus_1=null;
             $ket_plus_1=null;
@@ -10580,17 +10785,17 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
@@ -11060,7 +11265,9 @@ class PengerjaanController extends Controller
         $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
-        $hitung_lembur = round((($request->upah_dasar*25/173*$request->lembur_1)*1.5)+(($request->upah_dasar*25/173*$request->lembur_2)*2));
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
+        $hitung_lembur = round((($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_1)*1.5)+(($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_2)*2));
         
         $input['lembur'] = $hitung_lembur.'|'.$request->lembur_1.'|'.$request->lembur_2;
 
@@ -11229,6 +11436,8 @@ class PengerjaanController extends Controller
         $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
         $data['explode_tanggal_pengerjaans'] = explode('#',$data['new_data_pengerjaan']['tanggal']);
 
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
         if (empty($data['karyawan_harian']['plus_1'])) {
             $plus_1=null;
             $ket_plus_1=null;
@@ -11304,17 +11513,17 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
@@ -11530,7 +11739,9 @@ class PengerjaanController extends Controller
         $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
-        $hitung_lembur = round((($request->upah_dasar*25/173*$request->lembur_1)*1.5)+(($request->upah_dasar*25/173*$request->lembur_2)*2));
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
+        $hitung_lembur = round((($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_1)*1.5)+(($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_2)*2));
         
         $input['lembur'] = $hitung_lembur.'|'.$request->lembur_1.'|'.$request->lembur_2;
 
@@ -11704,6 +11915,8 @@ class PengerjaanController extends Controller
         $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
         $data['explode_tanggal_pengerjaans'] = explode('#',$data['new_data_pengerjaan']['tanggal']);
 
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
         if (empty($data['karyawan_harian']['plus_1'])) {
             $plus_1=null;
             $ket_plus_1=null;
@@ -11779,17 +11992,17 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
@@ -12008,7 +12221,9 @@ class PengerjaanController extends Controller
         $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
-        $hitung_lembur = round((($request->upah_dasar*25/173*$request->lembur_1)*1.5)+(($request->upah_dasar*25/173*$request->lembur_2)*2));
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
+        $hitung_lembur = round((($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_1)*1.5)+(($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_2)*2));
         
         $input['lembur'] = $hitung_lembur.'|'.$request->lembur_1.'|'.$request->lembur_2;
 
@@ -12174,6 +12389,8 @@ class PengerjaanController extends Controller
         $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
         $data['explode_tanggal_pengerjaans'] = explode('#',$data['new_data_pengerjaan']['tanggal']);
 
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
         if (empty($data['karyawan_harian']['plus_1'])) {
             $plus_1=null;
             $ket_plus_1=null;
@@ -12249,17 +12466,17 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
@@ -12639,6 +12856,8 @@ class PengerjaanController extends Controller
         $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
         $data['explode_tanggal_pengerjaans'] = explode('#',$data['new_data_pengerjaan']['tanggal']);
 
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
         if (empty($data['karyawan_harian']['plus_1'])) {
             $plus_1=null;
             $ket_plus_1=null;
@@ -12714,17 +12933,17 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
@@ -12936,7 +13155,9 @@ class PengerjaanController extends Controller
         $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
-        $hitung_lembur = round((($request->upah_dasar*25/173*$request->lembur_1)*1.5)+(($request->upah_dasar*25/173*$request->lembur_2)*2));
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
+        $hitung_lembur = round((($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_1)*1.5)+(($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_2)*2));
         
         $input['lembur'] = $hitung_lembur.'|'.$request->lembur_1.'|'.$request->lembur_2;
 
@@ -13102,6 +13323,8 @@ class PengerjaanController extends Controller
         $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
         $data['explode_tanggal_pengerjaans'] = explode('#',$data['new_data_pengerjaan']['tanggal']);
 
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
         if (empty($data['karyawan_harian']['plus_1'])) {
             $plus_1=null;
             $ket_plus_1=null;
@@ -13177,17 +13400,17 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
@@ -13401,7 +13624,9 @@ class PengerjaanController extends Controller
         $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
-        $hitung_lembur = round((($request->upah_dasar*25/173*$request->lembur_1)*1.5)+(($request->upah_dasar*25/173*$request->lembur_2)*2));
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
+        $hitung_lembur = round((($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_1)*1.5)+(($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_2)*2));
         
         $input['lembur'] = $hitung_lembur.'|'.$request->lembur_1.'|'.$request->lembur_2;
 
@@ -13566,6 +13791,8 @@ class PengerjaanController extends Controller
         $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
         $data['explode_tanggal_pengerjaans'] = explode('#',$data['new_data_pengerjaan']['tanggal']);
 
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
         if (empty($data['karyawan_harian']['plus_1'])) {
             $plus_1=null;
             $ket_plus_1=null;
@@ -13641,17 +13868,17 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
@@ -13864,7 +14091,9 @@ class PengerjaanController extends Controller
         $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
-        $hitung_lembur = round((($request->upah_dasar*25/173*$request->lembur_1)*1.5)+(($request->upah_dasar*25/173*$request->lembur_2)*2));
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
+        $hitung_lembur = round((($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_1)*1.5)+(($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_2)*2));
         
         $input['lembur'] = $hitung_lembur.'|'.$request->lembur_1.'|'.$request->lembur_2;
 
@@ -14029,6 +14258,8 @@ class PengerjaanController extends Controller
         // dd($data['karyawan_harian']);
         $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
         $data['explode_tanggal_pengerjaans'] = explode('#',$data['new_data_pengerjaan']['tanggal']);
+
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
         
         if (empty($data['karyawan_harian']['plus_1'])) {
             $plus_1=null;
@@ -14105,7 +14336,7 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             // elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 0){
@@ -14115,12 +14346,12 @@ class PengerjaanController extends Controller
             // }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
             // elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 0){
@@ -14342,7 +14573,9 @@ class PengerjaanController extends Controller
         $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
-        $hitung_lembur = round((($request->upah_dasar*25/173*$request->lembur_1)*1.5)+(($request->upah_dasar*25/173*$request->lembur_2)*2));
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
+        $hitung_lembur = round((($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_1)*1.5)+(($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_2)*2));
         
         $input['lembur'] = $hitung_lembur.'|'.$request->lembur_1.'|'.$request->lembur_2;
 
@@ -14482,6 +14715,8 @@ class PengerjaanController extends Controller
                                                                 ->where('operator_supir_rit_karyawan.status','y')
                                                                 ->orderBy('biodata_karyawan.nama','asc')
                                                                 ->get();
+
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
         
         foreach ($data['pengerjaan_supir_rit_dailys'] as $key => $pengerjaan_supir_rit_daily) {
             // $umk_rit = RitUMK::where('rit_posisi_id', $pengerjaan_supir_rit_daily->rit_posisi_id)->first();
@@ -14512,17 +14747,17 @@ class PengerjaanController extends Controller
             foreach ($data['jhts'] as $key => $jht) {
                 if ($data['masa_kerja_tahun'] > 15) {
                     if ($jht->urutan == 3) {
-                        $upah_dasar_karyawan = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                        $upah_dasar_karyawan = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                     }
                 }
                 elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
                     if ($jht->urutan == 2) {
-                        $upah_dasar_karyawan = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                        $upah_dasar_karyawan = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                     }
                 }
                 elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                     if ($jht->urutan == 1) {
-                        $upah_dasar_karyawan = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                        $upah_dasar_karyawan = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                     }
                 }
             }
@@ -14600,6 +14835,9 @@ class PengerjaanController extends Controller
 
         $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
         $data['explode_tanggal_pengerjaans'] = explode("#",$data['new_data_pengerjaan']['tanggal']);
+
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
         if (empty($data['karyawan_supir_rit']['plus_1'])) {
             $plus_1=null;
             $ket_plus_1=null;
@@ -14666,17 +14904,17 @@ class PengerjaanController extends Controller
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
                 if ($jht->urutan == 3) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 2) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
-                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
@@ -14882,6 +15120,8 @@ class PengerjaanController extends Controller
         $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
         if ($request->check_jht == 'on') {
             $input['jht'] = $request->jht;
         }else{
@@ -14894,7 +15134,7 @@ class PengerjaanController extends Controller
             $input['bpjs_kesehatan'] = 0;
         }
 
-        $hitung_lembur = round((($request->upah_dasar_karyawan*25/173*$request->lembur_1)*1.5)+(($request->upah_dasar_karyawan*25/173*$request->lembur_2)*2));
+        $hitung_lembur = round((($request->upah_dasar_karyawan*$cutOff->tanggal/173*$request->lembur_1)*1.5)+(($request->upah_dasar_karyawan*$cutOff->tanggal/173*$request->lembur_2)*2));
 
         $input['lembur'] = $hitung_lembur.'|'.$request->lembur_1.'|'.$request->lembur_2;
         

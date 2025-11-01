@@ -107,12 +107,20 @@
             @endif
             <div class="card">
                 <div class="card-header">
-                    <h5>
-                        Kode ID : {{ $new_data_pengerjaan->kode_pengerjaan }}
-                        @if ($new_data_pengerjaan->status == 'n')
-                            <i class="far fa-check-circle text-success"></i>
-                        @endif
-                    </h5>
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h5>
+                                Kode ID : {{ $new_data_pengerjaan->kode_pengerjaan }}
+                                @if ($new_data_pengerjaan->status == 'n')
+                                    <i class="far fa-check-circle text-success"></i>
+                                @endif
+                            </h5>
+                        </div>
+                        <div class="col-auto">
+                            <a href="{{ route('hasil_kerja.input_bpjs_kesehatan',['id' => $id, 'kode_pengerjaan' => $kode_pengerjaan ]) }}" class="btn btn-outline-primary">Input BPJS Kesehatan</a>
+                            <button class="btn btn-outline-primary">Input BPJS Ketenagakerjaan</button>
+                        </div>
+                    </div>
                     {{-- <a href="{{ route('hasil_kerja.export_excel_borongan_packing', ['id' => $id, 'jenisOperatorDetailId' => 1, 'jenisOperatorDetailPekerjaanId' => 1, 'kode_pengerjaan' => $new_data_pengerjaan->kode_pengerjaan]) }}" class="btn btn-primary">Download Template</a>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                         data-bs-target="#modalBoronganPacking">

@@ -114,8 +114,8 @@
             <li class="{{ Request::is('periode/b') ? 'active' : '' }}">
                 <a href="{{ route('b.periode') }}" class="{{ Request::is('periode/b') ? 'active' : '' }}"><i class="mdi mdi-office-building"></i> Periode Payrol</a>
             </li>
-            <li class="{{ Request::is('biodata_karyawan') ? 'active' : '' }}">
-                <a href="#" class="{{ Request::is('biodata_karyawan') ? 'active' : '' }}"><i class="mdi mdi-home"></i> Biodata Karyawan</a>
+            <li class="{{ Request::is('cut_off') ? 'active' : '' }}">
+                <a href="{{ route('cut_off') }}" class="{{ Request::is('cut_off') ? 'active' : '' }}"><i data-feather="file-text" class="align-self-center menu-icon"></i> Cut Off</a>
             </li>
             <li class="{{ Request::is('jenis_operator') ? 'active' : '' }}">
                 <a href="{{ route('jenis_operator') }}" class="{{ Request::is('jenis_operator') ? 'active' : '' }}"><i class="mdi mdi-home"></i> Jenis Operator</a>

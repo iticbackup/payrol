@@ -56,8 +56,12 @@ Route::group(['middleware' => 'auth'], function () {
 
             Route::prefix('packing_lokal')->group(function () {
                 Route::get('{id}/{kode_pengerjaan}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_packing'])->name('hasil_kerja.packingLokal');
+                
+                Route::get('{id}/{kode_pengerjaan}/input_bpjs_kesehatan', [App\Http\Controllers\PengerjaanController::class, 'input_bpjs_kesehatan'])->name('hasil_kerja.input_bpjs_kesehatan');
+                Route::post('{id}/{kode_pengerjaan}/input_bpjs_kesehatan/simpan', [App\Http\Controllers\PengerjaanController::class, 'input_bpjs_kesehatan_simpan'])->name('hasil_kerja.input_bpjs_kesehatan.simpan');
+                
                 Route::get('{id}/{kode_pengerjaan}/{tanggal}/input_hasil', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_packing_view_hasil'])->name('hasil_kerja.packingLokal.view_hasil');
-                Route::post('{id}/{kode_pengerjaan}/{tanggal}/input_hasil/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_packing_view_simpan'])->name('hasil_kerja.packingLokal.view_hasil.simpan');
+                Route::post('{id}/{kode_pengerjaan}/{tanggal}/input_hasil/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_packing_view_simpan'])->name('hasil_kerja.packingLokal.view_hasil.simpan');           
                 Route::get('{id}/{kode_pengerjaan}/{jenisOperatorDetailId}/{jenisOperatorDetailPekerjaanId}/download', [App\Http\Controllers\PengerjaanController::class, 'export_excel_borongan'])->name('hasil_kerja.export_excel_borongan_packing');
                 Route::post('{id}/{kode_pengerjaan}/{jenisOperatorDetailId}/{jenisOperatorDetailPekerjaanId}/upload', [App\Http\Controllers\PengerjaanController::class, 'import_excel_borongan'])->name('hasil_kerja.import_excel_borongan_packing');
                 
@@ -427,6 +431,13 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::prefix('hasil_kerja')->group(function () {
         Route::get('/', [App\Http\Controllers\HasilKerjaController::class, 'index'])->name('hasil_kerja');
+    });
+    
+    Route::prefix('cut_off')->group(function () {
+        Route::get('/', [App\Http\Controllers\CutOffController::class, 'index'])->name('cut_off');
+        Route::post('simpan', [App\Http\Controllers\CutOffController::class, 'simpan'])->name('cut_off.simpan');
+        Route::post('update', [App\Http\Controllers\CutOffController::class, 'update'])->name('cut_off.update');
+        Route::get('{id}', [App\Http\Controllers\CutOffController::class, 'detail'])->name('cut_off.detail');
     });
 
     Route::get('testing', [App\Http\Controllers\TestingController::class, 'testing'])->name('testing');
