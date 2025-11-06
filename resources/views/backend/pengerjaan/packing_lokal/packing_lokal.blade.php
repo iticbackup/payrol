@@ -116,10 +116,10 @@
                                 @endif
                             </h5>
                         </div>
-                        <div class="col-auto">
+                        {{-- <div class="col-auto">
                             <a href="{{ route('hasil_kerja.input_bpjs_kesehatan',['id' => $id, 'kode_pengerjaan' => $kode_pengerjaan ]) }}" class="btn btn-outline-primary">Input BPJS Kesehatan</a>
                             <button class="btn btn-outline-primary">Input BPJS Ketenagakerjaan</button>
-                        </div>
+                        </div> --}}
                     </div>
                     {{-- <a href="{{ route('hasil_kerja.export_excel_borongan_packing', ['id' => $id, 'jenisOperatorDetailId' => 1, 'jenisOperatorDetailPekerjaanId' => 1, 'kode_pengerjaan' => $new_data_pengerjaan->kode_pengerjaan]) }}" class="btn btn-primary">Download Template</a>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
