@@ -340,6 +340,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('{id}/pengerjaan/{id_pengerjaan}', [App\Http\Controllers\JenisOperatorController::class, 'detail_pengerjaan'])->name('jenis_operator.detail.pengerjaan');
         Route::post('{id}/pengerjaan/{id_pengerjaan}/simpan', [App\Http\Controllers\JenisOperatorController::class, 'detail_pengerjaan_simpan'])->name('jenis_operator.detail.pengerjaan.simpan');
     });
+    
+    Route::prefix('umk_supir_rit')->group(function () {
+        Route::get('/', [App\Http\Controllers\JenisUMKSupirRitController::class, 'index'])->name('umk_supir_rit.index');
+        Route::post('simpan', [App\Http\Controllers\JenisUMKSupirRitController::class, 'simpan'])->name('umk_supir_rit.simpan');
+        Route::post('update', [App\Http\Controllers\JenisUMKSupirRitController::class, 'update'])->name('umk_supir_rit.update');
+        Route::get('{id}', [App\Http\Controllers\JenisUMKSupirRitController::class, 'detail'])->name('umk_supir_rit.detail');
+        Route::get('{id}/delete', [App\Http\Controllers\JenisUMKSupirRitController::class, 'delete'])->name('umk_supir_rit.delete');
+    });
 
     Route::prefix('jenis_umk_borongan')->group(function () {
         Route::prefix('lokal')->group(function () {

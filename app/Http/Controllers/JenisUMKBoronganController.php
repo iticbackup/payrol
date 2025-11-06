@@ -29,6 +29,106 @@ class JenisUMKBoronganController extends Controller
 
             return DataTables::of($data)
                     ->addIndexColumn()
+                    ->addColumn('packing', function($row){
+                        if(empty($row->target_packing)){
+                            $target = '<span>-</span>';
+                        }else{
+                            $target = '<span class="text-dark">'.number_format($row->target_packing,0,',','.').'</span>';
+                        }
+
+                        switch ($row->jenis_produk) {
+                            case 'LIBUR':
+                                 return $row->umk_packing;
+                                break;
+
+                            case 'LIBUR NEW':
+                                 return $row->umk_packing;
+                                break;
+                            
+                            default:
+                                return '<div>'.
+                                            '<div>UMK : '.$row->umk_packing.'</div>'.
+                                            '<div>Target : '.$target.'</div>'.
+                                        '</div>';
+                                break;
+                        }
+
+                    })
+                    ->addColumn('bandrol', function($row){
+                        if(empty($row->target_bandrol)){
+                            $target = '<span>-</span>';
+                        }else{
+                            $target = '<span class="text-dark">'.number_format($row->target_bandrol,0,',','.').'</span>';
+                        }
+
+                        switch ($row->jenis_produk) {
+                            case 'LIBUR':
+                                 return $row->umk_bandrol;
+                                break;
+
+                            case 'LIBUR NEW':
+                                return $row->umk_packing;
+                            break;
+                            
+                            default:
+                                return '<div>'.
+                                            '<div>UMK : '.$row->umk_bandrol.'</div>'.
+                                            '<div>Target : '.$target.'</div>'.
+                                        '</div>';
+                                break;
+                        }
+
+                    })
+                    ->addColumn('inner', function($row){
+                        if(empty($row->target_inner)){
+                            $target = '<span>-</span>';
+                        }else{
+                            $target = '<span class="text-dark">'.number_format($row->target_inner,0,',','.').'</span>';
+                        }
+
+                        switch ($row->jenis_produk) {
+                            case 'LIBUR':
+                                 return $row->umk_inner;
+                                break;
+
+                            case 'LIBUR NEW':
+                                return $row->umk_packing;
+                            break;
+                            
+                            default:
+                                return '<div>'.
+                                            '<div>UMK : '.$row->umk_inner.'</div>'.
+                                            '<div>Target : '.$target.'</div>'.
+                                        '</div>';
+                                break;
+                        }
+
+                    })
+                    ->addColumn('outer', function($row){
+                        if(empty($row->target_inner)){
+                            $target = '<span>-</span>';
+                        }else{
+                            $target = '<span class="text-dark">'.number_format($row->target_outer,0,',','.').'</span>';
+                        }
+
+                        switch ($row->jenis_produk) {
+                            case 'LIBUR':
+                                 return $row->umk_outer;
+                                break;
+
+                            case 'LIBUR NEW':
+                                return $row->umk_packing;
+                            break;
+                            
+                            default:
+                                return '<div>'.
+                                            '<div>UMK : '.$row->umk_outer.'</div>'.
+                                            '<div>Target : '.$target.'</div>'.
+                                        '</div>';
+                                break;
+                        }
+
+                    })
                     ->addColumn('status', function($row){
                         if($row->status == 'Y'){
                             return '<span class="text-success">Aktif</span>';
@@ -45,7 +145,7 @@ class JenisUMKBoronganController extends Controller
                                 </button>';
                         return $btn;
                     })
-                    ->rawColumns(['action','status'])
+                    ->rawColumns(['packing','bandrol','inner','outer','action','status'])
                     ->make(true);
         }
         return view('backend.jenis_umk_borongan.lokal.index');
@@ -54,22 +154,31 @@ class JenisUMKBoronganController extends Controller
     public function lokal_simpan(Request $request)
     {
         $rules = [
-            'jenis_produk' => 'required|unique:borongan_umk_lokal',
+            'jenis_produk' => 'required',
+            // 'jenis_produk' => 'required|unique:borongan_umk_lokal',
             'umk_packing' => 'required',
             'umk_bandrol' => 'required',
             'umk_inner' => 'required',
             'umk_outer' => 'required',
+            'target_packing' => 'required',
+            'target_bandrol' => 'required',
+            'target_inner' => 'required',
+            'target_outer' => 'required',
             'tahun_aktif' => 'required',
             'status' => 'required',
         ];
 
         $messages = [
             'jenis_produk.required'  => 'Jenis Produk wajib diisi.',
-            'jenis_produk.unique'  => 'Jenis Produk sudah ada.',
+            // 'jenis_produk.unique'  => 'Jenis Produk sudah ada.',
             'umk_packing.required'  => 'UMK Packing wajib diisi.',
             'umk_bandrol.required'  => 'UMK Bandrol wajib diisi.',
             'umk_inner.required'  => 'UMK Inner wajib diisi.',
             'umk_outer.required'  => 'UMK Outer wajib diisi.',
+            'target_packing.required'  => 'Target Packing wajib diisi.',
+            'target_bandrol.required'  => 'Target Bandrol wajib diisi.',
+            'target_inner.required'  => 'Target Inner wajib diisi.',
+            'target_outer.required'  => 'Target Outer wajib diisi.',
             'tahun_aktif.required'  => 'Tahun Aktif wajib diisi.',
             'status.required'  => 'Status wajib diisi.',
         ];
@@ -114,45 +223,91 @@ class JenisUMKBoronganController extends Controller
 
     public function lokal_update(Request $request)
     {
-        $umk_borongan_lokal = UMKBoronganLokal::where('id',$request->edit_id)->first();
-            
-        $input['jenis_produk'] = $request->edit_jenis_produk;
-        $input['umk_packing'] = $request->edit_umk_packing;
-        $input['umk_bandrol'] = $request->edit_umk_bandrol;
-        $input['umk_inner'] = $request->edit_umk_inner;
-        $input['umk_outer'] = $request->edit_umk_outer;
-        $input['tahun_aktif'] = $request->edit_tahun_aktif;
-        $input['status'] = $request->edit_status;
+        $rules = [
+            'jenis_produk' => 'required',
+            // 'jenis_produk' => 'required|unique:borongan_umk_lokal',
+            'umk_packing' => 'required',
+            'umk_bandrol' => 'required',
+            'umk_inner' => 'required',
+            'umk_outer' => 'required',
+            'target_packing' => 'required',
+            'target_bandrol' => 'required',
+            'target_inner' => 'required',
+            'target_outer' => 'required',
+            'tahun_aktif' => 'required',
+            'status' => 'required',
+        ];
 
-        $umk_borongan_lokal->update($input);
+        $messages = [
+            'jenis_produk.required'  => 'Jenis Produk wajib diisi.',
+            // 'jenis_produk.unique'  => 'Jenis Produk sudah ada.',
+            'umk_packing.required'  => 'UMK Packing wajib diisi.',
+            'umk_bandrol.required'  => 'UMK Bandrol wajib diisi.',
+            'umk_inner.required'  => 'UMK Inner wajib diisi.',
+            'umk_outer.required'  => 'UMK Outer wajib diisi.',
+            'target_packing.required'  => 'Target Packing wajib diisi.',
+            'target_bandrol.required'  => 'Target Bandrol wajib diisi.',
+            'target_inner.required'  => 'Target Inner wajib diisi.',
+            'target_outer.required'  => 'Target Outer wajib diisi.',
+            'tahun_aktif.required'  => 'Tahun Aktif wajib diisi.',
+            'status.required'  => 'Status wajib diisi.',
+        ];
 
-        if($umk_borongan_lokal){
-            $message_title="Berhasil !";
-            $message_content="UMK Borongan Lokal ".$request->edit_jenis_produk." Berhasil Diupdate";
-            $message_type="success";
-            $message_succes = true;
-        }else{
-            $message_title="Tidak Berhasil !";
-            $message_content="UMK Borongan Lokal ".$request->edit_jenis_produk." Belum Berhasil Diupdate";
-            $message_type="danger";
-            $message_succes = false;
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->passes()) {
+            $umk_borongan_lokal = UMKBoronganLokal::where('id',$request->edit_id)->first();
+                
+            // $input['jenis_produk'] = $request->edit_jenis_produk;
+            // $input['umk_packing'] = $request->edit_umk_packing;
+            // $input['umk_bandrol'] = $request->edit_umk_bandrol;
+            // $input['umk_inner'] = $request->edit_umk_inner;
+            // $input['umk_outer'] = $request->edit_umk_outer;
+            // $input['tahun_aktif'] = $request->edit_tahun_aktif;
+            // $input['status'] = $request->edit_status;
+    
+            $input = $request->all();
+    
+            $umk_borongan_lokal->update($input);
+    
+            if($umk_borongan_lokal){
+                $message_title="Berhasil !";
+                $message_content="UMK Borongan Lokal ".$request->jenis_produk." Berhasil Diupdate";
+                $message_type="success";
+                $message_succes = true;
+            }
+            // else{
+            //     $message_title="Tidak Berhasil !";
+            //     $message_content="UMK Borongan Lokal ".$request->jenis_produk." Belum Berhasil Diupdate";
+            //     $message_type="danger";
+            //     $message_succes = false;
+            // }
+    
+            $array_message = array(
+                'success' => $message_succes,
+                'message_title' => $message_title,
+                'message_content' => $message_content,
+                'message_type' => $message_type,
+            );
+            return response()->json($array_message);
         }
 
-        $array_message = array(
-            'success' => $message_succes,
-            'message_title' => $message_title,
-            'message_content' => $message_content,
-            'message_type' => $message_type,
+        return response()->json(
+            [
+                'success' => false,
+                'error' => $validator->errors()->all()
+            ]
         );
-        return response()->json($array_message);
+
     }
 
     public function lokal_delete($id)
     {
         $umk_borongan_lokal = UMKBoronganLokal::where('id',$id)->delete();
+        
         return response()->json([
             'message_title' => 'Berhasil !',
-            'message_content' => 'Data Berhasil Dihapus',
+            'message_content' => 'UMK Borongan Lokal '.$umk_borongan_lokal->jenis_produk.' Berhasil Dihapus',
             'message_type' => 'success',
             'message_success' => true
         ]);
@@ -175,8 +330,8 @@ class JenisUMKBoronganController extends Controller
 
     public function lokal_umk_periode()
     {
-        $data['tahun_berjalan'] = 2025;
-        // $data['tahun_berjalan'] = Carbon::now()->format('Y');
+        // $data['tahun_berjalan'] = 2025;
+        $data['tahun_berjalan'] = Carbon::now()->format('Y');
         // $data['umk_borongan_lokals'] = UMKBoronganLokal::whereIn('tahun_aktif',[2023,2024])->get();
         return view('backend.jenis_umk_borongan.umk_periode.index',$data);
     }

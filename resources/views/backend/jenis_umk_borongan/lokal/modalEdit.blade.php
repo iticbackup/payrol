@@ -1,5 +1,6 @@
-<div class="modal fade modalEdit" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal fade modalEdit" id="exampleModalCenter" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title m-0" id="exampleModalCenterTitle">Edit Data UMK Borongan Lokal</h6>
@@ -8,9 +9,9 @@
             <form id="form-update" method="post">
                 @csrf
                 <input type="hidden" name="edit_id" id="edit_id">
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
+                <div class="modal-body">
+                    <div class="row">
+                        {{-- <div class="col-md-12">
                         <div class="mb-3">
                             <label class="form-label">Jenis Produk</label>
                             <input type="text" class="form-control" name="edit_jenis_produk" id="edit_jenis_produk" placeholder="Jenis Produk">
@@ -39,29 +40,106 @@
                             <label class="form-label">UMK Outer</label>
                             <input type="text" class="form-control" name="edit_umk_outer" id="edit_umk_outer" placeholder="UMK Outer">
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">Tahun Aktif</label>
-                            <input type="text" class="form-control" name="edit_tahun_aktif" id="edit_tahun_aktif" placeholder="Tahun Aktif">
+                    </div> --}}
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="form-label">Jenis Produk</label>
+                                <input type="text" class="form-control" name="jenis_produk"
+                                    placeholder="Jenis Produk" id="edit_jenis_produk">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">Status</label>
-                            <select name="edit_status" class="form-control" id="edit_status">
-                                <option>-- Pilih Status --</option>
-                                <option value="Y">Ya</option>
-                                <option value="T">Tidak</option>
-                            </select>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <div class="form-label fw-bold">Packing</div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">UMK Packing</label>
+                                        <input type="text" class="form-control" name="umk_packing"
+                                            placeholder="UMK Packing" id="edit_umk_packing">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Target Packing</label>
+                                        <input type="text" class="form-control" name="target_packing"
+                                            placeholder="Target Packing" id="edit_target_packing">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Bandrol</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">UMK Bandrol</label>
+                                        <input type="text" class="form-control" name="umk_bandrol"
+                                            placeholder="UMK Bandrol" id="edit_umk_bandrol">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Target bandrol</label>
+                                        <input type="text" class="form-control" name="target_bandrol"
+                                            placeholder="Target Bandrol" id="edit_target_bandrol">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Inner</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">UMK Inner</label>
+                                        <input type="text" class="form-control" name="umk_inner"
+                                            placeholder="UMK Inner" id="edit_umk_inner">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Target Inner</label>
+                                        <input type="text" class="form-control" name="target_inner"
+                                            placeholder="Target Inner" id="edit_target_inner">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Outer</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">UMK Outer</label>
+                                        <input type="text" class="form-control" name="umk_outer"
+                                            placeholder="UMK Outer" id="edit_umk_outer">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Target Outer</label>
+                                        <input type="text" class="form-control" name="target_outer"
+                                            placeholder="Target Outer" id="edit_target_outer">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Tahun Aktif</label>
+                                <input type="text" class="form-control" name="tahun_aktif"
+                                    id="edit_tahun_aktif" placeholder="Tahun Aktif">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Status</label>
+                                <select name="status" class="form-control" id="edit_status">
+                                    <option>-- Pilih Status --</option>
+                                    <option value="Y">Ya</option>
+                                    <option value="T">Tidak</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-soft-primary btn-sm">Update</button>
-                <button type="button" class="btn btn-soft-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-soft-primary btn-sm">Update</button>
+                    <button type="button" class="btn btn-soft-secondary btn-sm"
+                        data-bs-dismiss="modal">Close</button>
+                </div>
             </form>
         </div>
     </div>

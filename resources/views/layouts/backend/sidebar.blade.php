@@ -112,17 +112,17 @@
             </li>
             <li class="menu-label mt-0">Developer</li>
             <li class="{{ Request::is('periode/b') ? 'active' : '' }}">
-                <a href="{{ route('b.periode') }}" class="{{ Request::is('periode/b') ? 'active' : '' }}"><i class="mdi mdi-office-building"></i> Periode Payrol</a>
+                <a href="{{ route('b.periode') }}" class="{{ Request::is('periode/b') ? 'active' : '' }}"><i data-feather="file-text" class="align-self-center menu-icon"></i> Periode Payrol</a>
             </li>
             <li class="{{ Request::is('cut_off') ? 'active' : '' }}">
                 <a href="{{ route('cut_off') }}" class="{{ Request::is('cut_off') ? 'active' : '' }}"><i data-feather="file-text" class="align-self-center menu-icon"></i> Cut Off</a>
             </li>
             <li class="{{ Request::is('jenis_operator') ? 'active' : '' }}">
-                <a href="{{ route('jenis_operator') }}" class="{{ Request::is('jenis_operator') ? 'active' : '' }}"><i class="mdi mdi-home"></i> Jenis Operator</a>
+                <a href="{{ route('jenis_operator') }}" class="{{ Request::is('jenis_operator') ? 'active' : '' }}"><i data-feather="file-text" class="align-self-center menu-icon"></i> Jenis Operator</a>
             </li>
             <li>
                 <a href="javascript: void(0);"> <i data-feather="file-text"
-                        class="align-self-center menu-icon"></i><span>Jenis UMK Borongan</span><span
+                        class="align-self-center menu-icon"></i><span>UMK Borongan</span><span
                         class="menu-arrow"><i class="mdi mdi-chevron-right"></i></span></a>
                 <ul class="nav-second-level" aria-expanded="false">
                     <li class="nav-item"><a class="nav-link" href="{{ route('jenis_umk_borongan.lokal') }}">
@@ -136,8 +136,11 @@
                     </li>
                 </ul>
             </li>
+            <li>
+                <a href="{{ route('umk_supir_rit.index') }}" class="{{ Request::is('umk_supir_rit') ? 'active' : '' }}"><i data-feather="file-text" class="align-self-center menu-icon"></i> UMK Supir RIT</a>
+            </li>
             <li class="{{ Request::is('umk_periode') ? 'active' : '' }}">
-                <a href="{{ route('umk_periode.lokal_umk_periode') }}" class="{{ Request::is('umk_periode') ? 'active' : '' }}"><i class="mdi mdi-home"></i> UMK Periode</a>
+                <a href="{{ route('umk_periode.lokal_umk_periode') }}" class="{{ Request::is('umk_periode') ? 'active' : '' }}"><i data-feather="file-text" class="align-self-center menu-icon"></i> UMK Periode</a>
             </li>
             <li>
                 <a href="javascript: void(0);"> <i data-feather="file-text"
@@ -153,7 +156,7 @@
                 </ul>
             </li>
             <li class="{{ Request::is('tunjangan_kerja') ? 'active' : '' }}">
-                <a href="{{ route('tunjangan_kerja') }}" class="{{ Request::is('tunjangan_kerja') ? 'active' : '' }}"><i class="mdi mdi-home"></i> Tunjangan Kerja</a>
+                <a href="{{ route('tunjangan_kerja') }}" class="{{ Request::is('tunjangan_kerja') ? 'active' : '' }}"><i data-feather="file-text" class="align-self-center menu-icon"></i> Tunjangan Kerja</a>
             </li>
             <li class="menu-label mt-0">User Management</li>
             <li>

@@ -21,6 +21,10 @@ class UMKBoronganAmbri extends Model
         'umk_las_tepi',
         'umk_las_pojok',
         'umk_ambri',
+        'target_etiket',
+        'target_las_tepi',
+        'target_las_pojok',
+        'target_ambri',
         'tahun_aktif',
         'status',
     ];

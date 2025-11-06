@@ -21,6 +21,10 @@ class UMKBoronganLokal extends Model
         'umk_bandrol',
         'umk_inner',
         'umk_outer',
+        'target_packing',
+        'target_bandrol',
+        'target_inner',
+        'target_outer',
         'tahun_aktif',
         'status',
     ];

@@ -128,6 +128,11 @@
                     </button> --}}
                 </div>
                 <div class="card-body">
+                    <div class="mb-3">
+                        <span>Ket: </span>
+                        <div><span class="badge badge-soft-success">L</span> : Lembur</div>
+                        <div><span class="badge badge-soft-info">T</span> : Melampaui Target</div>
+                    </div>
                     <div class="table-container">
                         <table id="datatables" class="table table-sm table-bordered dt-responsive nowrap"
                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
@@ -245,13 +250,26 @@
                                         @foreach ($hasil_pengerjaans as $hasil_pengerjaan)
                                             <?php
                                             $explode_hasil_kerja_1 = explode('|', $hasil_pengerjaan->hasil_kerja_1);
-                                            $umk_borongan_lokal_1 = \App\Models\UMKBoronganLokal::select('id', 'jenis_produk', 'umk_packing', 'umk_bandrol', 'umk_inner', 'umk_outer')->where('id', $explode_hasil_kerja_1[0])->first();
+                                            $umk_borongan_lokal_1 = \App\Models\UMKBoronganLokal::select(
+                                                                                                            'id', 
+                                                                                                            'jenis_produk', 
+                                                                                                            'umk_packing', 
+                                                                                                            // 'umk_bandrol', 
+                                                                                                            // 'umk_inner', 
+                                                                                                            // 'umk_outer', 
+                                                                                                            'target_packing',
+                                                                                                            // 'target_bandrol',
+                                                                                                            // 'target_inner',
+                                                                                                            // 'target_outer'
+                                                                                                            )->where('id', $explode_hasil_kerja_1[0])
+                                                                                                            ->first();
                                             if (empty($umk_borongan_lokal_1)) {
                                                 $jenis_produk_1 = '-';
                                                 $hasil_kerja_1 = 0;
                                                 $data_explode_hasil_kerja_1 = '-';
                                                 $lembur_1 = 1;
                                                 $icon_lembur_1 = null;
+                                                $icon_target_1 = null;
                                             } else {
                                                 $jenis_produk_1 = $umk_borongan_lokal_1->jenis_produk;
                                                 $hasil_kerja_1 = $explode_hasil_kerja_1[1] * $umk_borongan_lokal_1->umk_packing;
@@ -267,16 +285,53 @@
                                                     $lembur_1 = 1;
                                                     $icon_lembur_1 = null;
                                                 }
+
+                                                // if ((int)$data_explode_hasil_kerja_1 >= $umk_borongan_lokal_1->target_packing) {
+                                                //     $icon_target_1 = "<span class='badge badge-soft-info'>T</span>";
+                                                // }else{
+                                                //     $icon_target_1 = "<span class='badge badge-soft-primary'>".$umk_borongan_lokal_1->target_packing."</span>";
+                                                // }
+
+                                                // switch ($data_explode_hasil_kerja_1) {
+                                                //     case ($data_explode_hasil_kerja_1 >= $umk_borongan_lokal_1->target_packing):
+                                                //         // $target_1 = 'Target '.$umk_borongan_lokal_1->target_packing;
+                                                //         // $icon_target_1 = "<button class='btn btn-info btn-sm' data-bs-toggle='tooltip' data-bs-placement='top' title='".$target_1."'>T</button>";
+                                                //         $icon_target_1 = "<span class='badge badge-soft-info btn-sm'>T</span>";
+                                                //         break;
+                                                    
+                                                //     default:
+                                                //         $icon_target_1 = null;
+                                                //         break;
+                                                // }
+
+                                                if ((int)$data_explode_hasil_kerja_1 >= $umk_borongan_lokal_1->target_packing) {
+                                                    $icon_target_1 = "<span class='badge badge-soft-info btn-sm'>T</span>";
+                                                }else{
+                                                    $icon_target_1 = null;
+                                                }
+
+                                                // dd((int)$data_explode_hasil_kerja_1);
+                                                // dd($umk_borongan_lokal_1->target_packing);
                                             }
                                             
                                             $explode_hasil_kerja_2 = explode('|', $hasil_pengerjaan->hasil_kerja_2);
-                                            $umk_borongan_lokal_2 = \App\Models\UMKBoronganLokal::select('id', 'jenis_produk', 'umk_packing', 'umk_bandrol', 'umk_inner', 'umk_outer')->where('id', $explode_hasil_kerja_2[0])->first();
+                                            $umk_borongan_lokal_2 = \App\Models\UMKBoronganLokal::select(
+                                                'id', 
+                                                'jenis_produk', 
+                                                'umk_packing', 
+                                                // 'umk_bandrol', 
+                                                // 'umk_inner', 
+                                                // 'umk_outer'
+                                                'target_packing',
+                                                )
+                                                ->where('id', $explode_hasil_kerja_2[0])->first();
                                             if (empty($umk_borongan_lokal_2)) {
                                                 $jenis_produk_2 = '-';
                                                 $hasil_kerja_2 = 0;
                                                 $data_explode_hasil_kerja_2 = '-';
                                                 $lembur_2 = 1;
                                                 $icon_lembur_2 = null;
+                                                $icon_target_2 = null;
                                             } else {
                                                 $jenis_produk_2 = $umk_borongan_lokal_2->jenis_produk;
                                                 $hasil_kerja_2 = $explode_hasil_kerja_2[1] * $umk_borongan_lokal_2->umk_packing;
@@ -292,16 +347,42 @@
                                                     $lembur_2 = 1;
                                                     $icon_lembur_2 = null;
                                                 }
+
+                                                if ((int)$data_explode_hasil_kerja_2 >= $umk_borongan_lokal_2->target_packing) {
+                                                    $icon_target_2 = "<span class='badge badge-soft-info btn-sm'>T</span>";
+                                                }else{
+                                                    $icon_target_2 = null;
+                                                }
+                                                // switch ($data_explode_hasil_kerja_2) {
+                                                //     case ($data_explode_hasil_kerja_2 >= $umk_borongan_lokal_2->target_packing):
+                                                //         $icon_target_2 = "<span class='badge badge-soft-info'>T</span>";
+                                                //         break;
+                                                    
+                                                //     default:
+                                                //         $icon_target_2 = null;
+                                                //         break;
+                                                // }
                                             }
                                             
                                             $explode_hasil_kerja_3 = explode('|', $hasil_pengerjaan->hasil_kerja_3);
-                                            $umk_borongan_lokal_3 = \App\Models\UMKBoronganLokal::select('id', 'jenis_produk', 'umk_packing', 'umk_bandrol', 'umk_inner', 'umk_outer')->where('id', $explode_hasil_kerja_3[0])->first();
+                                            $umk_borongan_lokal_3 = \App\Models\UMKBoronganLokal::select(
+                                                'id', 
+                                                'jenis_produk', 
+                                                'umk_packing', 
+                                                // 'umk_bandrol', 
+                                                // 'umk_inner', 
+                                                // 'umk_outer'
+                                                'target_packing',
+                                                )
+                                                ->where('id', $explode_hasil_kerja_3[0])
+                                                ->first();
                                             if (empty($umk_borongan_lokal_3)) {
                                                 $jenis_produk_3 = '-';
                                                 $hasil_kerja_3 = 0;
                                                 $data_explode_hasil_kerja_3 = '-';
                                                 $lembur_3 = 1;
                                                 $icon_lembur_3 = null;
+                                                $icon_target_3 = null;
                                             } else {
                                                 $jenis_produk_3 = $umk_borongan_lokal_3->jenis_produk;
                                                 $hasil_kerja_3 = $explode_hasil_kerja_3[1] * $umk_borongan_lokal_3->umk_packing;
@@ -316,16 +397,43 @@
                                                     $lembur_3 = 1;
                                                     $icon_lembur_3 = null;
                                                 }
+
+                                                if ((int)$data_explode_hasil_kerja_3 >= $umk_borongan_lokal_3->target_packing) {
+                                                    $icon_target_3 = "<span class='badge badge-soft-info btn-sm'>T</span>";
+                                                }else{
+                                                    $icon_target_3 = null;
+                                                }
+
+                                                // switch ($data_explode_hasil_kerja_3) {
+                                                //     case ($data_explode_hasil_kerja_3 >= $umk_borongan_lokal_3->target_packing):
+                                                //         $icon_target_3 = "<span class='badge badge-soft-info'>T</span>";
+                                                //         break;
+                                                    
+                                                //     default:
+                                                //         $icon_target_3 = null;
+                                                //         break;
+                                                // }
                                             }
                                             
                                             $explode_hasil_kerja_4 = explode('|', $hasil_pengerjaan->hasil_kerja_4);
-                                            $umk_borongan_lokal_4 = \App\Models\UMKBoronganLokal::select('id', 'jenis_produk', 'umk_packing', 'umk_bandrol', 'umk_inner', 'umk_outer')->where('id', $explode_hasil_kerja_4[0])->first();
+                                            $umk_borongan_lokal_4 = \App\Models\UMKBoronganLokal::select(
+                                                'id', 
+                                                'jenis_produk', 
+                                                'umk_packing', 
+                                                // 'umk_bandrol', 
+                                                // 'umk_inner', 
+                                                // 'umk_outer'
+                                                'target_packing'
+                                                )
+                                                ->where('id', $explode_hasil_kerja_4[0])
+                                                ->first();
                                             if (empty($umk_borongan_lokal_4)) {
                                                 $jenis_produk_4 = '-';
                                                 $hasil_kerja_4 = 0;
                                                 $data_explode_hasil_kerja_4 = '-';
                                                 $lembur_4 = 1;
                                                 $icon_lembur_4 = null;
+                                                $icon_target_4 = null;
                                             } else {
                                                 $jenis_produk_4 = $umk_borongan_lokal_4->jenis_produk;
                                                 $hasil_kerja_4 = $explode_hasil_kerja_4[1] * $umk_borongan_lokal_4->umk_packing;
@@ -341,16 +449,43 @@
                                                     $lembur_4 = 1;
                                                     $icon_lembur_4 = null;
                                                 }
+
+                                                if ((int)$data_explode_hasil_kerja_4 >= $umk_borongan_lokal_4->target_packing) {
+                                                    $icon_target_4 = "<span class='badge badge-soft-info btn-sm'>T</span>";
+                                                }else{
+                                                    $icon_target_4 = null;
+                                                }
+
+                                                // switch ($data_explode_hasil_kerja_4) {
+                                                //     case ($data_explode_hasil_kerja_4 >= $umk_borongan_lokal_4->target_packing):
+                                                //         $icon_target_4 = "<span class='badge badge-soft-info'>T</span>";
+                                                //         break;
+                                                    
+                                                //     default:
+                                                //         $icon_target_4 = null;
+                                                //         break;
+                                                // }
                                             }
                                             
                                             $explode_hasil_kerja_5 = explode('|', $hasil_pengerjaan->hasil_kerja_5);
-                                            $umk_borongan_lokal_5 = \App\Models\UMKBoronganLokal::select('id', 'jenis_produk', 'umk_packing', 'umk_bandrol', 'umk_inner', 'umk_outer')->where('id', $explode_hasil_kerja_5[0])->first();
+                                            $umk_borongan_lokal_5 = \App\Models\UMKBoronganLokal::select(
+                                                'id', 
+                                                'jenis_produk', 
+                                                'umk_packing', 
+                                                // 'umk_bandrol', 
+                                                // 'umk_inner', 
+                                                // 'umk_outer'
+                                                'target_packing'
+                                                )
+                                                ->where('id', $explode_hasil_kerja_5[0])
+                                                ->first();
                                             if (empty($umk_borongan_lokal_5)) {
                                                 $jenis_produk_5 = '-';
                                                 $hasil_kerja_5 = 0;
                                                 $data_explode_hasil_kerja_5 = '-';
                                                 $lembur_5 = 1;
                                                 $icon_lembur_5 = null;
+                                                $icon_target_5 = null;
                                             } else {
                                                 $jenis_produk_5 = $umk_borongan_lokal_5->jenis_produk;
                                                 $hasil_kerja_5 = $explode_hasil_kerja_5[1] * $umk_borongan_lokal_5->umk_packing;
@@ -366,6 +501,22 @@
                                                     $lembur_5 = 1;
                                                     $icon_lembur_5 = null;
                                                 }
+
+                                                if ((int)$data_explode_hasil_kerja_5 >= $umk_borongan_lokal_5->target_packing) {
+                                                    $icon_target_5 = "<span class='badge badge-soft-info btn-sm'>T</span>";
+                                                }else{
+                                                    $icon_target_5 = null;
+                                                }
+
+                                                // switch ($data_explode_hasil_kerja_5) {
+                                                //     case ($data_explode_hasil_kerja_5 >= $umk_borongan_lokal_5->target_packing):
+                                                //         $icon_target_5 = "<span class='badge badge-soft-info'>T</span>";
+                                                //         break;
+                                                    
+                                                //     default:
+                                                //         $icon_target_5 = null;
+                                                //         break;
+                                                // }
                                             }
                                             
                                             $hasil_upah = round($hasil_kerja_1 * $lembur_1 + $hasil_kerja_2 * $lembur_2 + $hasil_kerja_3 * $lembur_3 + $hasil_kerja_4 * $lembur_4 + $hasil_kerja_5 * $lembur_5);
@@ -382,7 +533,7 @@
                                                 <table class="table table-bordered" style="width: 100%">
                                                     <tr>
                                                         <td style="font-size: 8pt; " class="text-danger">
-                                                            {{ $jenis_produk_1 }} {!! $icon_lembur_1 !!}</td>
+                                                            {{ $jenis_produk_1 }} {!! $icon_lembur_1 !!} {!! $icon_target_1 !!}</td>
                                                         <td style="font-size: 8pt; text-align: right"
                                                             class="text-primary">
                                                             {{ $data_explode_hasil_kerja_1 }}</td>
@@ -391,7 +542,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td style="font-size: 8pt; " class="text-danger">
-                                                            {{ $jenis_produk_2 }} {!! $icon_lembur_2 !!}</td>
+                                                            {{ $jenis_produk_2 }} {!! $icon_lembur_2 !!} {!! $icon_target_2 !!}</td>
                                                         <td style="font-size: 8pt; text-align: right"
                                                             class="text-primary">
                                                             {{ $data_explode_hasil_kerja_2 }}</td>
@@ -400,7 +551,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td style="font-size: 8pt; " class="text-danger">
-                                                            {{ $jenis_produk_3 }} {!! $icon_lembur_3 !!}</td>
+                                                            {{ $jenis_produk_3 }} {!! $icon_lembur_3 !!} {!! $icon_target_3 !!}</td>
                                                         <td style="font-size: 8pt; text-align: right"
                                                             class="text-primary">{{ $data_explode_hasil_kerja_3 }}</td>
                                                         <td style="font-size: 8pt; text-align: right">
@@ -408,7 +559,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td style="font-size: 8pt; " class="text-danger">
-                                                            {{ $jenis_produk_4 }} {!! $icon_lembur_4 !!}</td>
+                                                            {{ $jenis_produk_4 }} {!! $icon_lembur_4 !!} {!! $icon_target_4 !!}</td>
                                                         <td style="font-size: 8pt; text-align: right"
                                                             class="text-primary">{{ $data_explode_hasil_kerja_4 }}</td>
                                                         <td style="font-size: 8pt; text-align: right">
@@ -416,7 +567,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td style="font-size: 8pt; " class="text-danger">
-                                                            {{ $jenis_produk_5 }} {!! $icon_lembur_5 !!}</td>
+                                                            {{ $jenis_produk_5 }} {!! $icon_lembur_5 !!} {!! $icon_target_5 !!}</td>
                                                         <td style="font-size: 8pt; text-align: right"
                                                             class="text-primary">{{ $data_explode_hasil_kerja_5 }}</td>
                                                         <td style="font-size: 8pt; text-align: right">

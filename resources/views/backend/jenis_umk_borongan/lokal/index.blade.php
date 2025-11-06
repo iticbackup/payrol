@@ -47,7 +47,7 @@
                         <thead>
                             <tr>
                                 <th>Jenis Produk</th>
-                                <th>UMK Packing</th>
+                                <th>Packing</th>
                                 <th>UMK Bandrol</th>
                                 <th>UMK Inner</th>
                                 <th>UMK Outer</th>
@@ -81,7 +81,7 @@
                             <tr>
                                 <th>Jenis Produk</th>
                                 <th>Nominal UMK</th>
-                                <th>Target Pengerjaan</th>
+                                <th>Target</th>
                                 <th>Tahun</th>
                                 <th>Status</th>
                                 <th>Actions</th>
@@ -127,20 +127,20 @@
                     name: 'jenis_produk'
                 },
                 {
-                    data: 'umk_packing',
-                    name: 'umk_packing'
+                    data: 'packing',
+                    name: 'packing'
                 },
                 {
-                    data: 'umk_bandrol',
-                    name: 'umk_bandrol'
+                    data: 'bandrol',
+                    name: 'bandrol'
                 },
                 {
-                    data: 'umk_inner',
-                    name: 'umk_inner'
+                    data: 'inner',
+                    name: 'inner'
                 },
                 {
-                    data: 'umk_outer',
-                    name: 'umk_outer'
+                    data: 'outer',
+                    name: 'outer'
                 },
                 {
                     data: 'tahun_aktif',
