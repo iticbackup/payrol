@@ -14713,13 +14713,17 @@ class PengerjaanController extends Controller
                                                                 ->where('pengerjaan_supir_rit.tanggal_pengerjaan',$tanggal)
                                                                 ->where('pengerjaan_supir_rit.kode_pengerjaan',$kode_pengerjaan)
                                                                 ->where('operator_supir_rit_karyawan.status','y')
+                                                                ->where('karyawan_supir_rit_id',4)
                                                                 ->orderBy('biodata_karyawan.nama','asc')
                                                                 ->get();
+
+                                                                // dd($data);
 
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
         
         foreach ($data['pengerjaan_supir_rit_dailys'] as $key => $pengerjaan_supir_rit_daily) {
             // $umk_rit = RitUMK::where('rit_posisi_id', $pengerjaan_supir_rit_daily->rit_posisi_id)->first();
+            
             $operator_karyawan_supir_rit = $this->ritKaryawan->where('nik',$pengerjaan_supir_rit_daily->nik)->where('status','y')->first();
             if ($request->rit[$key]) {
                 $hasil_kerja_1 = $request->hasil_kerja_1[$key].'|'.$request->rit[$key];
@@ -14750,17 +14754,19 @@ class PengerjaanController extends Controller
                         $upah_dasar_karyawan = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                     }
                 }
-                elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15){
                     if ($jht->urutan == 2) {
                         $upah_dasar_karyawan = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                     }
                 }
-                elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                elseif($data['masa_kerja_tahun'] <= 10){
                     if ($jht->urutan == 1) {
                         $upah_dasar_karyawan = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                     }
                 }
             }
+
+            // dd($dpb);
             // $ritUmk = $this->ritUmk->find($request->hasil_kerja_1[$key]);
 
             // dd($ritUmk);
@@ -15155,6 +15161,7 @@ class PengerjaanController extends Controller
         // $input['tunjangan_kehadiran'] = 75000-$request->pot_tunjangan_kehadiran;
         // $input['tunjangan_kerja'] = $karyawan_supir_rit->tunjangan_kerja->nominal;
         
+        // dd($input);
         $pengerjaan_supir_rit_weekly = $this->pengerjaanRitWeekly->where('karyawan_supir_rit_id',$request->karyawan_supir_rit_id)
                                                         ->where('kode_pengerjaan',$kode_pengerjaan)
                                                         // ->update($input)
