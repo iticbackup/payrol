@@ -14836,6 +14836,8 @@ class PengerjaanController extends Controller
         $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
         $data['explode_tanggal_pengerjaans'] = explode("#",$data['new_data_pengerjaan']['tanggal']);
 
+        // dd($data);
+
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
 
         if (empty($data['karyawan_supir_rit']['plus_1'])) {
@@ -14907,17 +14909,19 @@ class PengerjaanController extends Controller
                     $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                 }
             }
-            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15){
                 if ($jht->urutan == 2) {
                     $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                 }
             }
-            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+            elseif($data['masa_kerja_tahun'] <= 10){
                 if ($jht->urutan == 1) {
                     $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                 }
             }
         }
+
+        // dd($data);
 
         $tgl_current_active = Carbon::now()->format('d');
         $bln_active = Carbon::now()->format('m');
@@ -15101,6 +15105,8 @@ class PengerjaanController extends Controller
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
+        
+        // dd($data);
 
         return view('backend.pengerjaan.supir_rit.input_karyawan',$data);
     }
