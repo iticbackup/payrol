@@ -14697,6 +14697,7 @@ class PengerjaanController extends Controller
 
     public function hasil_kerja_supir_rit_simpan(Request $request, $kode_pengerjaan, $tanggal)
     {
+        // dd($tanggal, $kode_pengerjaan);
         $data['pengerjaan_supir_rit_dailys'] = $this->pengerjaanRitHarian->select([
                                                                     'pengerjaan_supir_rit.id as id',
                                                                     'operator_supir_rit_karyawan.nik as nik',
@@ -14713,10 +14714,11 @@ class PengerjaanController extends Controller
                                                                 ->where('pengerjaan_supir_rit.tanggal_pengerjaan',$tanggal)
                                                                 ->where('pengerjaan_supir_rit.kode_pengerjaan',$kode_pengerjaan)
                                                                 ->where('operator_supir_rit_karyawan.status','y')
-                                                                ->where('karyawan_supir_rit_id',4)
+                                                                // ->where('karyawan_supir_rit_id',4)
                                                                 ->orderBy('biodata_karyawan.nama','asc')
                                                                 ->get();
 
+                                                                // dd('Test');
                                                                 // dd($data);
 
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
@@ -14766,7 +14768,7 @@ class PengerjaanController extends Controller
                 }
             }
 
-            // dd($dpb);
+            // dd($upah_dasar_karyawan);
             // $ritUmk = $this->ritUmk->find($request->hasil_kerja_1[$key]);
 
             // dd($ritUmk);
@@ -14780,6 +14782,15 @@ class PengerjaanController extends Controller
 
             // dd($upah_dasar);
 
+            // $pengerjaan_supir_rit_weekly = $this->pengerjaanRitWeekly->where('kode_pengerjaan',$kode_pengerjaan)
+            //                                                         ->where('karyawan_supir_rit_id',$pengerjaan_supir_rit_daily->karyawan_supir_rit_id)
+            //                                                         ->first();
+
+            // $pengerjaan_supir_rit_weekly->update([
+            //     'total_hasil' => $operator_karyawan_supir_rit->upah_dasar,
+            // ]);
+                                                                    // dd($pengerjaan_supir_rit_weekly);
+
             $pengerjaan_supir_rit_weekly = $this->pengerjaanRitWeekly->where('kode_pengerjaan',$kode_pengerjaan)
                                                             ->where('karyawan_supir_rit_id',$pengerjaan_supir_rit_daily->karyawan_supir_rit_id)
                                                             ->update([
@@ -14792,6 +14803,7 @@ class PengerjaanController extends Controller
                 // 'upah_dasar' => $operator_karyawan_supir_rit->upah_dasar*$request->rit[$key],
                 'upah_dasar' => $upah_dasar,
             ]);
+
             // dd($dpb);
         }
         return response()->json([
