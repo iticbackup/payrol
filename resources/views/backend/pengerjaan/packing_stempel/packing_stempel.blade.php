@@ -204,6 +204,7 @@
                                     @php
                                         $explode_hasil_kerja_1 = explode("|",$hasil_pengerjaan->hasil_kerja_1);
                                         $umk_borongan_lokal_1 = \App\Models\UMKBoronganStempel::select('id','jenis_produk','nominal_umk','target_pengerjaan')->where('id',$explode_hasil_kerja_1[0])->first();
+                                        // dd($umk_borongan_lokal_1);
                                         if(empty($umk_borongan_lokal_1)){
                                             $jenis_produk_1 = '-';
                                             $hasil_kerja_1 = null;

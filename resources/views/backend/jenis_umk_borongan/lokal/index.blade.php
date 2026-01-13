@@ -222,9 +222,13 @@
                     $('#edit_id').val(result.data.id);
                     $('#edit_jenis_produk').val(result.data.jenis_produk);
                     $('#edit_umk_packing').val(result.data.umk_packing);
+                    $('#edit_target_packing').val(result.data.target_packing);
                     $('#edit_umk_bandrol').val(result.data.umk_bandrol);
+                    $('#edit_target_bandrol').val(result.data.target_bandrol);
                     $('#edit_umk_inner').val(result.data.umk_inner);
+                    $('#edit_target_inner').val(result.data.target_inner);
                     $('#edit_umk_outer').val(result.data.umk_outer);
+                    $('#edit_target_outer').val(result.data.target_outer);
                     $('#edit_tahun_aktif').val(result.data.tahun_aktif);
                     $('#edit_status').val(result.data.status);
 
@@ -253,6 +257,7 @@
                     $('#edit_stempel_id').val(result.data.id);
                     $('#edit_stempel_jenis_produk').val(result.data.jenis_produk);
                     $('#edit_stempel_nominal_umk').val(result.data.nominal_umk);
+                    $('#edit_stempel_target_pengerjaan').val(result.data.target_pengerjaan);
                     $('#edit_stempel_tahun_aktif').val(result.data.tahun_aktif);
                     $('#edit_stempel_status').val(result.data.status);
 

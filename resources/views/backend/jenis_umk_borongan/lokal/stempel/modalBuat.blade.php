@@ -12,31 +12,31 @@
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label class="form-label">Jenis Produk</label>
-                            <input type="text" class="form-control" name="stempel_jenis_produk" placeholder="Jenis Produk">
+                            <input type="text" class="form-control" name="jenis_produk" placeholder="Jenis Produk">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label class="form-label">Nominal UMK</label>
-                            <input type="text" class="form-control" name="stempel_nominal_umk" placeholder="Nominal UMK">
+                            <input type="text" class="form-control" name="nominal_umk" placeholder="Nominal UMK">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label class="form-label">Target Pengerjaan</label>
-                            <input type="number" class="form-control" name="stempel_target_pengerjaan" placeholder="Target Pengerjaan">
+                            <input type="number" class="form-control" name="target_pengerjaan" placeholder="Target Pengerjaan">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label class="form-label">Tahun Aktif</label>
-                            <input type="number" class="form-control" name="stempel_tahun_aktif" min="0" placeholder="Tahun Aktif">
+                            <input type="number" class="form-control" name="tahun_aktif" min="0" placeholder="Tahun Aktif">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label class="form-label">Status</label>
-                            <select name="stempel_status" class="form-control" id="">
+                            <select name="status" class="form-control" id="">
                                 <option>-- Pilih Status --</option>
                                 <option value="Y">Ya</option>
                                 <option value="T">Tidak</option>

@@ -10698,7 +10698,7 @@ class PengerjaanController extends Controller
                                                         ->where('operator_harian_karyawan.status','y')
                                                         ->where('pengerjaan_harian.kode_pengerjaan',$kode_pengerjaan)
                                                         ->first();
-        
+        // dd($data['karyawan_harian']);
         $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
         $data['explode_tanggal_pengerjaans'] = explode('#',$data['new_data_pengerjaan']['tanggal']);
         // dd($data['explode_tanggal_pengerjaans']);
@@ -10781,6 +10781,8 @@ class PengerjaanController extends Controller
         $data['masa_kerja_tahun'] = $diff->y;
         $data['masa_kerja_hari'] = $diff->d;
 
+        // $data['upah_dasar'] = $data['karyawan_harian']['upah_dasar'];
+        // $data['upah_dasar'] = [];
         $data['upah_dasar_karyawan'] = [];
         foreach ($data['jhts'] as $key => $jht) {
             if ($data['masa_kerja_tahun'] > 15) {
@@ -10796,11 +10798,12 @@ class PengerjaanController extends Controller
             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                 if ($jht->urutan == 1) {
                     $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
+                    // $data['upah_dasar_karyawan'] = $data['upah_dasar'];
                 }
             }
         }
 
-        // dd(number_format($data['upah_dasar_karyawan'],0,',','.'));
+        // dd($data['upah_dasar_karyawan']);
 
         // dd($data['masa_kerja_tahun']);
 
@@ -11286,6 +11289,7 @@ class PengerjaanController extends Controller
         $input['hasil_kerja'] = $hasil_kerja;
         // $input['upah_dasar_harian'] = round($upah_dasar_harian);
         $input['upah_dasar_weekly'] = round($upah_dasar_weekly);
+        // $input['upah_dasar_weekly'] = $upah_dasar_weekly;
        
         if ($request->akhir_bulan == 'n') {
             $input['tunjangan_kerja'] = 0;

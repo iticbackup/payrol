@@ -408,21 +408,22 @@ class JenisUMKBoronganController extends Controller
 
     public function lokal_umk_stempel_simpan(Request $request)
     {
+        // dd($request->stempel_jenis_produk);
         $rules = [
-            'stempel_jenis_produk' => 'required|unique:borongan_umk_stempel',
-            'stempel_nominal_umk' => 'required',
-            'stempel_target_pengerjaan' => 'required',
-            'stempel_tahun_aktif' => 'required',
-            'stempel_status' => 'required',
+            'jenis_produk' => 'required|unique:borongan_umk_stempel',
+            'nominal_umk' => 'required',
+            'target_pengerjaan' => 'required',
+            'tahun_aktif' => 'required',
+            'status' => 'required',
         ];
 
         $messages = [
-            'stempel_jenis_produk.required'  => 'Jenis Produk wajib diisi.',
-            'stempel_jenis_produk.unique'  => 'Jenis Produk sudah ada.',
-            'stempel_nominal_umk.required'  => 'Nominal UMK wajib diisi.',
-            'stempel_target_pengerjaan.required'  => 'Target Pengerjaan wajib diisi.',
-            'stempel_tahun_aktif.required'  => 'Tahun Aktif wajib diisi.',
-            'stempel_status.required'  => 'Status wajib diisi.',
+            'jenis_produk.required'  => 'Jenis Produk wajib diisi.',
+            'jenis_produk.unique'  => 'Jenis Produk sudah ada.',
+            'nominal_umk.required'  => 'Nominal UMK wajib diisi.',
+            'target_pengerjaan.required'  => 'Target Pengerjaan wajib diisi.',
+            'tahun_aktif.required'  => 'Tahun Aktif wajib diisi.',
+            'status.required'  => 'Status wajib diisi.',
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -437,11 +438,11 @@ class JenisUMKBoronganController extends Controller
             }
 
             $input['id'] = $id;
-            $input['jenis_produk'] = $request->stempel_jenis_produk;
-            $input['nominal_umk'] = $request->stempel_nominal_umk;
-            $input['target_pengerjaan'] = $request->stempel_target_pengerjaan;
-            $input['tahun_aktif'] = $request->stempel_tahun_aktif;
-            $input['status'] = $request->stempel_status;
+            $input['jenis_produk'] = $request->jenis_produk;
+            $input['nominal_umk'] = $request->nominal_umk;
+            $input['target_pengerjaan'] = $request->target_pengerjaan;
+            $input['tahun_aktif'] = $request->tahun_aktif;
+            $input['status'] = $request->status;
 
             $simpanUmkBoronganStempel = $this->umkBoronganStempel->create($input);
 
