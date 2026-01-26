@@ -123,8 +123,8 @@
         <tbody>
             @php
                 $operator_karyawan_id = [];
-                $cutOff = $cut_off->select('id','periode','tanggal')->where('periode',explode('_',$kode_pengerjaan)[1])->first();
-                // dd($tahun_pengerjaan);
+                $cutOff = \App\Models\CutOff::select('id','periode','tanggal')->where('periode',explode('_',$kode_pengerjaan)[1])->first();
+                // dd($cutOff);
             @endphp
             @foreach ($pengerjaan_harians as $ph=> $pengerjaan_harian)
             @php
