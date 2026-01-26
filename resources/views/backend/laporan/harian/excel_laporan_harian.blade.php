@@ -123,6 +123,8 @@
         <tbody>
             @php
                 $operator_karyawan_id = [];
+                $cutOff = $cut_off->select('id','periode','tanggal')->where('periode',explode('_',$kode_pengerjaan)[1])->first();
+                // dd($tahun_pengerjaan);
             @endphp
             @foreach ($pengerjaan_harians as $ph=> $pengerjaan_harian)
             @php
@@ -282,8 +284,10 @@
                         $total_diterima = $total_gaji-$total_potongan;
 
                         // array_push($total_hari_kerja,$pengerjaan_harian->hari_kerja);
-                        array_push($total_upah_dasar,$pengerjaan_harian->upah_dasar);
-                        array_push($total_gaji_pokok,$pengerjaan_harian->upah_dasar_weekly);
+                        // array_push($total_upah_dasar,$pengerjaan_harian->upah_dasar);
+                        // array_push($total_upah_dasar,$pengerjaan_harian->upah_dasar);
+                        // array_push($total_gaji_pokok,$pengerjaan_harian->upah_dasar_weekly);
+
                         array_push($total_plus_1,$plus_1);
                         array_push($total_plus_2,$plus_2);
                         array_push($total_plus_3,$plus_3);
@@ -335,26 +339,30 @@
                         foreach ($data['jhtss'] as $key => $jhts) {
                             if ($data['masa_kerja_tahun'] > 15) {
                                 if ($jhts->urutan == 3) {
-                                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/25;
+                                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
                                 }
                             }
                             elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15){
                                 if ($jhts->urutan == 2) {
-                                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/25;
+                                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
                                 }
                             }
                             elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
                                 if ($jhts->urutan == 1) {
-                                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/25;
+                                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
                                 }
                             }
                         }
 
+                        array_push($total_upah_dasar,$pengerjaan_harian->upah_dasar_weekly);
+                        array_push($total_gaji_pokok,$pengerjaan_harian->upah_dasar);
+
                     @endphp
+                    {{-- <td style="text-align: center; border: 1px solid black;">-</td> --}}
                     <td style="text-align: center; border: 1px solid black;">{{ $total_all_hasil_kerja }}</td>
-                    {{-- <td style="text-align: right; border: 1px solid black;">{{ $pengerjaan_harian->upah_dasar }}</td> --}}
-                    <td style="text-align: right; border: 1px solid black;">{{ round($data['upah_dasar_karyawan']) }}</td>
-                    <td style="text-align: right; border: 1px solid black;">{{ $pengerjaan_harian->upah_dasar_weekly }}</td>
+                    {{-- <td style="text-align: right; border: 1px solid black;">{{ $pengerjaan_harian->upah_dasar_weekly }}</td> --}}
+                    <td style="text-align: right; border: 1px solid black;">{{ round($pengerjaan_harian->upah_dasar_weekly) }}</td>
+                    <td style="text-align: right; border: 1px solid black;">{{ round($pengerjaan_harian->upah_dasar) }}</td>
                     <td style="text-align: right; border: 1px solid black;">{{ $plus_1 }}</td>
                     <td style="text-align: right; border: 1px solid black;">{{ $plus_2 }}</td>
                     <td style="text-align: right; border: 1px solid black;">{{ $plus_3 }}</td>
@@ -382,6 +390,7 @@
         </tbody>
         @php
             $total_penjumlahan_hasil_kerja = [];
+            // dd($total_gaji_pokok);
         @endphp
         <tfoot>
             <tr>
@@ -400,8 +409,8 @@
                 <td style="text-align: center; border: 1px solid black; font-weight: bold">{{ array_sum($total_hari_jam_kerja) }}</td>
                 @endfor
                 <td style="text-align: center; border: 1px solid black; font-weight: bold">{{ array_sum($total_hari_kerja) }}</td>
-                <td style="text-align: right; border: 1px solid black; font-weight: bold">{{ array_sum($total_upah_dasar) }}</td>
-                <td style="text-align: right; border: 1px solid black; font-weight: bold">{{ array_sum($total_gaji_pokok) }}</td>
+                <td style="text-align: right; border: 1px solid black; font-weight: bold">{{ round(array_sum($total_upah_dasar)) }}</td>
+                <td style="text-align: right; border: 1px solid black; font-weight: bold">{{ round(array_sum($total_gaji_pokok)) }}</td>
                 <td style="text-align: right; border: 1px solid black; font-weight: bold">{{ array_sum($total_plus_1) }}</td>
                 <td style="text-align: right; border: 1px solid black; font-weight: bold">{{ array_sum($total_plus_2) }}</td>
                 <td style="text-align: right; border: 1px solid black; font-weight: bold">{{ array_sum($total_plus_3) }}</td>

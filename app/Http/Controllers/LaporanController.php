@@ -20,6 +20,8 @@ use App\Models\PengerjaanHarian;
 use App\Models\PengerjaanRITHarian;
 use App\Models\PengerjaanRITWeekly;
 
+use App\Models\CutOff;
+
 use \Carbon\Carbon;
 use Validator;
 use DataTables;
@@ -27,6 +29,13 @@ use Excel;
 
 class LaporanController extends Controller
 {
+
+    function __construct(
+        CutOff $cutOff
+    )
+    {
+        $this->cutOff = $cutOff;
+    }
 
     public function laporan(Request $request)
     {
@@ -71,7 +80,7 @@ class LaporanController extends Controller
                                         case 'PS':
                                             $btn .= '<a href='.route('laporan.download',['id_jenis_operator' => $jenis_operator->id, 'kode_pengerjaan' => $new_data_pengerjaan->kode_pengerjaan]).' class="btn btn-outline-primary">Download Laporan Supir RIT '.$explode_kode_pengerjaan[1].'_'.$explode_kode_pengerjaan[2].'</a>';
                                             break;
-                                        
+
                                         default:
                                             # code...
                                             break;
@@ -191,7 +200,7 @@ class LaporanController extends Controller
                                 //     $no++;
                                 // }
                                 // $btn_jenis_operator = $btn_jenis_operator.='</div>';
-                                
+
                                 foreach ($jenis_operator_details as $key => $jenis_operator_detail) {
                                     if ($jenis_operator_detail->jenis_operator_id == 1) {
                                         $jenis_operator_detail_pengerjaans = JenisOperatorDetailPengerjaan::where('jenis_operator_detail_id',$jenis_operator_detail->id)->get();
@@ -214,7 +223,7 @@ class LaporanController extends Controller
                                         $btn_jenis_operator = $btn_jenis_operator.='</div>';
                                     }
                                 }
-                                
+
                                 // $btn_jenis_operator = $btn_jenis_operator.='<div class="button-items">';
                                 // foreach ($jenis_operator_details as $key => $jenis_operator_detail) {
                                 //     if ($jenis_operator_detail->jenis_operator_id == 1) {
@@ -266,12 +275,12 @@ class LaporanController extends Controller
         // dd(substr($kode_pengerjaan,0,2).$kode_jenis_operator_detail.'_'.substr($kode_pengerjaan,3));
         $data['new_data_pengerjaan'] = NewDataPengerjaan::where('kode_pengerjaan',$kode_pengerjaan)->first();
         $data['explode_tanggal_pengerjaans'] = explode('#',$data['new_data_pengerjaan']['tanggal']);
-        
+
         $exp_tanggals = array_filter($data['explode_tanggal_pengerjaans']);
         $a = count($exp_tanggals);
         $exp_tgl_awal = explode('-', $exp_tanggals[1]);
         $exp_tgl_akhir = explode('-', $exp_tanggals[$a]);
-        
+
         $data['jenis_operator_detail_pengerjaan'] = JenisOperatorDetailPengerjaan::where('id',$id_jenis_pekerjaan)->first();
         $data['pengerjaan_borongan_weeklys'] = PengerjaanWeekly::select([
                                                 'pengerjaan_weekly.kode_payrol as kode_payrol',
@@ -301,7 +310,7 @@ class LaporanController extends Controller
         $baris_akhir = $data['pengerjaan_borongan_weeklys']->count()+10;
         // foreach ($data['jenis_operator_detail_pengerjaans'] as $key => $value) {
         // }
-        
+
         // return view('backend.laporan.borongan.excel_laporan_borongan',$data);
         return Excel::download(new LaporanBoronganLokalExport($id_jenis_pekerjaan,$id,$kode_pengerjaan,$baris_akhir), 'Laporan Borongan '.$data['jenis_operator_detail_pengerjaan']['jenis_posisi_pekerjaan'].' '.Carbon::parse($exp_tgl_awal[0] . '-' . $exp_tgl_awal[1] . '-' . $exp_tgl_awal[2])->isoFormat('D MMMM').' sd '.Carbon::parse($exp_tgl_akhir[0] . '-' . $exp_tgl_akhir[1] . '-' . $exp_tgl_akhir[2])->isoFormat('D MMMM YYYY').'.xlsx');
         // return Excel::download(new LaporanBoronganLokalExport($id_jenis_pekerjaan,$id,$kode_pengerjaan), 'Laporan Borongan '.$data['jenis_operator_detail_pengerjaan']['jenis_posisi_pekerjaan'].' '.$kode_pengerjaan.'.xlsx');
@@ -437,7 +446,8 @@ class LaporanController extends Controller
                                                     ->get();
         $baris_akhir = $data['pengerjaan_harians']->count()+10;
         // dd($data);
-        // return view('backend.laporan.harian.excel_laporan_harian',$data);
+        $data['cut_off'] = $this->cutOff;
+        return view('backend.laporan.harian.excel_laporan_harian',$data);
         $document_name= str_replace(array("/", "\\", ":", "*", "?", "«", "<", ">", "|"), "-", 'Laporan Harian '.$data['jenis_operator_detail_pengerjaan']['jenis_posisi_pekerjaan'].' '.Carbon::parse($exp_tgl_awal[0] . '-' . $exp_tgl_awal[1] . '-' . $exp_tgl_awal[2])->isoFormat('D MMMM').' sd '.Carbon::parse($exp_tgl_akhir[0] . '-' . $exp_tgl_akhir[1] . '-' . $exp_tgl_akhir[2])->isoFormat('D MMMM YYYY').'.xlsx');
 
         return Excel::download(new LaporanHarianExport($id_jenis_pekerjaan,$id,$kode_pengerjaan,$baris_akhir), $document_name);

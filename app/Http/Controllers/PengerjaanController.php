@@ -554,7 +554,7 @@ class PengerjaanController extends Controller
     public function tambah_karyawan_pengerjaan_simpan(Request $request, $kode_pengerjaan,$id,$jenis_pekerja_id)
     {
         $total_id = $this->karyawanOperator->max('id');
-        for ($i=1; $i <= 11 ; $i++) { 
+        for ($i=1; $i <= 11 ; $i++) {
             if ($request['checkbox_'.$i]) {
                 $data_checkbox = $request['checkbox_'.$i];
                 foreach ($data_checkbox as $key => $checkbox) {
@@ -646,7 +646,7 @@ class PengerjaanController extends Controller
                                                         // <div class="dropdown-divider"></div>
                                                         // <a class="dropdown-item" href="#" target="_blank">Separated link</a>
                                 $btn_jenis_operator.='</div>';
-    
+
                                 $btn_jenis_operator.='</div>';
                             }elseif($jenis_operator_detail->jenis_operator_id == 2){
                                 $jenis_operator_detail_pengerjaans = $this->jenisOperatorDetailPengerjaan->where('jenis_operator_detail_id',4)->get();
@@ -818,7 +818,7 @@ class PengerjaanController extends Controller
                                     $btn_jenis_operator.='<a class="dropdown-item" href='.route($jenis_operator_detail_pengerjaan->link,['id' => $jenis_operator_detail_pengerjaan->jenis_operator_detail_id, 'kode_pengerjaan' => $row->kode_pengerjaan]).' target="_blank">'.$jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan.'</a>';
                                 }
                                 $btn_jenis_operator.='</div>';
-    
+
                                 $btn_jenis_operator.='</div>';
                             }elseif($jenis_operator_detail->jenis_operator_id == 2){
                                 $jenis_operator_detail_pengerjaans = $this->jenisOperatorDetailPengerjaan->where('jenis_operator_detail_id',4)->get();
@@ -880,7 +880,7 @@ class PengerjaanController extends Controller
                                     $btn_jenis_operator.='<a class="dropdown-item" href='.route($jenis_operator_detail_pengerjaan->link,['id' => $jenis_operator_detail_pengerjaan->jenis_operator_detail_id, 'kode_pengerjaan' => $row->kode_pengerjaan]).' target="_blank">'.$jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan.'</a>';
                                 }
                                 $btn_jenis_operator.='</div>';
-    
+
                                 $btn_jenis_operator.='</div>';
                             }elseif($jenis_operator_detail->jenis_operator_id == 2){
                                 $jenis_operator_detail_pengerjaans = $this->jenisOperatorDetailPengerjaan->where('jenis_operator_detail_id',4)->get();
@@ -942,7 +942,7 @@ class PengerjaanController extends Controller
                                     $btn_jenis_operator.='<a class="dropdown-item" href='.route($jenis_operator_detail_pengerjaan->link,['id' => $jenis_operator_detail_pengerjaan->jenis_operator_detail_id, 'kode_pengerjaan' => $row->kode_pengerjaan]).' target="_blank">'.$jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan.'</a>';
                                 }
                                 $btn_jenis_operator.='</div>';
-    
+
                                 $btn_jenis_operator.='</div>';
                             }elseif($jenis_operator_detail->jenis_operator_id == 2){
                                 $jenis_operator_detail_pengerjaans = $this->jenisOperatorDetailPengerjaan->where('jenis_operator_detail_id',4)->get();
@@ -1151,7 +1151,7 @@ class PengerjaanController extends Controller
                                                     ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
-        
+
         foreach ($data['karyawan_pengerjaans'] as $key => $karyawan_pengerjaan) {
             // dd($request->umk_borongan_lokal_kerja_1);
             if ($request->umk_borongan_lokal_kerja_1) {
@@ -1161,7 +1161,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_1 = $umk_borongan_lokal_1->id.'|'.$umk_borongan_lokal_1->umk_packing*$request->hasil_kerja_1[$key];
-                
+
                 // if ($request->hasil_kerja_1[$key]) {
                 // }
 
@@ -1200,7 +1200,7 @@ class PengerjaanController extends Controller
                 }else{
                     $total_jam_1 = '0';
                 }
-                
+
             }else{
                 $hasil_pengerjaan_1 = '0'.'|'.'0';
                 $lembur_1 = '1-n';
@@ -1213,7 +1213,7 @@ class PengerjaanController extends Controller
             $total_hasil_lembur_1 = $total_upah_lembur_1;
 
             // dd($hasil_pengerjaan_1);
-            
+
             if ($request->umk_borongan_lokal_kerja_2) {
                 $umk_borongan_lokal_2 = $this->umkBoronganLokal->select('id','jenis_produk','umk_packing')
                                                         ->where('id',$request->umk_borongan_lokal_kerja_2)
@@ -1221,7 +1221,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$umk_borongan_lokal_2->umk_packing*$request->hasil_kerja_2[$key];
-                
+
                 if ($request->hasil_kerja_2[$key]) {
                     $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$request->hasil_kerja_2[$key];
                     $hasil_kerja_2 = $umk_borongan_lokal_2->umk_packing*$request->hasil_kerja_2[$key];
@@ -1266,7 +1266,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$umk_borongan_lokal_3->umk_packing*$request->hasil_kerja_3[$key];
-                
+
                 if ($request->hasil_kerja_3[$key]) {
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$request->hasil_kerja_3[$key];
                     $hasil_kerja_3 = $umk_borongan_lokal_3->umk_packing*$request->hasil_kerja_3[$key];
@@ -1274,7 +1274,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.'0';
                     $hasil_kerja_3 = 0;
                 }
-            
+
                 if($request->lembur_kerja_3){
                     $lembur_3 = '3-y';
                     $hasil_lembur_3 = '1.5';
@@ -1311,7 +1311,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$umk_borongan_lokal_4->umk_packing*$request->hasil_kerja_4[$key];
-                
+
                 if ($request->hasil_kerja_4[$key]) {
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$request->hasil_kerja_4[$key];
                     $hasil_kerja_4 = $umk_borongan_lokal_4->umk_packing*$request->hasil_kerja_4[$key];
@@ -1319,7 +1319,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.'0';
                     $hasil_kerja_4 = 0;
                 }
-            
+
                 if($request->lembur_kerja_4){
                     $lembur_4 = '4-y';
                     $hasil_lembur_4 = '1.5';
@@ -1356,7 +1356,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$umk_borongan_lokal_5->umk_packing*$request->hasil_kerja_5[$key];
-                
+
                 if ($request->hasil_kerja_5[$key]) {
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$request->hasil_kerja_5[$key];
                     $hasil_kerja_5 = $umk_borongan_lokal_5->umk_packing*$request->hasil_kerja_5[$key];
@@ -1364,7 +1364,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.'0';
                     $hasil_kerja_5 = 0;
                 }
-            
+
                 if($request->lembur_kerja_5){
                     $lembur_5 = '5-y';
                     $hasil_lembur_5 = '1.5';
@@ -1396,7 +1396,7 @@ class PengerjaanController extends Controller
             // $uang_lembur = 0;
             $lemburs = '|'.$lembur_1.'|'.$lembur_2.'|'.$lembur_3.'|'.$lembur_4.'|'.$lembur_5;
             $hasil_upah_dasar = $hasil_kerja_1+$hasil_kerja_2+$hasil_kerja_3+$hasil_kerja_4+$hasil_kerja_5;
-            
+
             // $penjumlahan_lembur = round($total_hasil_lembur_1);
             $penjumlahan_lembur = round($total_hasil_lembur_1+$total_hasil_lembur_2+$total_hasil_lembur_3+$total_hasil_lembur_4+$total_hasil_lembur_5);
             // dd($hasil_upah_dasar);
@@ -1556,7 +1556,7 @@ class PengerjaanController extends Controller
             //             'bpjs_kesehatan' => round((1 / 100) * $bpjs_kesehatan->nominal)
             //         ]);
             //         break;
-                
+
             //     default:
             //         $karyawan = $this->pengerjaanWeekly->whereHas('operator_karyawan', function($query) use($id){
             //                                         $query->where('jenis_operator_detail_pekerjaan_id',$id);
@@ -1596,7 +1596,7 @@ class PengerjaanController extends Controller
 
         //                                 dd($karyawan);
 
-        
+
         // dd(substr($kode_pengerjaan,0,2).$kode_jenis_operator_detail.'_'.substr($kode_pengerjaan,3));
     }
 
@@ -1640,7 +1640,7 @@ class PengerjaanController extends Controller
         // dd($data['new_data_pengerjaan']);
 
         $data['pengerjaans'] = $this->pengerjaan->where('operator_karyawan_id',$data['karyawan']['id'])->where('kode_pengerjaan',$kode_pengerjaan)->get();
-        
+
         $data['upah'] = array();
 
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
@@ -1824,7 +1824,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-26";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
@@ -1875,8 +1875,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -1990,7 +1990,7 @@ class PengerjaanController extends Controller
         // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
         // // }
         // else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
@@ -2016,12 +2016,12 @@ class PengerjaanController extends Controller
 
         $input['upah_dasar'] = $request->upah_dasar;
         $input['upah_makan'] = $request->upah_makan;
-        
+
         $input['uang_makan'] = $request->uang_makan;
         $input['plus_1'] = $request->plus_1."|".$request->keterangan_plus_1;
         $input['plus_2'] = $request->plus_2."|".$request->keterangan_plus_2;
         $input['plus_3'] = $request->plus_3."|".$request->keterangan_plus_3;
-        
+
         $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
@@ -2194,7 +2194,7 @@ class PengerjaanController extends Controller
                                                     ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
-        
+
         foreach ($data['karyawan_pengerjaans'] as $key => $karyawan_pengerjaan) {
             // dd($request->umk_borongan_lokal_kerja_1);
             if ($request->umk_borongan_lokal_kerja_1) {
@@ -2204,7 +2204,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_1 = $umk_borongan_lokal_1->id.'|'.$umk_borongan_lokal_1->umk_packing*$request->hasil_kerja_1[$key];
-                
+
                 // if ($request->hasil_kerja_1[$key]) {
                 // }
 
@@ -2232,7 +2232,7 @@ class PengerjaanController extends Controller
                 }else{
                     $total_jam_1 = '0';
                 }
-                
+
             }else{
                 $hasil_pengerjaan_1 = '0'.'|'.'0';
                 $lembur_1 = '1-n';
@@ -2245,7 +2245,7 @@ class PengerjaanController extends Controller
             $total_hasil_lembur_1 = $total_upah_lembur_1;
 
             // dd($hasil_pengerjaan_1);
-            
+
             if ($request->umk_borongan_lokal_kerja_2) {
                 $umk_borongan_lokal_2 = $this->umkBoronganLokal->select('id','jenis_produk','umk_bandrol')
                                                         ->where('id',$request->umk_borongan_lokal_kerja_2)
@@ -2253,7 +2253,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$umk_borongan_lokal_2->umk_packing*$request->hasil_kerja_2[$key];
-                
+
                 if ($request->hasil_kerja_2[$key]) {
                     $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$request->hasil_kerja_2[$key];
                     $hasil_kerja_2 = $umk_borongan_lokal_2->umk_bandrol*$request->hasil_kerja_2[$key];
@@ -2297,7 +2297,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$umk_borongan_lokal_3->umk_packing*$request->hasil_kerja_3[$key];
-                
+
                 if ($request->hasil_kerja_3[$key]) {
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$request->hasil_kerja_3[$key];
                     $hasil_kerja_3 = $umk_borongan_lokal_3->umk_bandrol*$request->hasil_kerja_3[$key];
@@ -2305,7 +2305,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.'0';
                     $hasil_kerja_3 = 0;
                 }
-            
+
                 if($request->lembur_kerja_3){
                     $lembur_3 = '3-y';
                     $hasil_lembur_3 = '1.5';
@@ -2341,7 +2341,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$umk_borongan_lokal_4->umk_packing*$request->hasil_kerja_4[$key];
-                
+
                 if ($request->hasil_kerja_4[$key]) {
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$request->hasil_kerja_4[$key];
                     $hasil_kerja_4 = $umk_borongan_lokal_4->umk_bandrol*$request->hasil_kerja_4[$key];
@@ -2349,7 +2349,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.'0';
                     $hasil_kerja_4 = 0;
                 }
-            
+
                 if($request->lembur_kerja_4){
                     $lembur_4 = '4-y';
                     $hasil_lembur_4 = '1.5';
@@ -2385,7 +2385,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$umk_borongan_lokal_5->umk_packing*$request->hasil_kerja_5[$key];
-                
+
                 if ($request->hasil_kerja_5[$key]) {
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$request->hasil_kerja_5[$key];
                     $hasil_kerja_5 = $umk_borongan_lokal_5->umk_bandrol*$request->hasil_kerja_5[$key];
@@ -2393,7 +2393,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.'0';
                     $hasil_kerja_5 = 0;
                 }
-            
+
                 if($request->lembur_kerja_5){
                     $lembur_5 = '5-y';
                     $hasil_lembur_5 = '1.5';
@@ -2487,7 +2487,7 @@ class PengerjaanController extends Controller
         // dd($data['new_data_pengerjaan']);
 
         $data['pengerjaans'] = $this->pengerjaan->where('operator_karyawan_id',$data['karyawan']['id'])->where('kode_pengerjaan',$kode_pengerjaan)->get();
-        
+
         $data['upah'] = array();
 
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
@@ -2672,7 +2672,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-26";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
@@ -2718,8 +2718,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -2832,7 +2832,7 @@ class PengerjaanController extends Controller
         // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
         // // }
         // else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
@@ -2858,12 +2858,12 @@ class PengerjaanController extends Controller
 
         $input['upah_dasar'] = $request->upah_dasar;
         $input['upah_makan'] = $request->upah_makan;
-        
+
         $input['uang_makan'] = $request->uang_makan;
         $input['plus_1'] = $request->plus_1."|".$request->keterangan_plus_1;
         $input['plus_2'] = $request->plus_2."|".$request->keterangan_plus_2;
         $input['plus_3'] = $request->plus_3."|".$request->keterangan_plus_3;
-        
+
         $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
@@ -3038,7 +3038,7 @@ class PengerjaanController extends Controller
                                                     ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
-        
+
         foreach ($data['karyawan_pengerjaans'] as $key => $karyawan_pengerjaan) {
             // dd($request->umk_borongan_lokal_kerja_1);
             if ($request->umk_borongan_lokal_kerja_1) {
@@ -3048,7 +3048,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_1 = $umk_borongan_lokal_1->id.'|'.$umk_borongan_lokal_1->umk_packing*$request->hasil_kerja_1[$key];
-                
+
                 // if ($request->hasil_kerja_1[$key]) {
                 // }
 
@@ -3076,7 +3076,7 @@ class PengerjaanController extends Controller
                 }else{
                     $total_jam_1 = '0';
                 }
-                
+
             }else{
                 $hasil_pengerjaan_1 = '0'.'|'.'0';
                 $lembur_1 = '1-n';
@@ -3089,7 +3089,7 @@ class PengerjaanController extends Controller
             $total_hasil_lembur_1 = $total_upah_lembur_1;
 
             // dd($hasil_pengerjaan_1);
-            
+
             if ($request->umk_borongan_lokal_kerja_2) {
                 $umk_borongan_lokal_2 = $this->umkBoronganLokal->select('id','jenis_produk','umk_inner')
                                                         ->where('id',$request->umk_borongan_lokal_kerja_2)
@@ -3097,7 +3097,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$umk_borongan_lokal_2->umk_packing*$request->hasil_kerja_2[$key];
-                
+
                 if ($request->hasil_kerja_2[$key]) {
                     $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$request->hasil_kerja_2[$key];
                     $hasil_kerja_2 = $umk_borongan_lokal_2->umk_inner*$request->hasil_kerja_2[$key];
@@ -3141,7 +3141,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$umk_borongan_lokal_3->umk_packing*$request->hasil_kerja_3[$key];
-                
+
                 if ($request->hasil_kerja_3[$key]) {
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$request->hasil_kerja_3[$key];
                     $hasil_kerja_3 = $umk_borongan_lokal_3->umk_inner*$request->hasil_kerja_3[$key];
@@ -3149,7 +3149,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.'0';
                     $hasil_kerja_3 = 0;
                 }
-            
+
                 if($request->lembur_kerja_3){
                     $lembur_3 = '3-y';
                     $hasil_lembur_3 = '1.5';
@@ -3185,7 +3185,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$umk_borongan_lokal_4->umk_packing*$request->hasil_kerja_4[$key];
-                
+
                 if ($request->hasil_kerja_4[$key]) {
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$request->hasil_kerja_4[$key];
                     $hasil_kerja_4 = $umk_borongan_lokal_4->umk_inner*$request->hasil_kerja_4[$key];
@@ -3193,7 +3193,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.'0';
                     $hasil_kerja_4 = 0;
                 }
-            
+
                 if($request->lembur_kerja_4){
                     $lembur_4 = '4-y';
                     $hasil_lembur_4 = '1.5';
@@ -3229,7 +3229,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$umk_borongan_lokal_5->umk_packing*$request->hasil_kerja_5[$key];
-                
+
                 if ($request->hasil_kerja_5[$key]) {
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$request->hasil_kerja_5[$key];
                     $hasil_kerja_5 = $umk_borongan_lokal_5->umk_inner*$request->hasil_kerja_5[$key];
@@ -3237,7 +3237,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.'0';
                     $hasil_kerja_5 = 0;
                 }
-            
+
                 if($request->lembur_kerja_5){
                     $lembur_5 = '5-y';
                     $hasil_lembur_5 = '1.5';
@@ -3268,7 +3268,7 @@ class PengerjaanController extends Controller
 
             $lemburs = '|'.$lembur_1.'|'.$lembur_2.'|'.$lembur_3.'|'.$lembur_4.'|'.$lembur_5;
             $hasil_upah_dasar = $hasil_kerja_1+$hasil_kerja_2+$hasil_kerja_3+$hasil_kerja_4+$hasil_kerja_5;
-            
+
             $penjumlahan_lembur = round($total_hasil_lembur_1+$total_hasil_lembur_2+$total_hasil_lembur_3+$total_hasil_lembur_4+$total_hasil_lembur_5);
 
             // dd($hasil_upah_dasar);
@@ -3332,7 +3332,7 @@ class PengerjaanController extends Controller
         // dd($data['new_data_pengerjaan']);
 
         $data['pengerjaans'] = $this->pengerjaan->where('operator_karyawan_id',$data['karyawan']['id'])->where('kode_pengerjaan',$kode_pengerjaan)->get();
-        
+
         $data['upah'] = array();
 
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
@@ -3517,7 +3517,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-26";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
@@ -3563,8 +3563,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -3677,7 +3677,7 @@ class PengerjaanController extends Controller
         // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
         // // }
         // else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
@@ -3703,12 +3703,12 @@ class PengerjaanController extends Controller
 
         $input['upah_dasar'] = $request->upah_dasar;
         $input['upah_makan'] = $request->upah_makan;
-        
+
         $input['uang_makan'] = $request->uang_makan;
         $input['plus_1'] = $request->plus_1."|".$request->keterangan_plus_1;
         $input['plus_2'] = $request->plus_2."|".$request->keterangan_plus_2;
         $input['plus_3'] = $request->plus_3."|".$request->keterangan_plus_3;
-        
+
         $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
@@ -3893,7 +3893,7 @@ class PengerjaanController extends Controller
                                                     ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
-        
+
         foreach ($data['karyawan_pengerjaans'] as $key => $karyawan_pengerjaan) {
             // dd($request->umk_borongan_lokal_kerja_1);
             if ($request->umk_borongan_lokal_kerja_1) {
@@ -3903,7 +3903,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_1 = $umk_borongan_lokal_1->id.'|'.$umk_borongan_lokal_1->umk_packing*$request->hasil_kerja_1[$key];
-                
+
                 // if ($request->hasil_kerja_1[$key]) {
                 // }
 
@@ -3931,7 +3931,7 @@ class PengerjaanController extends Controller
                 }else{
                     $total_jam_1 = '0';
                 }
-                
+
             }else{
                 $hasil_pengerjaan_1 = '0'.'|'.'0';
                 $lembur_1 = '1-n';
@@ -3944,7 +3944,7 @@ class PengerjaanController extends Controller
             $total_hasil_lembur_1 = $total_upah_lembur_1;
 
             // dd($hasil_pengerjaan_1);
-            
+
             if ($request->umk_borongan_lokal_kerja_2) {
                 $umk_borongan_lokal_2 = $this->umkBoronganLokal->select('id','jenis_produk','umk_outer')
                                                         ->where('id',$request->umk_borongan_lokal_kerja_2)
@@ -3952,7 +3952,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$umk_borongan_lokal_2->umk_packing*$request->hasil_kerja_2[$key];
-                
+
                 if ($request->hasil_kerja_2[$key]) {
                     $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$request->hasil_kerja_2[$key];
                     $hasil_kerja_2 = $umk_borongan_lokal_2->umk_outer*$request->hasil_kerja_2[$key];
@@ -3996,7 +3996,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$umk_borongan_lokal_3->umk_packing*$request->hasil_kerja_3[$key];
-                
+
                 if ($request->hasil_kerja_3[$key]) {
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$request->hasil_kerja_3[$key];
                     $hasil_kerja_3 = $umk_borongan_lokal_3->umk_outer*$request->hasil_kerja_3[$key];
@@ -4004,7 +4004,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.'0';
                     $hasil_kerja_3 = 0;
                 }
-            
+
                 if($request->lembur_kerja_3){
                     $lembur_3 = '3-y';
                     $hasil_lembur_3 = '1.5';
@@ -4040,7 +4040,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$umk_borongan_lokal_4->umk_packing*$request->hasil_kerja_4[$key];
-                
+
                 if ($request->hasil_kerja_4[$key]) {
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$request->hasil_kerja_4[$key];
                     $hasil_kerja_4 = $umk_borongan_lokal_4->umk_outer*$request->hasil_kerja_4[$key];
@@ -4048,7 +4048,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.'0';
                     $hasil_kerja_4 = 0;
                 }
-            
+
                 if($request->lembur_kerja_4){
                     $lembur_4 = '4-y';
                     $hasil_lembur_4 = '1.5';
@@ -4084,7 +4084,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$umk_borongan_lokal_5->umk_packing*$request->hasil_kerja_5[$key];
-                
+
                 if ($request->hasil_kerja_5[$key]) {
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$request->hasil_kerja_5[$key];
                     $hasil_kerja_5 = $umk_borongan_lokal_5->umk_outer*$request->hasil_kerja_5[$key];
@@ -4092,7 +4092,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.'0';
                     $hasil_kerja_5 = 0;
                 }
-            
+
                 if($request->lembur_kerja_5){
                     $lembur_5 = '5-y';
                     $hasil_lembur_5 = '1.5';
@@ -4123,9 +4123,9 @@ class PengerjaanController extends Controller
 
             $lemburs = '|'.$lembur_1.'|'.$lembur_2.'|'.$lembur_3.'|'.$lembur_4.'|'.$lembur_5;
             $hasil_upah_dasar = $hasil_kerja_1+$hasil_kerja_2+$hasil_kerja_3+$hasil_kerja_4+$hasil_kerja_5;
-            
+
             $penjumlahan_lembur = round($total_hasil_lembur_1+$total_hasil_lembur_2+$total_hasil_lembur_3+$total_hasil_lembur_4+$total_hasil_lembur_5);
-            
+
             // dd($hasil_upah_dasar);
             $karyawan_pengerjaan->update([
                 'hasil_kerja_1' => $hasil_pengerjaan_1,
@@ -4187,7 +4187,7 @@ class PengerjaanController extends Controller
         // dd($data['new_data_pengerjaan']);
 
         $data['pengerjaans'] = $this->pengerjaan->where('operator_karyawan_id',$data['karyawan']['id'])->where('kode_pengerjaan',$kode_pengerjaan)->get();
-        
+
         $data['upah'] = array();
 
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
@@ -4372,7 +4372,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-26";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
@@ -4418,8 +4418,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -4532,7 +4532,7 @@ class PengerjaanController extends Controller
         // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
         // // }
         // else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
@@ -4558,12 +4558,12 @@ class PengerjaanController extends Controller
 
         $input['upah_dasar'] = $request->upah_dasar;
         $input['upah_makan'] = $request->upah_makan;
-        
+
         $input['uang_makan'] = $request->uang_makan;
         $input['plus_1'] = $request->plus_1."|".$request->keterangan_plus_1;
         $input['plus_2'] = $request->plus_2."|".$request->keterangan_plus_2;
         $input['plus_3'] = $request->plus_3."|".$request->keterangan_plus_3;
-        
+
         $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
@@ -4732,7 +4732,7 @@ class PengerjaanController extends Controller
                                                     ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
-        
+
         foreach ($data['karyawan_pengerjaans'] as $key => $karyawan_pengerjaan) {
             // dd($request->umk_borongan_lokal_kerja_1);
             if ($request->umk_borongan_lokal_kerja_1) {
@@ -4742,7 +4742,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_1 = $umk_borongan_lokal_1->id.'|'.$umk_borongan_lokal_1->umk_packing*$request->hasil_kerja_1[$key];
-                
+
                 // if ($request->hasil_kerja_1[$key]) {
                 // }
 
@@ -4772,7 +4772,7 @@ class PengerjaanController extends Controller
                 }else{
                     $total_jam_1 = '0';
                 }
-                
+
             }else{
                 $hasil_pengerjaan_1 = '0'.'|'.'0';
                 $lembur_1 = '1-n';
@@ -4785,7 +4785,7 @@ class PengerjaanController extends Controller
             $total_hasil_lembur_1 = $total_upah_lembur_1;
 
             // dd($hasil_pengerjaan_1);
-            
+
             if ($request->umk_borongan_lokal_kerja_2) {
                 $umk_borongan_lokal_2 = $this->umkBoronganStempel->select('id','jenis_produk','nominal_umk')
                                                         ->where('id',$request->umk_borongan_lokal_kerja_2)
@@ -4793,7 +4793,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$umk_borongan_lokal_2->umk_packing*$request->hasil_kerja_2[$key];
-                
+
                 if ($request->hasil_kerja_2[$key]) {
                     $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$request->hasil_kerja_2[$key];
                     $hasil_kerja_2 = $umk_borongan_lokal_2->nominal_umk*$request->hasil_kerja_2[$key];
@@ -4837,7 +4837,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$umk_borongan_lokal_3->umk_packing*$request->hasil_kerja_3[$key];
-                
+
                 if ($request->hasil_kerja_3[$key]) {
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$request->hasil_kerja_3[$key];
                     $hasil_kerja_3 = $umk_borongan_lokal_3->nominal_umk*$request->hasil_kerja_3[$key];
@@ -4845,7 +4845,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.'0';
                     $hasil_kerja_3 = 0;
                 }
-            
+
                 if($request->lembur_kerja_3){
                     $lembur_3 = '3-y';
                     $hasil_lembur_3 = '1.5';
@@ -4881,7 +4881,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$umk_borongan_lokal_4->umk_packing*$request->hasil_kerja_4[$key];
-                
+
                 if ($request->hasil_kerja_4[$key]) {
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$request->hasil_kerja_4[$key];
                     $hasil_kerja_4 = $umk_borongan_lokal_4->nominal_umk*$request->hasil_kerja_4[$key];
@@ -4889,7 +4889,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.'0';
                     $hasil_kerja_4 = 0;
                 }
-            
+
                 if($request->lembur_kerja_4){
                     $lembur_4 = '4-y';
                     $hasil_lembur_4 = '1.5';
@@ -4925,7 +4925,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$umk_borongan_lokal_5->umk_packing*$request->hasil_kerja_5[$key];
-                
+
                 if ($request->hasil_kerja_5[$key]) {
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$request->hasil_kerja_5[$key];
                     $hasil_kerja_5 = $umk_borongan_lokal_5->nominal_umk*$request->hasil_kerja_5[$key];
@@ -4933,7 +4933,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.'0';
                     $hasil_kerja_5 = 0;
                 }
-            
+
                 if($request->lembur_kerja_5){
                     $lembur_5 = '5-y';
                     $hasil_lembur_5 = '1.5';
@@ -4964,9 +4964,9 @@ class PengerjaanController extends Controller
 
             $lemburs = '|'.$lembur_1.'|'.$lembur_2.'|'.$lembur_3.'|'.$lembur_4.'|'.$lembur_5;
             $hasil_upah_dasar = $hasil_kerja_1+$hasil_kerja_2+$hasil_kerja_3+$hasil_kerja_4+$hasil_kerja_5;
-            
+
             $penjumlahan_lembur = round($total_hasil_lembur_1+$total_hasil_lembur_2+$total_hasil_lembur_3+$total_hasil_lembur_4+$total_hasil_lembur_5);
-            
+
             // dd($hasil_upah_dasar);
             $karyawan_pengerjaan->update([
                 'hasil_kerja_1' => $hasil_pengerjaan_1,
@@ -5028,7 +5028,7 @@ class PengerjaanController extends Controller
         // dd($data['new_data_pengerjaan']);
 
         $data['pengerjaans'] = $this->pengerjaan->where('operator_karyawan_id',$data['karyawan']['id'])->where('kode_pengerjaan',$kode_pengerjaan)->get();
-        
+
         $data['upah'] = array();
 
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
@@ -5213,7 +5213,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-26";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
@@ -5259,8 +5259,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -5375,7 +5375,7 @@ class PengerjaanController extends Controller
         // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
         // // }
         // else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
@@ -5401,12 +5401,12 @@ class PengerjaanController extends Controller
 
         $input['upah_dasar'] = $request->upah_dasar;
         $input['upah_makan'] = $request->upah_makan;
-        
+
         $input['uang_makan'] = $request->uang_makan;
         $input['plus_1'] = $request->plus_1."|".$request->keterangan_plus_1;
         $input['plus_2'] = $request->plus_2."|".$request->keterangan_plus_2;
         $input['plus_3'] = $request->plus_3."|".$request->keterangan_plus_3;
-        
+
         $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
@@ -5589,7 +5589,7 @@ class PengerjaanController extends Controller
                                                     ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
-        
+
         foreach ($data['karyawan_pengerjaans'] as $key => $karyawan_pengerjaan) {
             // dd($request->umk_borongan_lokal_kerja_1);
             if ($request->umk_borongan_lokal_kerja_1) {
@@ -5599,7 +5599,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_1 = $umk_borongan_lokal_1->id.'|'.$umk_borongan_lokal_1->umk_packing*$request->hasil_kerja_1[$key];
-                
+
                 // if ($request->hasil_kerja_1[$key]) {
                 // }
 
@@ -5626,7 +5626,7 @@ class PengerjaanController extends Controller
                 }else{
                     $total_jam_1 = '0';
                 }
-                
+
             }else{
                 $hasil_pengerjaan_1 = '0'.'|'.'0';
                 $lembur_1 = '1-n';
@@ -5639,7 +5639,7 @@ class PengerjaanController extends Controller
             $total_hasil_lembur_1 = $total_upah_lembur_1;
 
             // dd($hasil_pengerjaan_1);
-            
+
             if ($request->umk_borongan_lokal_kerja_2) {
                 $umk_borongan_lokal_2 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_packing')
                                                         ->where('id',$request->umk_borongan_lokal_kerja_2)
@@ -5647,7 +5647,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$umk_borongan_lokal_2->umk_packing*$request->hasil_kerja_2[$key];
-                
+
                 if ($request->hasil_kerja_2[$key]) {
                     $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$request->hasil_kerja_2[$key];
                     $hasil_kerja_2 = $umk_borongan_lokal_2->umk_packing*$request->hasil_kerja_2[$key];
@@ -5690,7 +5690,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$umk_borongan_lokal_3->umk_packing*$request->hasil_kerja_3[$key];
-                
+
                 if ($request->hasil_kerja_3[$key]) {
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$request->hasil_kerja_3[$key];
                     $hasil_kerja_3 = $umk_borongan_lokal_3->umk_packing*$request->hasil_kerja_3[$key];
@@ -5698,7 +5698,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.'0';
                     $hasil_kerja_3 = 0;
                 }
-            
+
                 if($request->lembur_kerja_3){
                     $lembur_3 = '3-y';
                     $hasil_lembur_3 = '1.5';
@@ -5733,7 +5733,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$umk_borongan_lokal_4->umk_packing*$request->hasil_kerja_4[$key];
-                
+
                 if ($request->hasil_kerja_4[$key]) {
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$request->hasil_kerja_4[$key];
                     $hasil_kerja_4 = $umk_borongan_lokal_4->umk_packing*$request->hasil_kerja_4[$key];
@@ -5741,7 +5741,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.'0';
                     $hasil_kerja_4 = 0;
                 }
-            
+
                 if($request->lembur_kerja_4){
                     $lembur_4 = '4-y';
                     $hasil_lembur_4 = '1.5';
@@ -5776,7 +5776,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$umk_borongan_lokal_5->umk_packing*$request->hasil_kerja_5[$key];
-                
+
                 if ($request->hasil_kerja_5[$key]) {
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$request->hasil_kerja_5[$key];
                     $hasil_kerja_5 = $umk_borongan_lokal_5->umk_packing*$request->hasil_kerja_5[$key];
@@ -5784,7 +5784,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.'0';
                     $hasil_kerja_5 = 0;
                 }
-            
+
                 if($request->lembur_kerja_5){
                     $lembur_5 = '5-y';
                     $hasil_lembur_5 = '1.5';
@@ -5878,7 +5878,7 @@ class PengerjaanController extends Controller
         // dd($data['new_data_pengerjaan']);
 
         $data['pengerjaans'] = $this->pengerjaan->where('operator_karyawan_id',$data['karyawan']['id'])->where('kode_pengerjaan',$kode_pengerjaan)->get();
-        
+
         $data['upah'] = array();
 
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
@@ -6063,7 +6063,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-26";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
@@ -6109,8 +6109,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -6224,7 +6224,7 @@ class PengerjaanController extends Controller
         // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
         // // }
         // else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
@@ -6250,12 +6250,12 @@ class PengerjaanController extends Controller
 
         $input['upah_dasar'] = $request->upah_dasar;
         $input['upah_makan'] = $request->upah_makan;
-        
+
         $input['uang_makan'] = $request->uang_makan;
         $input['plus_1'] = $request->plus_1."|".$request->keterangan_plus_1;
         $input['plus_2'] = $request->plus_2."|".$request->keterangan_plus_2;
         $input['plus_3'] = $request->plus_3."|".$request->keterangan_plus_3;
-        
+
         $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
@@ -6431,7 +6431,7 @@ class PengerjaanController extends Controller
                                                     ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
-        
+
         foreach ($data['karyawan_pengerjaans'] as $key => $karyawan_pengerjaan) {
             // dd($request->umk_borongan_lokal_kerja_1);
             if ($request->umk_borongan_lokal_kerja_1) {
@@ -6441,7 +6441,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_1 = $umk_borongan_lokal_1->id.'|'.$umk_borongan_lokal_1->umk_packing*$request->hasil_kerja_1[$key];
-                
+
                 // if ($request->hasil_kerja_1[$key]) {
                 // }
 
@@ -6468,7 +6468,7 @@ class PengerjaanController extends Controller
                 }else{
                     $total_jam_1 = '0';
                 }
-                
+
             }else{
                 $hasil_pengerjaan_1 = '0'.'|'.'0';
                 $lembur_1 = '1-n';
@@ -6481,7 +6481,7 @@ class PengerjaanController extends Controller
             $total_hasil_lembur_1 = $total_upah_lembur_1;
 
             // dd($hasil_pengerjaan_1);
-            
+
             if ($request->umk_borongan_lokal_kerja_2) {
                 $umk_borongan_lokal_2 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_kemas')
                                                         ->where('id',$request->umk_borongan_lokal_kerja_2)
@@ -6489,7 +6489,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$umk_borongan_lokal_2->umk_packing*$request->hasil_kerja_2[$key];
-                
+
                 if ($request->hasil_kerja_2[$key]) {
                     $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$request->hasil_kerja_2[$key];
                     $hasil_kerja_2 = $umk_borongan_lokal_2->umk_kemas*$request->hasil_kerja_2[$key];
@@ -6532,7 +6532,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$umk_borongan_lokal_3->umk_packing*$request->hasil_kerja_3[$key];
-                
+
                 if ($request->hasil_kerja_3[$key]) {
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$request->hasil_kerja_3[$key];
                     $hasil_kerja_3 = $umk_borongan_lokal_3->umk_kemas*$request->hasil_kerja_3[$key];
@@ -6540,7 +6540,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.'0';
                     $hasil_kerja_3 = 0;
                 }
-            
+
                 if($request->lembur_kerja_3){
                     $lembur_3 = '3-y';
                     $hasil_lembur_3 = '1.5';
@@ -6575,7 +6575,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$umk_borongan_lokal_4->umk_packing*$request->hasil_kerja_4[$key];
-                
+
                 if ($request->hasil_kerja_4[$key]) {
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$request->hasil_kerja_4[$key];
                     $hasil_kerja_4 = $umk_borongan_lokal_4->umk_kemas*$request->hasil_kerja_4[$key];
@@ -6583,7 +6583,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.'0';
                     $hasil_kerja_4 = 0;
                 }
-            
+
                 if($request->lembur_kerja_4){
                     $lembur_4 = '4-y';
                     $hasil_lembur_4 = '1.5';
@@ -6618,7 +6618,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$umk_borongan_lokal_5->umk_packing*$request->hasil_kerja_5[$key];
-                
+
                 if ($request->hasil_kerja_5[$key]) {
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$request->hasil_kerja_5[$key];
                     $hasil_kerja_5 = $umk_borongan_lokal_5->umk_kemas*$request->hasil_kerja_5[$key];
@@ -6626,7 +6626,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.'0';
                     $hasil_kerja_5 = 0;
                 }
-            
+
                 if($request->lembur_kerja_5){
                     $lembur_5 = '5-y';
                     $hasil_lembur_5 = '1.5';
@@ -6721,7 +6721,7 @@ class PengerjaanController extends Controller
         // dd($data['new_data_pengerjaan']);
 
         $data['pengerjaans'] = $this->pengerjaan->where('operator_karyawan_id',$data['karyawan']['id'])->where('kode_pengerjaan',$kode_pengerjaan)->get();
-        
+
         $data['upah'] = array();
 
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
@@ -6906,7 +6906,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-26";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
@@ -6952,8 +6952,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -7066,7 +7066,7 @@ class PengerjaanController extends Controller
         // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
         // // }
         // else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
@@ -7092,12 +7092,12 @@ class PengerjaanController extends Controller
 
         $input['upah_dasar'] = $request->upah_dasar;
         $input['upah_makan'] = $request->upah_makan;
-        
+
         $input['uang_makan'] = $request->uang_makan;
         $input['plus_1'] = $request->plus_1."|".$request->keterangan_plus_1;
         $input['plus_2'] = $request->plus_2."|".$request->keterangan_plus_2;
         $input['plus_3'] = $request->plus_3."|".$request->keterangan_plus_3;
-        
+
         $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
@@ -7233,7 +7233,7 @@ class PengerjaanController extends Controller
         // dd($data);
         return view('backend.pengerjaan.packing_ekspor_gagang.input_hasil_kerja',$data);
     }
-    
+
     public function hasil_kerja_gagang_ekspor_view_simpan(Request $request, $id, $kode_pengerjaan, $tanggal)
     {
         if($id == 1){
@@ -7267,7 +7267,7 @@ class PengerjaanController extends Controller
                                                     ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
-        
+
         foreach ($data['karyawan_pengerjaans'] as $key => $karyawan_pengerjaan) {
             // dd($request->umk_borongan_lokal_kerja_1);
             if ($request->umk_borongan_lokal_kerja_1) {
@@ -7277,7 +7277,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_1 = $umk_borongan_lokal_1->id.'|'.$umk_borongan_lokal_1->umk_packing*$request->hasil_kerja_1[$key];
-                
+
                 // if ($request->hasil_kerja_1[$key]) {
                 // }
 
@@ -7302,7 +7302,7 @@ class PengerjaanController extends Controller
                 }else{
                     $total_jam_1 = '0';
                 }
-                
+
             }else{
                 $hasil_pengerjaan_1 = '0'.'|'.'0';
                 $lembur_1 = '1-n';
@@ -7312,7 +7312,7 @@ class PengerjaanController extends Controller
             }
 
             // dd($hasil_pengerjaan_1);
-            
+
             if ($request->umk_borongan_lokal_kerja_2) {
                 $umk_borongan_lokal_2 = $this->umkBoronganEkspor->select('id','jenis_produk','umk_kemas')
                                                         ->where('id',$request->umk_borongan_lokal_kerja_2)
@@ -7320,7 +7320,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$umk_borongan_lokal_2->umk_packing*$request->hasil_kerja_2[$key];
-                
+
                 if ($request->hasil_kerja_2[$key]) {
                     $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$request->hasil_kerja_2[$key];
                     $hasil_kerja_2 = $umk_borongan_lokal_2->umk_kemas*$request->hasil_kerja_2[$key];
@@ -7358,7 +7358,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$umk_borongan_lokal_3->umk_packing*$request->hasil_kerja_3[$key];
-                
+
                 if ($request->hasil_kerja_3[$key]) {
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$request->hasil_kerja_3[$key];
                     $hasil_kerja_3 = $umk_borongan_lokal_3->umk_kemas*$request->hasil_kerja_3[$key];
@@ -7366,7 +7366,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.'0';
                     $hasil_kerja_3 = 0;
                 }
-            
+
                 if($request->lembur_kerja_3){
                     $lembur_3 = '3-y';
                     $hasil_lembur_3 = '1.5';
@@ -7396,7 +7396,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$umk_borongan_lokal_4->umk_packing*$request->hasil_kerja_4[$key];
-                
+
                 if ($request->hasil_kerja_4[$key]) {
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$request->hasil_kerja_4[$key];
                     $hasil_kerja_4 = $umk_borongan_lokal_4->umk_kemas*$request->hasil_kerja_4[$key];
@@ -7404,7 +7404,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.'0';
                     $hasil_kerja_4 = 0;
                 }
-            
+
                 if($request->lembur_kerja_4){
                     $lembur_4 = '4-y';
                     $hasil_lembur_4 = '1.5';
@@ -7434,7 +7434,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$umk_borongan_lokal_5->umk_packing*$request->hasil_kerja_5[$key];
-                
+
                 if ($request->hasil_kerja_5[$key]) {
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$request->hasil_kerja_5[$key];
                     $hasil_kerja_5 = $umk_borongan_lokal_5->umk_kemas*$request->hasil_kerja_5[$key];
@@ -7442,7 +7442,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.'0';
                     $hasil_kerja_5 = 0;
                 }
-            
+
                 if($request->lembur_kerja_5){
                     $lembur_5 = '5-y';
                     $hasil_lembur_5 = '1.5';
@@ -7528,7 +7528,7 @@ class PengerjaanController extends Controller
         // dd($data['new_data_pengerjaan']);
 
         $data['pengerjaans'] = $this->pengerjaan->where('operator_karyawan_id',$data['karyawan']['id'])->where('kode_pengerjaan',$kode_pengerjaan)->get();
-        
+
         $data['upah'] = array();
 
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
@@ -7713,7 +7713,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-26";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
@@ -7759,8 +7759,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -7874,7 +7874,7 @@ class PengerjaanController extends Controller
         // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
         // // }
         // else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
@@ -7900,12 +7900,12 @@ class PengerjaanController extends Controller
 
         $input['upah_dasar'] = $request->upah_dasar;
         $input['upah_makan'] = $request->upah_makan;
-        
+
         $input['uang_makan'] = $request->uang_makan;
         $input['plus_1'] = $request->plus_1."|".$request->keterangan_plus_1;
         $input['plus_2'] = $request->plus_2."|".$request->keterangan_plus_2;
         $input['plus_3'] = $request->plus_3."|".$request->keterangan_plus_3;
-        
+
         $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
@@ -8083,7 +8083,7 @@ class PengerjaanController extends Controller
                                                     ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
-        
+
         foreach ($data['karyawan_pengerjaans'] as $key => $karyawan_pengerjaan) {
             // dd($request->umk_borongan_lokal_kerja_1);
             if ($request->umk_borongan_lokal_kerja_1) {
@@ -8093,7 +8093,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_1 = $umk_borongan_lokal_1->id.'|'.$umk_borongan_lokal_1->umk_packing*$request->hasil_kerja_1[$key];
-                
+
                 // if ($request->hasil_kerja_1[$key]) {
                 // }
 
@@ -8121,7 +8121,7 @@ class PengerjaanController extends Controller
                 }else{
                     $total_jam_1 = '0';
                 }
-                
+
             }else{
                 $hasil_pengerjaan_1 = '0'.'|'.'0';
                 $lembur_1 = '1-n';
@@ -8134,7 +8134,7 @@ class PengerjaanController extends Controller
             $total_hasil_lembur_1 = $total_upah_lembur_1;
 
             // dd($hasil_pengerjaan_1);
-            
+
             if ($request->umk_borongan_lokal_kerja_2) {
                 $umk_borongan_lokal_2 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_etiket')
                                                         ->where('id',$request->umk_borongan_lokal_kerja_2)
@@ -8142,7 +8142,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$umk_borongan_lokal_2->umk_packing*$request->hasil_kerja_2[$key];
-                
+
                 if ($request->hasil_kerja_2[$key]) {
                     $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$request->hasil_kerja_2[$key];
                     $hasil_kerja_2 = $umk_borongan_lokal_2->umk_etiket*$request->hasil_kerja_2[$key];
@@ -8186,7 +8186,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$umk_borongan_lokal_3->umk_packing*$request->hasil_kerja_3[$key];
-                
+
                 if ($request->hasil_kerja_3[$key]) {
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$request->hasil_kerja_3[$key];
                     $hasil_kerja_3 = $umk_borongan_lokal_3->umk_etiket*$request->hasil_kerja_3[$key];
@@ -8194,7 +8194,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.'0';
                     $hasil_kerja_3 = 0;
                 }
-            
+
                 if($request->lembur_kerja_3){
                     $lembur_3 = '3-y';
                     $hasil_lembur_3 = '1.5';
@@ -8230,7 +8230,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$umk_borongan_lokal_4->umk_packing*$request->hasil_kerja_4[$key];
-                
+
                 if ($request->hasil_kerja_4[$key]) {
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$request->hasil_kerja_4[$key];
                     $hasil_kerja_4 = $umk_borongan_lokal_4->umk_etiket*$request->hasil_kerja_4[$key];
@@ -8238,7 +8238,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.'0';
                     $hasil_kerja_4 = 0;
                 }
-            
+
                 if($request->lembur_kerja_4){
                     $lembur_4 = '4-y';
                     $hasil_lembur_4 = '1.5';
@@ -8274,7 +8274,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$umk_borongan_lokal_5->umk_packing*$request->hasil_kerja_5[$key];
-                
+
                 if ($request->hasil_kerja_5[$key]) {
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$request->hasil_kerja_5[$key];
                     $hasil_kerja_5 = $umk_borongan_lokal_5->umk_etiket*$request->hasil_kerja_5[$key];
@@ -8282,7 +8282,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.'0';
                     $hasil_kerja_5 = 0;
                 }
-            
+
                 if($request->lembur_kerja_5){
                     $lembur_5 = '5-y';
                     $hasil_lembur_5 = '1.5';
@@ -8313,7 +8313,7 @@ class PengerjaanController extends Controller
 
             $lemburs = '|'.$lembur_1.'|'.$lembur_2.'|'.$lembur_3.'|'.$lembur_4.'|'.$lembur_5;
             $hasil_upah_dasar = $hasil_kerja_1+$hasil_kerja_2+$hasil_kerja_3+$hasil_kerja_4+$hasil_kerja_5;
-            
+
             $penjumlahan_lembur = round($total_hasil_lembur_1+$total_hasil_lembur_2+$total_hasil_lembur_3+$total_hasil_lembur_4+$total_hasil_lembur_5);
             // dd($hasil_upah_dasar);
             $karyawan_pengerjaan->update([
@@ -8377,7 +8377,7 @@ class PengerjaanController extends Controller
         // dd($data['new_data_pengerjaan']);
 
         $data['pengerjaans'] = $this->pengerjaan->where('operator_karyawan_id',$data['karyawan']['id'])->where('kode_pengerjaan',$kode_pengerjaan)->get();
-        
+
         $data['upah'] = array();
 
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
@@ -8562,7 +8562,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-26";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
@@ -8608,8 +8608,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -8723,7 +8723,7 @@ class PengerjaanController extends Controller
         // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
         // // }
         // else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
@@ -8749,12 +8749,12 @@ class PengerjaanController extends Controller
 
         $input['upah_dasar'] = $request->upah_dasar;
         $input['upah_makan'] = $request->upah_makan;
-        
+
         $input['uang_makan'] = $request->uang_makan;
         $input['plus_1'] = $request->plus_1."|".$request->keterangan_plus_1;
         $input['plus_2'] = $request->plus_2."|".$request->keterangan_plus_2;
         $input['plus_3'] = $request->plus_3."|".$request->keterangan_plus_3;
-        
+
         $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
@@ -8934,7 +8934,7 @@ class PengerjaanController extends Controller
                                                     ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
-        
+
         foreach ($data['karyawan_pengerjaans'] as $key => $karyawan_pengerjaan) {
             // dd($request->umk_borongan_lokal_kerja_1);
             if ($request->umk_borongan_lokal_kerja_1) {
@@ -8944,7 +8944,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_1 = $umk_borongan_lokal_1->id.'|'.$umk_borongan_lokal_1->umk_packing*$request->hasil_kerja_1[$key];
-                
+
                 // if ($request->hasil_kerja_1[$key]) {
                 // }
 
@@ -8972,7 +8972,7 @@ class PengerjaanController extends Controller
                 }else{
                     $total_jam_1 = '0';
                 }
-                
+
             }else{
                 $hasil_pengerjaan_1 = '0'.'|'.'0';
                 $lembur_1 = '1-n';
@@ -8985,7 +8985,7 @@ class PengerjaanController extends Controller
             $total_hasil_lembur_1 = $total_upah_lembur_1;
 
             // dd($hasil_pengerjaan_1);
-            
+
             if ($request->umk_borongan_lokal_kerja_2) {
                 $umk_borongan_lokal_2 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_las_tepi')
                                                         ->where('id',$request->umk_borongan_lokal_kerja_2)
@@ -8993,7 +8993,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$umk_borongan_lokal_2->umk_packing*$request->hasil_kerja_2[$key];
-                
+
                 if ($request->hasil_kerja_2[$key]) {
                     $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$request->hasil_kerja_2[$key];
                     $hasil_kerja_2 = $umk_borongan_lokal_2->umk_las_tepi*$request->hasil_kerja_2[$key];
@@ -9037,7 +9037,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$umk_borongan_lokal_3->umk_packing*$request->hasil_kerja_3[$key];
-                
+
                 if ($request->hasil_kerja_3[$key]) {
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$request->hasil_kerja_3[$key];
                     $hasil_kerja_3 = $umk_borongan_lokal_3->umk_las_tepi*$request->hasil_kerja_3[$key];
@@ -9045,7 +9045,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.'0';
                     $hasil_kerja_3 = 0;
                 }
-            
+
                 if($request->lembur_kerja_3){
                     $lembur_3 = '3-y';
                     $hasil_lembur_3 = '1.5';
@@ -9081,7 +9081,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$umk_borongan_lokal_4->umk_packing*$request->hasil_kerja_4[$key];
-                
+
                 if ($request->hasil_kerja_4[$key]) {
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$request->hasil_kerja_4[$key];
                     $hasil_kerja_4 = $umk_borongan_lokal_4->umk_las_tepi*$request->hasil_kerja_4[$key];
@@ -9089,7 +9089,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.'0';
                     $hasil_kerja_4 = 0;
                 }
-            
+
                 if($request->lembur_kerja_4){
                     $lembur_4 = '4-y';
                     $hasil_lembur_4 = '1.5';
@@ -9125,7 +9125,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$umk_borongan_lokal_5->umk_packing*$request->hasil_kerja_5[$key];
-                
+
                 if ($request->hasil_kerja_5[$key]) {
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$request->hasil_kerja_5[$key];
                     $hasil_kerja_5 = $umk_borongan_lokal_5->umk_las_tepi*$request->hasil_kerja_5[$key];
@@ -9133,7 +9133,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.'0';
                     $hasil_kerja_5 = 0;
                 }
-            
+
                 if($request->lembur_kerja_5){
                     $lembur_5 = '5-y';
                     $hasil_lembur_5 = '1.5';
@@ -9164,7 +9164,7 @@ class PengerjaanController extends Controller
 
             $lemburs = '|'.$lembur_1.'|'.$lembur_2.'|'.$lembur_3.'|'.$lembur_4.'|'.$lembur_5;
             $hasil_upah_dasar = $hasil_kerja_1+$hasil_kerja_2+$hasil_kerja_3+$hasil_kerja_4+$hasil_kerja_5;
-            
+
             $penjumlahan_lembur = round($total_hasil_lembur_1+$total_hasil_lembur_2+$total_hasil_lembur_3+$total_hasil_lembur_4+$total_hasil_lembur_5);
             // dd($hasil_upah_dasar);
             $karyawan_pengerjaan->update([
@@ -9227,7 +9227,7 @@ class PengerjaanController extends Controller
         // dd($data['new_data_pengerjaan']);
 
         $data['pengerjaans'] = $this->pengerjaan->where('operator_karyawan_id',$data['karyawan']['id'])->where('kode_pengerjaan',$kode_pengerjaan)->get();
-        
+
         $data['upah'] = array();
 
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
@@ -9412,7 +9412,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-26";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
@@ -9458,8 +9458,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -9573,7 +9573,7 @@ class PengerjaanController extends Controller
         // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
         // // }
         // else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
@@ -9599,12 +9599,12 @@ class PengerjaanController extends Controller
 
         $input['upah_dasar'] = $request->upah_dasar;
         $input['upah_makan'] = $request->upah_makan;
-        
+
         $input['uang_makan'] = $request->uang_makan;
         $input['plus_1'] = $request->plus_1."|".$request->keterangan_plus_1;
         $input['plus_2'] = $request->plus_2."|".$request->keterangan_plus_2;
         $input['plus_3'] = $request->plus_3."|".$request->keterangan_plus_3;
-        
+
         $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
@@ -9787,7 +9787,7 @@ class PengerjaanController extends Controller
                                                     ->where('pengerjaan.kode_pengerjaan',$kode_pengerjaan)
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
-        
+
         foreach ($data['karyawan_pengerjaans'] as $key => $karyawan_pengerjaan) {
             // dd($request->umk_borongan_lokal_kerja_1);
             if ($request->umk_borongan_lokal_kerja_1) {
@@ -9797,7 +9797,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_1 = $umk_borongan_lokal_1->id.'|'.$umk_borongan_lokal_1->umk_packing*$request->hasil_kerja_1[$key];
-                
+
                 // if ($request->hasil_kerja_1[$key]) {
                 // }
 
@@ -9825,7 +9825,7 @@ class PengerjaanController extends Controller
                 }else{
                     $total_jam_1 = '0';
                 }
-                
+
             }else{
                 $hasil_pengerjaan_1 = '0'.'|'.'0';
                 $lembur_1 = '1-n';
@@ -9838,7 +9838,7 @@ class PengerjaanController extends Controller
             $total_hasil_lembur_1 = $total_upah_lembur_1;
 
             // dd($hasil_pengerjaan_1);
-            
+
             if ($request->umk_borongan_lokal_kerja_2) {
                 $umk_borongan_lokal_2 = $this->umkBoronganAmbri->select('id','jenis_produk','umk_ambri')
                                                         ->where('id',$request->umk_borongan_lokal_kerja_2)
@@ -9846,7 +9846,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$umk_borongan_lokal_2->umk_packing*$request->hasil_kerja_2[$key];
-                
+
                 if ($request->hasil_kerja_2[$key]) {
                     $hasil_pengerjaan_2 = $umk_borongan_lokal_2->id.'|'.$request->hasil_kerja_2[$key];
                     $hasil_kerja_2 = $umk_borongan_lokal_2->umk_ambri*$request->hasil_kerja_2[$key];
@@ -9890,7 +9890,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$umk_borongan_lokal_3->umk_packing*$request->hasil_kerja_3[$key];
-                
+
                 if ($request->hasil_kerja_3[$key]) {
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.$request->hasil_kerja_3[$key];
                     $hasil_kerja_3 = $umk_borongan_lokal_3->umk_ambri*$request->hasil_kerja_3[$key];
@@ -9898,7 +9898,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_3 = $umk_borongan_lokal_3->id.'|'.'0';
                     $hasil_kerja_3 = 0;
                 }
-            
+
                 if($request->lembur_kerja_3){
                     $lembur_3 = '3-y';
                     $hasil_lembur_3 = '1.5';
@@ -9934,7 +9934,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$umk_borongan_lokal_4->umk_packing*$request->hasil_kerja_4[$key];
-                
+
                 if ($request->hasil_kerja_4[$key]) {
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.$request->hasil_kerja_4[$key];
                     $hasil_kerja_4 = $umk_borongan_lokal_4->umk_ambri*$request->hasil_kerja_4[$key];
@@ -9942,7 +9942,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_4 = $umk_borongan_lokal_4->id.'|'.'0';
                     $hasil_kerja_4 = 0;
                 }
-            
+
                 if($request->lembur_kerja_4){
                     $lembur_4 = '4-y';
                     $hasil_lembur_4 = '1.5';
@@ -9978,7 +9978,7 @@ class PengerjaanController extends Controller
                                                         ->first();
 
                 // $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$umk_borongan_lokal_5->umk_packing*$request->hasil_kerja_5[$key];
-                
+
                 if ($request->hasil_kerja_5[$key]) {
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.$request->hasil_kerja_5[$key];
                     $hasil_kerja_5 = $umk_borongan_lokal_5->umk_ambri*$request->hasil_kerja_5[$key];
@@ -9986,7 +9986,7 @@ class PengerjaanController extends Controller
                     $hasil_pengerjaan_5 = $umk_borongan_lokal_5->id.'|'.'0';
                     $hasil_kerja_5 = 0;
                 }
-            
+
                 if($request->lembur_kerja_5){
                     $lembur_5 = '5-y';
                     $hasil_lembur_5 = '1.5';
@@ -10017,9 +10017,9 @@ class PengerjaanController extends Controller
 
             $lemburs = '|'.$lembur_1.'|'.$lembur_2.'|'.$lembur_3.'|'.$lembur_4.'|'.$lembur_5;
             $hasil_upah_dasar = $hasil_kerja_1+$hasil_kerja_2+$hasil_kerja_3+$hasil_kerja_4+$hasil_kerja_5;
-            
+
             $penjumlahan_lembur = round($total_hasil_lembur_1+$total_hasil_lembur_2+$total_hasil_lembur_3+$total_hasil_lembur_4+$total_hasil_lembur_5);
-            
+
             // dd($hasil_upah_dasar);
             $karyawan_pengerjaan->update([
                 'hasil_kerja_1' => $hasil_pengerjaan_1,
@@ -10081,7 +10081,7 @@ class PengerjaanController extends Controller
         // dd($data['new_data_pengerjaan']);
 
         $data['pengerjaans'] = $this->pengerjaan->where('operator_karyawan_id',$data['karyawan']['id'])->where('kode_pengerjaan',$kode_pengerjaan)->get();
-        
+
         $data['upah'] = array();
 
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
@@ -10267,7 +10267,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-26";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
@@ -10313,8 +10313,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -10428,7 +10428,7 @@ class PengerjaanController extends Controller
         // //     $data['total_potongan_tk']=$data['pengerjaan_weekly']['tunjangan_kehadiran'];
         // // }
         // else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
@@ -10454,12 +10454,12 @@ class PengerjaanController extends Controller
 
         $input['upah_dasar'] = $request->upah_dasar;
         $input['upah_makan'] = $request->upah_makan;
-        
+
         $input['uang_makan'] = $request->uang_makan;
         $input['plus_1'] = $request->plus_1."|".$request->keterangan_plus_1;
         $input['plus_2'] = $request->plus_2."|".$request->keterangan_plus_2;
         $input['plus_3'] = $request->plus_3."|".$request->keterangan_plus_3;
-        
+
         $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
@@ -10773,7 +10773,7 @@ class PengerjaanController extends Controller
         //                                                     ->select('tanggal')
         //                                                     ->where('nik',$nik)
         //                                                     ->first();
-                                                            
+
         $awal  = new DateTime($data['karyawan_harian']->tanggal);
         $akhir = new DateTime(); // Waktu sekarang
         $diff  = $awal->diff($akhir);
@@ -10821,7 +10821,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-26";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
@@ -10868,8 +10868,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -10986,7 +10986,7 @@ class PengerjaanController extends Controller
         // //     $data['total_potongan_tk']=$data['pengerjaan_harian_weekly']['tunjangan_kerja'];
         // // }
         // else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
@@ -10999,7 +10999,7 @@ class PengerjaanController extends Controller
         // $exp_tgl_akhir = explode("-",$exp_tanggal[$a]);
         // $explode_posting = explode("-",$data['new_data_pengerjaan']['date']);
         // // dd($exp_tgl_awal);
-        // for ($b=1;$b<=$a;$b++) { 
+        // for ($b=1;$b<=$a;$b++) {
         //     $exp_per_tanggal = explode("-",$exp_tanggal[$b]);
         //     // dd($exp_per_tanggal);
         //     $m_date=$exp_per_tanggal[1];
@@ -11030,7 +11030,7 @@ class PengerjaanController extends Controller
         //         $jk_per_nik = strtotime($get_km->jam_keluar);
         //         $jd_per_nik = strtotime($get_km->jam_datang);
         //         $ist_awal_per_nik = strtotime($get_km->jam_istirahat);
-        //         $ist_akhir_per_nik = strtotime($get_km->jam_istirahat);					
+        //         $ist_akhir_per_nik = strtotime($get_km->jam_istirahat);
         //         $assembly_istirahat_akhir = explode(":", $get_km->jam_istirahat);
         //         $ist_akhir_per_nik = strtotime($assembly_istirahat_akhir[0].":59:59");
         //         if($jk_per_nik >= $ist_awal_per_nik && $jk_per_nik <= $ist_akhir_per_nik) $jk_per_nik = strtotime("13:00:00");
@@ -11046,7 +11046,7 @@ class PengerjaanController extends Controller
         //     }
         //     $total_ijin=$jam_ijin+$menit_ijin;
         //     // dd($total_ijin);
-            
+
         //     //Terlambat - Pribadi
         //     $get_terlambat_per_tanggals = PresensiInfo::where('pin',$data['karyawan_harian']['pin'])
         //                                             ->where('scan_date','LIKE',"%$tgl_digunakan%")
@@ -11072,8 +11072,8 @@ class PengerjaanController extends Controller
         //         $menit_terlambat=0;
         //     }
 		// 	$total_terlambat=$jam_terlambat+$menit_terlambat;
-            
-		// 	//9	Pulang Awal - Pribadi & 10	Pulang Awal - Sakit			
+
+		// 	//9	Pulang Awal - Pribadi & 10	Pulang Awal - Sakit
         //     $get_pulang_awal_per_tanggal = PresensiInfo::where('pin',$data['karyawan_harian']['pin'])
         //                                             ->where('scan_date','LIKE',"%$tgl_digunakan%")
         //                                             ->where('status',9)
@@ -11086,7 +11086,7 @@ class PengerjaanController extends Controller
         //         if (mb_ereg("@",$get_pulang_awal_per_tanggal->keterangan)) {
         //             $split_keterangan = explode("@", $get_pulang_awal_per_tanggal->keterangan);
 		// 			$penyesuaian_istirahat = explode(":", $split_keterangan[2]);
-        //             $penyesuaian_pulang = explode(":", $split_keterangan[3]); 
+        //             $penyesuaian_pulang = explode(":", $split_keterangan[3]);
 
         //             $jam_istirahat = $split_keterangan[2];
         //             $jam_istirahat = strtotime($jam_istirahat);
@@ -11102,7 +11102,7 @@ class PengerjaanController extends Controller
 		// 		// $pulang_dijam_istirahat=$total_ijin;
 		// 		// $pulang_dijam_istirahat=($jam_pulang-$jam_istirahat)/60;
         //         // dd($pulang_dijam_istirahat);
-        //         if(($jam_pulang <= $jam_istirahat)||($pulang_dijam_istirahat<=60))  
+        //         if(($jam_pulang <= $jam_istirahat)||($pulang_dijam_istirahat<=60))
         //         {
         //             $durasi = (($max_pulang-$jam_pulang)/60)-60;
         //         }else{
@@ -11217,7 +11217,7 @@ class PengerjaanController extends Controller
         //     // }
         //     // dd($jk_nik);
         // }else{
-        //     $jam_ijin=0; 
+        //     $jam_ijin=0;
         //     $menit_ijin=0;
         // }
         // $total_ijin=$jam_ijin+$menit_ijin;
@@ -11242,7 +11242,7 @@ class PengerjaanController extends Controller
         // }
 
         // $jam_kerja = $jam_kerja_seharusnya+$total_ijin;
-        
+
         // dd($jam_kerja);
         return view('backend.pengerjaan.harian.marketing.input_hasil_kerja_karyawan',$data);
     }
@@ -11271,13 +11271,13 @@ class PengerjaanController extends Controller
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
 
         $hitung_lembur = round((($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_1)*1.5)+(($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_2)*2));
-        
+
         $input['lembur'] = $hitung_lembur.'|'.$request->lembur_1.'|'.$request->lembur_2;
 
         $upah_dasar_weekly = 0;
         $hasil_kerja="";
 
-        for ($i=1; $i <=$request->data_for; $i++) { 
+        for ($i=1; $i <=$request->data_for; $i++) {
             $var_hasil_kerja="jam_kerja_".$i;
             $hasil_kerja=$hasil_kerja.$request[$var_hasil_kerja]."|";
             $upah_dasar_harian=$request[$var_hasil_kerja]*$request->upah_dasar;
@@ -11290,7 +11290,7 @@ class PengerjaanController extends Controller
         // $input['upah_dasar_harian'] = round($upah_dasar_harian);
         $input['upah_dasar_weekly'] = round($upah_dasar_weekly);
         // $input['upah_dasar_weekly'] = $upah_dasar_weekly;
-       
+
         if ($request->akhir_bulan == 'n') {
             $input['tunjangan_kerja'] = 0;
             $input['tunjangan_kehadiran'] = 0;
@@ -11546,7 +11546,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-26";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
@@ -11594,8 +11594,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -11703,7 +11703,7 @@ class PengerjaanController extends Controller
 
         $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
         ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
-        
+
         // dd($total_potongan_tk);
         if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
 
@@ -11714,7 +11714,7 @@ class PengerjaanController extends Controller
         // //     $data['total_potongan_tk']=$data['pengerjaan_harian_weekly']['tunjangan_kerja'];
         // // }
         // else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
         $data['total_potongan_tk']=$total_potongan_tk;
 
@@ -11746,7 +11746,7 @@ class PengerjaanController extends Controller
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
 
         $hitung_lembur = round((($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_1)*1.5)+(($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_2)*2));
-        
+
         $input['lembur'] = $hitung_lembur.'|'.$request->lembur_1.'|'.$request->lembur_2;
 
         // if (!$request->) {
@@ -11756,7 +11756,7 @@ class PengerjaanController extends Controller
         $upah_dasar_weekly = 0;
         $hasil_kerja="";
 
-        for ($i=1; $i <=$request->data_for; $i++) { 
+        for ($i=1; $i <=$request->data_for; $i++) {
             $var_hasil_kerja="jam_kerja_".$i;
             $hasil_kerja=$hasil_kerja.$request[$var_hasil_kerja]."|";
             // $upah_dasar_harian=$request[$var_hasil_kerja]*($request->upah_dasar);
@@ -11984,7 +11984,7 @@ class PengerjaanController extends Controller
         //                                                     ->select('tanggal')
         //                                                     ->where('nik',$nik)
         //                                                     ->first();
-                                                            
+
         $awal  = new DateTime($data['karyawan_harian']->tanggal);
         $akhir = new DateTime(); // Waktu sekarang
         $diff  = $awal->diff($akhir);
@@ -12025,7 +12025,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-26";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
@@ -12074,8 +12074,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -12195,7 +12195,7 @@ class PengerjaanController extends Controller
         //     $data['total_potongan_tk']=$data['pengerjaan_harian_weekly']['tunjangan_kerja'];
         // }
         // else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
@@ -12228,13 +12228,13 @@ class PengerjaanController extends Controller
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
 
         $hitung_lembur = round((($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_1)*1.5)+(($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_2)*2));
-        
+
         $input['lembur'] = $hitung_lembur.'|'.$request->lembur_1.'|'.$request->lembur_2;
 
         $upah_dasar_weekly = 0;
         $hasil_kerja="";
 
-        for ($i=1; $i <=$request->data_for; $i++) { 
+        for ($i=1; $i <=$request->data_for; $i++) {
             $var_hasil_kerja="jam_kerja_".$i;
             $hasil_kerja=$hasil_kerja.$request[$var_hasil_kerja]."|";
             $upah_dasar_harian=$request[$var_hasil_kerja]*$request->upah_dasar;
@@ -12458,7 +12458,7 @@ class PengerjaanController extends Controller
         //                                                     ->select('tanggal')
         //                                                     ->where('nik',$nik)
         //                                                     ->first();
-                                                            
+
         $awal  = new DateTime($data['karyawan_harian']->tanggal);
         $akhir = new DateTime(); // Waktu sekarang
         $diff  = $awal->diff($akhir);
@@ -12547,8 +12547,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -12664,7 +12664,7 @@ class PengerjaanController extends Controller
         // //     $data['total_potongan_tk']=$data['pengerjaan_harian_weekly']['tunjangan_kerja'];
         // // }
         // else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
@@ -12695,13 +12695,13 @@ class PengerjaanController extends Controller
         $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
 
         $hitung_lembur = round((($request->upah_dasar*25/173*$request->lembur_1)*1.5)+(($request->upah_dasar*25/173*$request->lembur_2)*2));
-        
+
         $input['lembur'] = $hitung_lembur.'|'.$request->lembur_1.'|'.$request->lembur_2;
 
         $upah_dasar_weekly = 0;
         $hasil_kerja="";
 
-        for ($i=1; $i <=$request->data_for; $i++) { 
+        for ($i=1; $i <=$request->data_for; $i++) {
             $var_hasil_kerja="jam_kerja_".$i;
             $hasil_kerja=$hasil_kerja.$request[$var_hasil_kerja]."|";
             $upah_dasar_harian=$request[$var_hasil_kerja]*$request->upah_dasar;
@@ -12925,7 +12925,7 @@ class PengerjaanController extends Controller
         //                                                     ->select('tanggal')
         //                                                     ->where('nik',$nik)
         //                                                     ->first();
-                                                            
+
         $awal  = new DateTime($data['karyawan_harian']->tanggal);
         $akhir = new DateTime(); // Waktu sekarang
         $diff  = $awal->diff($akhir);
@@ -12966,7 +12966,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-25";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-25";
@@ -13013,8 +13013,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -13129,7 +13129,7 @@ class PengerjaanController extends Controller
         // //     $data['total_potongan_tk']=$data['pengerjaan_harian_weekly']['tunjangan_kerja'];
         // // }
         // else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
@@ -13162,13 +13162,13 @@ class PengerjaanController extends Controller
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
 
         $hitung_lembur = round((($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_1)*1.5)+(($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_2)*2));
-        
+
         $input['lembur'] = $hitung_lembur.'|'.$request->lembur_1.'|'.$request->lembur_2;
 
         $upah_dasar_weekly = 0;
         $hasil_kerja="";
 
-        for ($i=1; $i <=$request->data_for; $i++) { 
+        for ($i=1; $i <=$request->data_for; $i++) {
             $var_hasil_kerja="jam_kerja_".$i;
             $hasil_kerja=$hasil_kerja.$request[$var_hasil_kerja]."|";
             $upah_dasar_harian=$request[$var_hasil_kerja]*$request->upah_dasar;
@@ -13392,7 +13392,7 @@ class PengerjaanController extends Controller
         //                                                     ->select('tanggal')
         //                                                     ->where('nik',$nik)
         //                                                     ->first();
-                                                            
+
         $awal  = new DateTime($data['karyawan_harian']->tanggal);
         $akhir = new DateTime(); // Waktu sekarang
         $diff  = $awal->diff($akhir);
@@ -13433,7 +13433,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-26";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
@@ -13480,8 +13480,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -13598,7 +13598,7 @@ class PengerjaanController extends Controller
         // //     $data['total_potongan_tk']=$data['pengerjaan_harian_weekly']['tunjangan_kerja'];
         // // }
         // else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
@@ -13631,13 +13631,13 @@ class PengerjaanController extends Controller
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
 
         $hitung_lembur = round((($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_1)*1.5)+(($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_2)*2));
-        
+
         $input['lembur'] = $hitung_lembur.'|'.$request->lembur_1.'|'.$request->lembur_2;
 
         $upah_dasar_weekly = 0;
         $hasil_kerja="";
 
-        for ($i=1; $i <=$request->data_for; $i++) { 
+        for ($i=1; $i <=$request->data_for; $i++) {
             $var_hasil_kerja="jam_kerja_".$i;
             $hasil_kerja=$hasil_kerja.$request[$var_hasil_kerja]."|";
             $upah_dasar_harian=$request[$var_hasil_kerja]*$request->upah_dasar;
@@ -13860,7 +13860,7 @@ class PengerjaanController extends Controller
         //                                                     ->select('tanggal')
         //                                                     ->where('nik',$nik)
         //                                                     ->first();
-                                                            
+
         $awal  = new DateTime($data['karyawan_harian']->tanggal);
         $akhir = new DateTime(); // Waktu sekarang
         $diff  = $awal->diff($akhir);
@@ -13901,7 +13901,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-26";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
@@ -13948,8 +13948,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -14065,7 +14065,7 @@ class PengerjaanController extends Controller
         // //     $data['total_potongan_tk']=$data['pengerjaan_harian_weekly']['tunjangan_kerja'];
         // // }
         // else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
@@ -14098,13 +14098,13 @@ class PengerjaanController extends Controller
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
 
         $hitung_lembur = round((($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_1)*1.5)+(($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_2)*2));
-        
+
         $input['lembur'] = $hitung_lembur.'|'.$request->lembur_1.'|'.$request->lembur_2;
 
         $upah_dasar_weekly = 0;
         $hasil_kerja="";
 
-        for ($i=1; $i <=$request->data_for; $i++) { 
+        for ($i=1; $i <=$request->data_for; $i++) {
             $var_hasil_kerja="jam_kerja_".$i;
             $hasil_kerja=$hasil_kerja.$request[$var_hasil_kerja]."|";
             $upah_dasar_harian=$request[$var_hasil_kerja]*$request->upah_dasar;
@@ -14264,7 +14264,7 @@ class PengerjaanController extends Controller
         $data['explode_tanggal_pengerjaans'] = explode('#',$data['new_data_pengerjaan']['tanggal']);
 
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
-        
+
         if (empty($data['karyawan_harian']['plus_1'])) {
             $plus_1=null;
             $ket_plus_1=null;
@@ -14328,7 +14328,7 @@ class PengerjaanController extends Controller
         //                                                     ->select('tanggal')
         //                                                     ->where('nik',$nik)
         //                                                     ->first();
-                                                            
+
         $awal  = new DateTime($data['karyawan_harian']->tanggal);
         $akhir = new DateTime(); // Waktu sekarang
         $diff  = $awal->diff($akhir);
@@ -14383,7 +14383,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-26";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
@@ -14431,8 +14431,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -14547,7 +14547,7 @@ class PengerjaanController extends Controller
         // //     $data['total_potongan_tk']=$data['pengerjaan_harian_weekly']['tunjangan_kerja'];
         // // }
         // else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
@@ -14580,13 +14580,13 @@ class PengerjaanController extends Controller
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
 
         $hitung_lembur = round((($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_1)*1.5)+(($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_2)*2));
-        
+
         $input['lembur'] = $hitung_lembur.'|'.$request->lembur_1.'|'.$request->lembur_2;
 
         $upah_dasar_weekly = 0;
         $hasil_kerja="";
 
-        for ($i=1; $i <=$request->data_for; $i++) { 
+        for ($i=1; $i <=$request->data_for; $i++) {
             $var_hasil_kerja="jam_kerja_".$i;
             $hasil_kerja=$hasil_kerja.$request[$var_hasil_kerja]."|";
             $upah_dasar_harian=$request[$var_hasil_kerja]*$request->upah_dasar;
@@ -14726,10 +14726,10 @@ class PengerjaanController extends Controller
                                                                 // dd($data);
 
         $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
-        
+
         foreach ($data['pengerjaan_supir_rit_dailys'] as $key => $pengerjaan_supir_rit_daily) {
             // $umk_rit = RitUMK::where('rit_posisi_id', $pengerjaan_supir_rit_daily->rit_posisi_id)->first();
-            
+
             $operator_karyawan_supir_rit = $this->ritKaryawan->where('nik',$pengerjaan_supir_rit_daily->nik)->where('status','y')->first();
             if ($request->rit[$key]) {
                 $hasil_kerja_1 = $request->hasil_kerja_1[$key].'|'.$request->rit[$key];
@@ -14800,7 +14800,7 @@ class PengerjaanController extends Controller
                                                             ->update([
                                                                 'total_hasil' => $operator_karyawan_supir_rit->upah_dasar,
                                                             ]);
-            
+
             $pengerjaan_supir_rit_daily->update([
                 'hasil_kerja_1' => $hasil_kerja_1,
                 'dpb' => $dpb,
@@ -14817,7 +14817,7 @@ class PengerjaanController extends Controller
         ]);
         // dd($request->all());
     }
-    
+
     public function hasil_kerja_supir_rit_input_karyawan($kode_pengerjaan, $nik, $month, $year)
     {
         $data['kode_pengerjaan'] = $kode_pengerjaan;
@@ -14828,9 +14828,9 @@ class PengerjaanController extends Controller
         $data['karyawan_supir_rit'] = $this->pengerjaanRitWeekly->select([
                                                           'pengerjaan_supir_rit_weekly.id as id',
                                                           'pengerjaan_supir_rit_weekly.karyawan_supir_rit_id as karyawan_supir_rit_id',
-                                                          'operator_supir_rit_karyawan.nik as nik',  
-                                                          'operator_supir_rit_karyawan.upah_dasar as upah_dasar',  
-                                                          'biodata_karyawan.nama as nama',  
+                                                          'operator_supir_rit_karyawan.nik as nik',
+                                                          'operator_supir_rit_karyawan.upah_dasar as upah_dasar',
+                                                          'biodata_karyawan.nama as nama',
                                                           'biodata_karyawan.pin as pin',
                                                           'biodata_karyawan.tanggal_masuk as tanggal',
                                                           'operator_supir_rit_karyawan.tunjangan_kerja_id as tunjangan_kerja_id',
@@ -14959,7 +14959,7 @@ class PengerjaanController extends Controller
             $bulan_kemarin="$thn_prev_active-12-26";
             $bulan_sekarang="$thn_current_active-01-26";
         }else{
-            $bln_prev_active = $month-1; 
+            $bln_prev_active = $month-1;
             $thn_prev_active = $year;
             $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
             $bulan_sekarang="$thn_current_active-$bln_current_active-26";
@@ -15007,8 +15007,8 @@ class PengerjaanController extends Controller
         $telat_1=0; //terlambat < 5 menit
         $telat_2=0; //terlambat > 5 menit < 15 menit
         $telat_3=0; //terlambat > 15 menit < 1 jam
-        $telat_4=0; //terlambat > 1 jam < 3 jam	
-        $telat_5=0; //terlambat > 3 jam	
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
         $data['telat_1'] = $telat_1;
         $data['telat_2'] = $telat_2;
         $data['telat_3'] = $telat_3;
@@ -15123,11 +15123,11 @@ class PengerjaanController extends Controller
         // if ($data['karyawan_supir_rit']['tunjangan_kehadiran'] > 0) {
         //     $data['total_potongan_tk']=$data['karyawan_supir_rit']['tunjangan_kehadiran'];
         // }else{
-        //     $data['total_potongan_tk']=$total_potongan_tk; 
+        //     $data['total_potongan_tk']=$total_potongan_tk;
         // }
 
         $data['total_potongan_tk']=$total_potongan_tk;
-        
+
         // dd($data);
 
         return view('backend.pengerjaan.supir_rit.input_karyawan',$data);
@@ -15165,7 +15165,7 @@ class PengerjaanController extends Controller
         $hitung_lembur = round((($request->upah_dasar_karyawan*$cutOff->tanggal/173*$request->lembur_1)*1.5)+(($request->upah_dasar_karyawan*$cutOff->tanggal/173*$request->lembur_2)*2));
 
         $input['lembur'] = $hitung_lembur.'|'.$request->lembur_1.'|'.$request->lembur_2;
-        
+
         $karyawan_supir_rit = $this->ritKaryawan->where('nik',$nik)->where('status','y')->first();
         if ($request->akhir_bulan == 'n') {
             $input['tunjangan_kerja'] = 0;
@@ -15176,7 +15176,7 @@ class PengerjaanController extends Controller
         }
         // $input['tunjangan_kehadiran'] = 75000-$request->pot_tunjangan_kehadiran;
         // $input['tunjangan_kerja'] = $karyawan_supir_rit->tunjangan_kerja->nominal;
-        
+
         // dd($input);
         $pengerjaan_supir_rit_weekly = $this->pengerjaanRitWeekly->where('karyawan_supir_rit_id',$request->karyawan_supir_rit_id)
                                                         ->where('kode_pengerjaan',$kode_pengerjaan)
@@ -15200,9 +15200,9 @@ class PengerjaanController extends Controller
         }
         // $pengerjaan_supir_rit_weekly = PengerjaanRITWeekly::select([
         //                                                     'pengerjaan_supir_rit_weekly.id as id',
-        //                                                     'operator_supir_rit_karyawan.nik as nik',  
-        //                                                     'biodata_karyawan.nama as nama',  
-        //                                                     'biodata_karyawan.pin as pin',  
+        //                                                     'operator_supir_rit_karyawan.nik as nik',
+        //                                                     'biodata_karyawan.nama as nama',
+        //                                                     'biodata_karyawan.pin as pin',
         //                                                     'pengerjaan_supir_rit_weekly.karyawan_supir_rit_id as karyawan_supir_rit_id',
         //                                                     'pengerjaan_supir_rit_weekly.total_hasil as total_hasil',
         //                                                     'pengerjaan_supir_rit_weekly.tunjangan_kerja as tunjangan_kerja',
@@ -15222,7 +15222,7 @@ class PengerjaanController extends Controller
         //                                                 ->where('operator_supir_rit_karyawan.nik',$nik)
         //                                                 ->where('pengerjaan_supir_rit_weekly.kode_pengerjaan',$kode_pengerjaan)
         //                                                 ->update($input);
-        
+
         // return 'Success';
     }
 
