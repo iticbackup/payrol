@@ -447,7 +447,7 @@ class LaporanController extends Controller
         $baris_akhir = $data['pengerjaan_harians']->count()+10;
         // dd($data);
         $data['cut_off'] = $this->cutOff;
-        return view('backend.laporan.harian.excel_laporan_harian',$data);
+        // return view('backend.laporan.harian.excel_laporan_harian',$data);
         $document_name= str_replace(array("/", "\\", ":", "*", "?", "«", "<", ">", "|"), "-", 'Laporan Harian '.$data['jenis_operator_detail_pengerjaan']['jenis_posisi_pekerjaan'].' '.Carbon::parse($exp_tgl_awal[0] . '-' . $exp_tgl_awal[1] . '-' . $exp_tgl_awal[2])->isoFormat('D MMMM').' sd '.Carbon::parse($exp_tgl_akhir[0] . '-' . $exp_tgl_akhir[1] . '-' . $exp_tgl_akhir[2])->isoFormat('D MMMM YYYY').'.xlsx');
 
         return Excel::download(new LaporanHarianExport($id_jenis_pekerjaan,$id,$kode_pengerjaan,$baris_akhir), $document_name);
