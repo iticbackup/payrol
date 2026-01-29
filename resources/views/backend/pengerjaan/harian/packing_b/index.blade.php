@@ -45,7 +45,9 @@
                         <i class="far fa-check-circle text-success"></i>
                         @endif
                     </h5>
+                    @if ($new_data_pengerjaan->status == 'y')
                     <a href="{{ route('hasil_kerja.packingB.tambah_karyawan',['id' => $jenis_operator_detail_pekerjaan->jenis_operator_detail_id, 'kode_pengerjaan' => $new_data_pengerjaan->kode_pengerjaan ]) }}" class="btn btn-primary">Tambah Karyawan</a>
+                    @endif
                 </div>
                 <div class="card-body">
                     <div class="table-container">
