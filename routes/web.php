@@ -225,6 +225,8 @@ Route::group(['middleware' => 'auth'], function () {
             });
             Route::prefix('supir_rit')->group(function () {
                 Route::get('{kode_pengerjaan}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_supir_rit'])->name('hasil_kerja.supir_rit');
+                Route::get('{kode_pengerjaan}/tambah_karyawan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_supir_rit_tambah_karyawan'])->name('hasil_kerja.supir_rit.karyawan');
+                Route::post('{kode_pengerjaan}/tambah_karyawan/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_supir_rit_tambah_karyawan_simpan'])->name('hasil_kerja.supir_rit.karyawan.simpan');
                 Route::get('{id}/{kode_pengerjaan}/tambah_karyawan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_supir_rit_tambah_karyawan'])->name('hasil_kerja.supir_rit.tambah_karyawan');
                 // Route::post('{id}/{kode_pengerjaan}/tambah_karyawan/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_tambah_karyawan_simpan'])->name('hasil_kerja.supir_rit.tambah_karyawan.simpan');
                 Route::get('{kode_pengerjaan}/{tanggal}/input', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_supir_rit_input'])->name('hasil_kerja.supir_rit.input');

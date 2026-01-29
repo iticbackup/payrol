@@ -52,6 +52,7 @@
                             <i class="far fa-check-circle text-success"></i>
                         @endif
                     </h5>
+                    <a href="{{ route('hasil_kerja.supir_rit.karyawan',['kode_pengerjaan' => $new_data_pengerjaan->kode_pengerjaan]) }}" class="btn btn-primary">Tambah Pekerja</a>
                 </div>
                 <div class="card-body">
                     <div class="table-container">

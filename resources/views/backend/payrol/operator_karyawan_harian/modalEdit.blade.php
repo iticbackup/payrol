@@ -16,10 +16,16 @@
                             <input type="text" class="form-control buat_nik_karyawan" id="edit_nik" name="edit_nik" placeholder="NIK Karyawan">
                         </div>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-4">
                         <div class="mb-3">
                             <label class="form-label">Nama Karyawan</label>
                             <input type="text" class="form-control buat_nama_karyawan" name="edit_nama_karyawan" placeholder="Nama Karyawan" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Masa Kerja</label>
+                            <div id="edit_masa_kerja"></div>
                         </div>
                     </div>
                     <div class="col-md-2">

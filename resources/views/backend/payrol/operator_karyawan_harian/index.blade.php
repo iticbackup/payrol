@@ -52,6 +52,7 @@
                                 <th>Jenis Operator</th>
                                 <th>Golongan Tunjangan Kerja</th>
                                 <th>Nominal Tunjangan Kerja</th>
+                                <th>Upah Dasar</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -116,6 +117,10 @@
                 {
                     data: 'nominal_tunjangan_kerja',
                     name: 'nominal_tunjangan_kerja'
+                },
+                {
+                    data: 'upah_dasar',
+                    name: 'upah_dasar'
                 },
                 {
                     data: 'status',
@@ -242,6 +247,8 @@
                     $('#edit_upah_dasar').val(result.data.upah_dasar);
                     $('#edit_tunjangan_kerja_id').val(result.data.tunjangan_kerja_id);
                     $('#edit_status').val(result.data.status);
+
+                    document.getElementById('edit_masa_kerja').innerHTML = result.data.masa_kerja;
 
                     $('.modalEdit').modal('show');
                 },

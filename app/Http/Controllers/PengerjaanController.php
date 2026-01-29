@@ -10600,6 +10600,7 @@ class PengerjaanController extends Controller
 
     public function hasil_kerja_harian_marketing($id, $kode_pengerjaan)
     {
+        // dd(1);
         if($id == 1){
             $kode_jenis_operator_detail = 'L';
         }
@@ -10624,33 +10625,39 @@ class PengerjaanController extends Controller
         //                                                         ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',12)
         //                                                         ->where('operator_harian_karyawan.status','y')
         //                                                         ->get();
-        $data['pengerjaan_harians'] = $this->pengerjaanHarian->select([
-                                                        'pengerjaan_harian.id as id',
-                                                        'pengerjaan_harian.operator_harian_karyawan_id as operator_harian_karyawan_id',
-                                                        'operator_harian_karyawan.nik as nik',
-                                                        'biodata_karyawan.nama as nama',
-                                                        'pengerjaan_harian.uang_makan as uang_makan',
-                                                        'pengerjaan_harian.upah_dasar_weekly as upah_dasar_weekly',
-                                                        'pengerjaan_harian.plus_1 as plus_1',
-                                                        'pengerjaan_harian.plus_2 as plus_2',
-                                                        'pengerjaan_harian.plus_3 as plus_3',
-                                                        'pengerjaan_harian.minus_1 as minus_1',
-                                                        'pengerjaan_harian.minus_2 as minus_2',
-                                                        'pengerjaan_harian.jht as jht',
-                                                        'pengerjaan_harian.bpjs_kesehatan as bpjs_kesehatan',
-                                                        'pengerjaan_harian.lembur as lembur',
-                                                        'pengerjaan_harian.hasil_kerja as hasil_kerja',
-                                                        'pengerjaan_harian.tunjangan_kerja as tunjangan_kerja',
-                                                        'pengerjaan_harian.tunjangan_kehadiran as tunjangan_kehadiran',
-                                                        'operator_harian_karyawan.tunjangan_kerja_id as tunjangan_kerja_id',
-                                                    ])
-                                                    ->leftJoin('operator_harian_karyawan','operator_harian_karyawan.id','=','pengerjaan_harian.operator_harian_karyawan_id')
-                                                    ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
-                                                    ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',12)
-                                                    ->where('kode_pengerjaan',$kode_pengerjaan)
-                                                    ->where('operator_harian_karyawan.status','y')
-                                                    ->orderBy('biodata_karyawan.nama','asc')
-                                                    ->get();
+        // dd($data);
+        $data['pengerjaan_harians'] = $this->pengerjaanHarian
+                                            ->leftJoin('operator_harian_karyawan','operator_harian_karyawan.id','=','pengerjaan_harian.operator_harian_karyawan_id')
+                                            ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
+                                            ->where('kode_pengerjaan',$kode_pengerjaan)
+                                            ->get();
+        // $data['pengerjaan_harians'] = $this->pengerjaanHarian->select([
+        //                                                 'pengerjaan_harian.id as id',
+        //                                                 'pengerjaan_harian.operator_harian_karyawan_id as operator_harian_karyawan_id',
+        //                                                 'operator_harian_karyawan.nik as nik',
+        //                                                 'biodata_karyawan.nama as nama',
+        //                                                 'pengerjaan_harian.uang_makan as uang_makan',
+        //                                                 'pengerjaan_harian.upah_dasar_weekly as upah_dasar_weekly',
+        //                                                 'pengerjaan_harian.plus_1 as plus_1',
+        //                                                 'pengerjaan_harian.plus_2 as plus_2',
+        //                                                 'pengerjaan_harian.plus_3 as plus_3',
+        //                                                 'pengerjaan_harian.minus_1 as minus_1',
+        //                                                 'pengerjaan_harian.minus_2 as minus_2',
+        //                                                 'pengerjaan_harian.jht as jht',
+        //                                                 'pengerjaan_harian.bpjs_kesehatan as bpjs_kesehatan',
+        //                                                 'pengerjaan_harian.lembur as lembur',
+        //                                                 'pengerjaan_harian.hasil_kerja as hasil_kerja',
+        //                                                 'pengerjaan_harian.tunjangan_kerja as tunjangan_kerja',
+        //                                                 'pengerjaan_harian.tunjangan_kehadiran as tunjangan_kehadiran',
+        //                                                 'operator_harian_karyawan.tunjangan_kerja_id as tunjangan_kerja_id',
+        //                                             ])
+        //                                             ->leftJoin('operator_harian_karyawan','operator_harian_karyawan.id','=','pengerjaan_harian.operator_harian_karyawan_id')
+        //                                             ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
+        //                                             ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',12)
+        //                                             ->where('kode_pengerjaan',$kode_pengerjaan)
+        //                                             ->where('operator_harian_karyawan.status','y')
+        //                                             ->orderBy('biodata_karyawan.nama','asc')
+        //                                             ->get();
         // dd($data['pengerjaan_harians']);
         return view('backend.pengerjaan.harian.marketing.index',$data);
     }
@@ -15224,6 +15231,132 @@ class PengerjaanController extends Controller
         //                                                 ->update($input);
 
         // return 'Success';
+    }
+
+    public function hasil_kerja_supir_rit_tambah_karyawan($kode_pengerjaan)
+    {
+        $data['kode_pengerjaan'] = $kode_pengerjaan;
+        $data['karyawan_supir_rits'] = $this->ritKaryawan->with('pengerjaanSupirRit','biodata_karyawan')
+                                                        // ->whereHas('pengerjaanSupirRit', function($query) use($kode_pengerjaan){
+                                                        //     $query->where('kode_pengerjaan',$kode_pengerjaan);
+                                                        // })
+                                                        ->where('status','y')
+                                                        ->get();
+                                                        // dd($data);
+        return view('backend.pengerjaan.supir_rit.tambah_karyawan',$data);
+    }
+
+    public function hasil_kerja_supir_rit_tambah_karyawan_simpan(Request $request, $kode_pengerjaan)
+    {
+        $new_data_pengerjaan = $this->newDataPengerjaan->select('tanggal')->where('kode_pengerjaan',$kode_pengerjaan)->first();
+        
+        $explode_tanggal = explode('#',$new_data_pengerjaan->tanggal);
+        $filter_explode_tanggal = array_filter($explode_tanggal);
+        // dd($filter_explode_tanggal);
+        foreach ($filter_explode_tanggal as $key => $tanggal) {
+            $tanggal_bulans = explode('-',$tanggal);
+            // dd()
+            $explode_tanggal_bulans[] = '#'.$tanggal_bulans[2].'-'.$tanggal_bulans[1].'-'.$tanggal_bulans[0];
+            // $explode_tanggal_bulans[] = '#'.str_replace('0','',$tanggal_bulans[0]).str_replace('0','',$tanggal_bulans[1]);
+        }
+        $hasil_convert_tanggal_bulan = implode($explode_tanggal_bulans);
+        // dd($hasil_convert_tanggal_bulan);
+        $explode_tanggal_pengerjaan = explode("#",$hasil_convert_tanggal_bulan);
+        $hasil_export_tanggal_pengerjaan = array_filter($explode_tanggal_pengerjaan);
+
+        // $ritKaryawans = $this->ritKaryawan->with('pengerjaanSupirRit','biodata_karyawan')->where('status','y')->get();
+
+        // foreach ($ritKaryawans as $key => $ritKaryawan) {
+        //     // dd($ritKaryawan);
+        //     if ($ritKaryawan->) {
+        //         # code...
+        //     }
+        // }
+        $data_checkbox = $request['checkbox'];
+
+        // dd($hasil_export_tanggal_pengerjaan);
+
+        foreach ($data_checkbox as $key => $checkbox) {
+            // dd($checkbox);
+            for ($i=1; $i <=count($explode_tanggal_bulans); $i++) {
+                $pengerjaan_supir_rit_dailys = $this->pengerjaanRitHarian->orderBy('id','desc')->first();
+                $no = 0;
+                $number_id = $no+1;
+                if (empty($pengerjaan_supir_rit_dailys)) {
+                    // dd('OK1');
+                    $pengerjaan_supir_rit_daily = new PengerjaanRITHarian();
+                    $input_rit_daily['id'] = $number_id;
+                    $input_rit_daily['kode_pengerjaan'] = $kode_pengerjaan;
+                    $input_rit_daily['kode_payrol'] = $kode_pengerjaan;
+                    $input_rit_daily['karyawan_supir_rit_id'] = $checkbox;
+                    $input_rit_daily['tanggal_pengerjaan'] = $hasil_export_tanggal_pengerjaan[$i];
+                    $pengerjaan_supir_rit_daily->create($input_rit_daily);
+                }else{
+                    // dd($hasil_export_tanggal_pengerjaan[$i]);
+                    $input_rit_daily['id'] = $pengerjaan_supir_rit_dailys->id+1;
+                    $input_rit_daily['kode_pengerjaan'] = $kode_pengerjaan;
+                    $input_rit_daily['kode_payrol'] = $kode_pengerjaan;
+                    $input_rit_daily['karyawan_supir_rit_id'] = $checkbox;
+                    $input_rit_daily['tanggal_pengerjaan'] = Carbon::create($hasil_export_tanggal_pengerjaan[$i])->format('Y-m-d');
+                    $pengerjaan_supir_rit_dailys->create($input_rit_daily);
+                }
+                $no++;
+            }
+            // for ($i=1; $i <=count($explode_tanggal_bulans); $i++) {
+            //     $pengerjaan_rit_harians = $this->pengerjaanRitHarian->orderBy('id','desc')->first();
+            //     $no = 0;
+            //     $number_id = $no+1;
+            //     if (empty($pengerjaan_rit_harians)) {
+            //         $input_rit_daily['id'] = $pengerjaan_rit_harians->id+1;
+            //         $input_rit_daily['kode_pengerjaan'] = $kode_pengerjaan;
+            //         $input_rit_daily['kode_payrol'] = $kode_pengerjaan;
+            //         $input_rit_daily['karyawan_supir_rit_id'] = $checkbox;
+            //         $input_rit_daily['tanggal_pengerjaan'] = $hasil_export_tanggal_pengerjaan[$i];
+            //         dd($input_rit_daily);
+            //         $pengerjaan_supir_rit_daily = $this->pengerjaanRitHarian->create($input_rit_daily);
+            //         // $no++;
+            //     }else{
+            //         $input_rit_daily['id'] = $pengerjaan_supir_rit_dailys->id+1;
+            //         $input_rit_daily['kode_pengerjaan'] = $kode_pengerjaan;
+            //         $input_rit_daily['kode_payrol'] = $kode_pengerjaan;
+            //         $input_rit_daily['karyawan_supir_rit_id'] = $checkbox;
+            //         $input_rit_daily['tanggal_pengerjaan'] = $hasil_export_tanggal_pengerjaan[$i];
+            //         $pengerjaan_supir_rit_dailys->create($input_rit_daily);
+            //     }
+            //     $no++;
+            // }
+
+            $no = 0;
+            $number_id = $no+1;
+
+            $pengerjaan_supir_rit_weeklys = $this->pengerjaanRitWeekly->orderBy('id','desc')->first();
+            if (empty($pengerjaan_supir_rit_weeklys)) {
+                $pengerjaan_supir_rit_weekly = new PengerjaanRITWeekly();
+                $input_rit_weekly['id'] = $number_id;
+                $input_rit_weekly['kode_pengerjaan'] = $kode_pengerjaan;
+                $input_rit_weekly['kode_payrol'] = $kode_pengerjaan;
+                $input_rit_weekly['karyawan_supir_rit_id'] = $checkbox;
+                // $input_rit_weekly['tunjangan_kerja'] = $operator_karyawan_supir_rit->tunjangan_kerja->nominal;
+                $pengerjaan_supir_rit_weekly->create($input_rit_weekly);
+            }else{
+                $input_rit_weekly['id'] = $pengerjaan_supir_rit_weeklys->id+1;
+                $input_rit_weekly['kode_pengerjaan'] = $kode_pengerjaan;
+                $input_rit_weekly['kode_payrol'] = $kode_pengerjaan;
+                $input_rit_weekly['karyawan_supir_rit_id'] = $checkbox;
+                // $input_rit_weekly['tunjangan_kerja'] = $operator_karyawan_supir_rit->tunjangan_kerja->nominal;
+                $pengerjaan_supir_rit_weeklys->create($input_rit_weekly);
+            }
+
+            $no++;
+
+        }
+
+        return response()->json([
+            'success' => true,
+            'message_title' => 'Success',
+            'message_content' => 'Berhasil'
+        ]);
+        // return redirect()->route('hasil_kerja.supir_rit',['kode_pengerjaan' => $kode_pengerjaan]);
     }
 
     public function close_periode(){

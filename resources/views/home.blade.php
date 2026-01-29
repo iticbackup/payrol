@@ -18,6 +18,7 @@
     @endcomponent
 
     @php
+    // dd(env('APP_URL'));
         if (env('IS_PRODUCTION') == 'LIVE') {
             $color = 'success';
             $icon = 'mdi mdi-briefcase-check';
@@ -29,6 +30,7 @@
             $message_alert_title = 'PAYROL MODE TESTING';
             $message_alert = 'Aplikasi Payrol sekarang adalah mode <b>TESTING</b>. Silahkan input data dummy bila tidak sesuai dengan data tersebut.';
         }
+        
     @endphp
 
     <div class="row">

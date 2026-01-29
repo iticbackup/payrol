@@ -53,6 +53,7 @@
                                 <th>RIT Posisi</th>
                                 <th>Golongan Tunjangan Kerja</th>
                                 <th>Nominal Tunjangan Kerja</th>
+                                <th>Upah Dasar</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -118,6 +119,10 @@
                 {
                     data: 'nominal_tunjangan_kerja',
                     name: 'nominal_tunjangan_kerja'
+                },
+                {
+                    data: 'upah_dasar',
+                    name: 'upah_dasar'
                 },
                 {
                     data: 'status',

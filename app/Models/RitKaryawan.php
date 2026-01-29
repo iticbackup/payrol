@@ -38,4 +38,9 @@ class RitKaryawan extends Model
     {
         return $this->belongsTo(\App\Models\BiodataKaryawan::class, 'nik', 'nik');
     }
+
+    public function pengerjaanSupirRit()
+    {
+        return $this->belongsTo(\App\Models\PengerjaanRITWeekly::class, 'id', 'karyawan_supir_rit_id');
+    }
 }

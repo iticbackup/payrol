@@ -14,12 +14,17 @@ use App\Models\JenisOperatorDetail;
 use App\Models\JenisOperatorDetailPengerjaan;
 use App\Models\RitPosisi;
 
+use App\Models\BPJSJHT;
+use App\Models\BPJSKesehatan;
+use App\Models\CutOff;
+
 use App\Models\BiodataKaryawan;
 use App\Models\TunjanganKerja;
 
 use \Carbon\Carbon;
 use Validator;
 use DataTables;
+use DateTime;
 
 class OperatorKaryawanController extends Controller
 {
@@ -370,6 +375,13 @@ class OperatorKaryawanController extends Controller
                                     return $biodata_karyawan->nama;
                                 }
                             })
+                            ->addColumn('upah_dasar', function($row){
+                                if (empty($row->upah_dasar)) {
+                                    return '-';
+                                }else {
+                                    return 'Rp. '.number_format(floatval($row->upah_dasar),2,',','.');
+                                }
+                            })
                             ->addColumn('status', function($row){
                                 if ($row->status == 'y') {
                                     return '<span class="text-success">Aktif</span>';
@@ -467,13 +479,49 @@ class OperatorKaryawanController extends Controller
     public function karyawan_operator_harian_detail($id)
     {
         $karyawan_operator_harian = KaryawanOperatorHarian::find($id);
-        $biodata_karyawan = BiodataKaryawan::select('rekening')->where('nik',$karyawan_operator_harian->nik)->first();
+        $biodata_karyawan = BiodataKaryawan::select('rekening','tanggal_masuk')->where('nik',$karyawan_operator_harian->nik)->first();
         if(empty($karyawan_operator_harian)){
             return response()->json([
                 'success' => false,
                 'message' => 'Data tidak ditemukan'
             ]);
         }
+
+        $data['jhts'] = BPJSJHT::where('status','y')->get();
+        $data['bpjs_kesehatan'] = BPJSKesehatan::select('nominal')->where('status','y')->first();
+
+        $awal  = new DateTime($biodata_karyawan->tanggal_masuk);
+        $akhir = new DateTime(); // Waktu sekarang
+        $diff  = $awal->diff($akhir);
+
+        $data['masa_kerja'] = $diff->y.' Tahun '.$diff->m.' Bulan '.$diff->d.' Hari';
+        $data['masa_kerja_tahun'] = $diff->y;
+        $data['masa_kerja_hari'] = $diff->d;
+
+        $cutOff = CutOff::select('tanggal')->where('status','Y')->first();
+
+        $data['upah_dasar_karyawan'] = [];
+
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15 && $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
+                }
+            }
+        }
+
+        // dd($data);
+
         return response()->json([
             'success' => true,
             'data' => [
@@ -485,9 +533,11 @@ class OperatorKaryawanController extends Controller
                 'jenis_operator_detail_pekerjaan_id' => $karyawan_operator_harian->jenis_operator_detail_pekerjaan_id,
                 'tunjangan_kerja_id' => $karyawan_operator_harian->tunjangan_kerja_id,
                 'hari_kerja' => $karyawan_operator_harian->hari_kerja,
-                'upah_dasar' => $karyawan_operator_harian->upah_dasar,
+                // 'upah_dasar' => $karyawan_operator_harian->upah_dasar,
+                'upah_dasar' => $data['upah_dasar_karyawan'],
                 'jht' => $karyawan_operator_harian->jht,
                 'bpjs' => $karyawan_operator_harian->bpjs,
+                'masa_kerja' => $data['masa_kerja'],
                 'status' => $karyawan_operator_harian->status,
             ]
         ]);
@@ -632,6 +682,13 @@ class OperatorKaryawanController extends Controller
                             })
                             ->addColumn('rit_posisi_id', function($row){
                                 return $row->rit_posisi->kode_posisi.' - '.$row->rit_posisi->nama_posisi;
+                            })
+                            ->addColumn('upah_dasar', function($row){
+                                if (empty($row->upah_dasar)) {
+                                    return '-';
+                                }else {
+                                    return 'Rp. '.number_format(floatval($row->upah_dasar),2,',','.');
+                                }
                             })
                             ->addColumn('status', function($row){
                                 if ($row->status == 'y') {
