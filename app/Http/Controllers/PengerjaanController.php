@@ -10626,38 +10626,38 @@ class PengerjaanController extends Controller
         //                                                         ->where('operator_harian_karyawan.status','y')
         //                                                         ->get();
         // dd($data);
-        $data['pengerjaan_harians'] = $this->pengerjaanHarian
-                                            ->leftJoin('operator_harian_karyawan','operator_harian_karyawan.id','=','pengerjaan_harian.operator_harian_karyawan_id')
-                                            ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
-                                            ->where('kode_pengerjaan',$kode_pengerjaan)
-                                            ->get();
-        // $data['pengerjaan_harians'] = $this->pengerjaanHarian->select([
-        //                                                 'pengerjaan_harian.id as id',
-        //                                                 'pengerjaan_harian.operator_harian_karyawan_id as operator_harian_karyawan_id',
-        //                                                 'operator_harian_karyawan.nik as nik',
-        //                                                 'biodata_karyawan.nama as nama',
-        //                                                 'pengerjaan_harian.uang_makan as uang_makan',
-        //                                                 'pengerjaan_harian.upah_dasar_weekly as upah_dasar_weekly',
-        //                                                 'pengerjaan_harian.plus_1 as plus_1',
-        //                                                 'pengerjaan_harian.plus_2 as plus_2',
-        //                                                 'pengerjaan_harian.plus_3 as plus_3',
-        //                                                 'pengerjaan_harian.minus_1 as minus_1',
-        //                                                 'pengerjaan_harian.minus_2 as minus_2',
-        //                                                 'pengerjaan_harian.jht as jht',
-        //                                                 'pengerjaan_harian.bpjs_kesehatan as bpjs_kesehatan',
-        //                                                 'pengerjaan_harian.lembur as lembur',
-        //                                                 'pengerjaan_harian.hasil_kerja as hasil_kerja',
-        //                                                 'pengerjaan_harian.tunjangan_kerja as tunjangan_kerja',
-        //                                                 'pengerjaan_harian.tunjangan_kehadiran as tunjangan_kehadiran',
-        //                                                 'operator_harian_karyawan.tunjangan_kerja_id as tunjangan_kerja_id',
-        //                                             ])
-        //                                             ->leftJoin('operator_harian_karyawan','operator_harian_karyawan.id','=','pengerjaan_harian.operator_harian_karyawan_id')
-        //                                             ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
-        //                                             ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',12)
-        //                                             ->where('kode_pengerjaan',$kode_pengerjaan)
-        //                                             ->where('operator_harian_karyawan.status','y')
-        //                                             ->orderBy('biodata_karyawan.nama','asc')
-        //                                             ->get();
+        // $data['pengerjaan_harians'] = $this->pengerjaanHarian
+        //                                     ->leftJoin('operator_harian_karyawan','operator_harian_karyawan.id','=','pengerjaan_harian.operator_harian_karyawan_id')
+        //                                     ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
+        //                                     ->where('kode_pengerjaan',$kode_pengerjaan)
+        //                                     ->get();
+        $data['pengerjaan_harians'] = $this->pengerjaanHarian->select([
+                                                        'pengerjaan_harian.id as id',
+                                                        'pengerjaan_harian.operator_harian_karyawan_id as operator_harian_karyawan_id',
+                                                        'operator_harian_karyawan.nik as nik',
+                                                        'biodata_karyawan.nama as nama',
+                                                        'pengerjaan_harian.uang_makan as uang_makan',
+                                                        'pengerjaan_harian.upah_dasar_weekly as upah_dasar_weekly',
+                                                        'pengerjaan_harian.plus_1 as plus_1',
+                                                        'pengerjaan_harian.plus_2 as plus_2',
+                                                        'pengerjaan_harian.plus_3 as plus_3',
+                                                        'pengerjaan_harian.minus_1 as minus_1',
+                                                        'pengerjaan_harian.minus_2 as minus_2',
+                                                        'pengerjaan_harian.jht as jht',
+                                                        'pengerjaan_harian.bpjs_kesehatan as bpjs_kesehatan',
+                                                        'pengerjaan_harian.lembur as lembur',
+                                                        'pengerjaan_harian.hasil_kerja as hasil_kerja',
+                                                        'pengerjaan_harian.tunjangan_kerja as tunjangan_kerja',
+                                                        'pengerjaan_harian.tunjangan_kehadiran as tunjangan_kehadiran',
+                                                        'operator_harian_karyawan.tunjangan_kerja_id as tunjangan_kerja_id',
+                                                    ])
+                                                    ->leftJoin('operator_harian_karyawan','operator_harian_karyawan.id','=','pengerjaan_harian.operator_harian_karyawan_id')
+                                                    ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
+                                                    ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',12)
+                                                    ->where('kode_pengerjaan',$kode_pengerjaan)
+                                                    ->where('operator_harian_karyawan.status','y')
+                                                    ->orderBy('biodata_karyawan.nama','asc')
+                                                    ->get();
         // dd($data['pengerjaan_harians']);
         return view('backend.pengerjaan.harian.marketing.index',$data);
     }

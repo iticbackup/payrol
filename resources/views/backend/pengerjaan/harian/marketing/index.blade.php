@@ -255,6 +255,8 @@
                                                 $hasil_minus_2 = $explode_minus_2[0];
                                             }
                                         }
+
+                                        // dd($hasil_minus_1+$hasil_minus_2);
     
                                         $total_potongan = $hasil_minus_1+$hasil_minus_2+$pengerjaan_harian->jht+$pengerjaan_harian->bpjs_kesehatan;
     
