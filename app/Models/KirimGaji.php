@@ -52,4 +52,14 @@ class KirimGaji extends Model
     {
         return $this->belongsTo(\App\Models\PengerjaanRITWeekly::class, 'pengerjaan_id', 'id');
     }
+
+    public function biodata_karyawan()
+    {
+        return $this->belongsTo(\App\Models\BiodataKaryawan::class, 'nik', 'nik');
+    }
+
+    public function new_data_pengerjaan()
+    {
+        return $this->belongsTo(\App\Models\NewDataPengerjaan::class, 'kode_pengerjaan', 'kode_pengerjaan');
+    }
 }

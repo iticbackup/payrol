@@ -30,9 +30,8 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="alert alert-danger border-0" role="alert">
-                <strong>Informasi!</strong> Sistem Slip Gaji Elektronik dilakukan mengirim email dari sistem Payroll maksimal <b>50</b> ke penerima dan diberi waktu jeda maksimal 15 Menit agar tidak terjadi overload.
-                Jika Sudah lebih dari 15 menit bisa dilakukan pengiriman kembali.
+            <div class="alert alert-info border-0" role="alert">
+                <strong>Informasi!</strong> Sistem Slip Gaji Elektronik Dikirim Secara Otomatis Oleh Sistem dan Akan Dikirim Setelah Melakukan Close Period.
             </div>
             <form id="kirim_slip" method="POST" class="card" enctype="multipart/form-data">
                 @csrf
@@ -41,11 +40,11 @@
                         @if ($new_data_pengerjaan->status == 'n')
                         <i class="far fa-check-circle text-success"></i>
                         @endif
-                        <button type="submit" class="btn btn-primary">
+                        {{-- <button type="submit" class="btn btn-primary">
                             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512">
                                 <path fill="currentColor" d="m476.59 227.05l-.16-.07L49.35 49.84A23.56 23.56 0 0 0 27.14 52A24.65 24.65 0 0 0 16 72.59v113.29a24 24 0 0 0 19.52 23.57l232.93 43.07a4 4 0 0 1 0 7.86L35.53 303.45A24 24 0 0 0 16 327v113.31A23.57 23.57 0 0 0 26.59 460a23.94 23.94 0 0 0 13.22 4a24.55 24.55 0 0 0 9.52-1.93L476.4 285.94l.19-.09a32 32 0 0 0 0-58.8" />
                             </svg> Kirim Gaji
-                        </button>
+                        </button> --}}
                         <button type="button" class="btn" style="background-color: #FD8B51; color: black" onclick="window.location.href='{{ route('payrol.borongan.borongan_cek_email_slip_gaji',['kode_pengerjaan' => $new_data_pengerjaan->kode_pengerjaan ]) }}'">
                             <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 512 512">
                                 <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M320 96H88a40 40 0 0 0-40 40v240a40 40 0 0 0 40 40h334.73a40 40 0 0 0 40-40V239" />
@@ -511,6 +510,8 @@
                                             <span class="badge bg-primary">Belum Terkirim</span>
                                         @elseif($kirim_gaji->status == 'terkirim')
                                             <span class="badge bg-success">Terkirim</span>
+                                        @elseif($kirim_gaji->status == 'menunggu')
+                                            <span class="badge bg-warning">Menunggu Dikirim</span>
                                         @else
                                             <span class="badge bg-danger">Gagal Terkirim</span>
                                         @endif
@@ -525,8 +526,8 @@
                                 </tr>
                             @endforeach
                                 <tr>
-                                    <td colspan="4" class="text-center" style="font-weight: bold">Total Gaji</td>
-                                    <td style="font-weight: bold">{{ 'Rp. '.number_format(array_sum($total_all_gaji),0,',','.') }}</td>
+                                    <td colspan="5" class="text-end" style="font-weight: bold">Total Gaji</td>
+                                    <td colspan="3" style="font-weight: bold">{{ 'Rp. '.number_format(array_sum($total_all_gaji),0,',','.') }}</td>
                                 </tr>
                         </tbody>
                     </table>

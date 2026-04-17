@@ -193,15 +193,45 @@
                         // processData: false,
                         contentType: "application/json;  charset=utf-8",
                         cache: false,
+                        beforeSend: () => {
+                            let timerInterval;
+                            Swal.fire({
+                            title: "Waiting Process",
+                            html: "Sedang Proses Submit, Silahkan Tunggu.",
+                            // timer: 2000,
+                            showConfirmButton: false,
+                            timerProgressBar: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                            }
+                            }).then((result) => {
+                            // if (result.dismiss === Swal.DismissReason.timer) console.log("I was closed by the timer");
+                            });
+                        },
                         success: (result) => {
                             if(result.success != false){
-                                iziToast.success({
-                                    title: result.message_title,
-                                    message: result.message_content
-                                });
-                                table.ajax.reload();
+                                Swal.close();
+                                // iziToast.success({
+                                //     title: result.message_title,
+                                //     message: result.message_content
+                                // });
+                                Swal.fire(
+                                    result.message_title,
+                                    result.message_content,
+                                    'success'
+                                );
+                                
+                                table.ajax.reload(null, false);
                                 $('.modalBuat').modal('hide');
                             }else{
+                                Swal.close();
                                 iziToast.error({
                                     title: result.success,
                                     // message: result.error
@@ -209,6 +239,7 @@
                             }
                         },
                         error: function (request, status, error) {
+                            Swal.close();
                             iziToast.error({
                                 title: 'Error',
                                 message: error,

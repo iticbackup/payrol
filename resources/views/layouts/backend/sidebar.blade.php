@@ -89,6 +89,7 @@
                 <a href="{{ route('laporan') }}" class="{{ Request::is('laporan') ? 'active' : '' }}"><i class="mdi mdi-home"></i> Detail Laporan</a>
             </li> --}}
             {{-- <li class="menu-label mt-0">Laporan</li> --}}
+            
             <li>
                 <a href="javascript: void(0);"> <i data-feather="file-text"
                         class="align-self-center menu-icon"></i><span>Detail Laporan</span><span
@@ -104,6 +105,15 @@
                         <i class="ti-control-record"></i>Supir RIT</a>
                     </li>
                 </ul>
+            </li>
+            <li class="menu-label mt-0">THR</li>
+            <li class="{{ Request::is('payrol/thr/periode') ? 'active' : '' }}">
+                <a href="{{ route('laporan.thr') }}" class="{{ Request::is('payrol/thr') ? 'active' : '' }}"><i data-feather="file-text"
+                        class="align-self-center menu-icon"></i> THR Periode</a>
+            </li>
+            <li class="{{ Request::is('payrol/thr') ? 'active' : '' }}">
+                <a href="{{ route('laporan.thr') }}" class="{{ Request::is('payrol/thr') ? 'active' : '' }}"><i data-feather="file-text"
+                        class="align-self-center menu-icon"></i> Laporan THR</a>
             </li>
             @if (auth()->user()->roles == 1)
             <li class="menu-label mt-0">Company</li>

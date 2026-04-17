@@ -19,13 +19,21 @@ use App\Models\PengerjaanWeekly;
 use App\Models\PengerjaanHarian;
 use App\Models\PengerjaanRITHarian;
 use App\Models\PengerjaanRITWeekly;
+use App\Models\KirimGaji;
 
 use App\Models\CutOff;
+
+use App\Models\Thr;
+use App\Models\ThrDetail;
+use App\Models\ThrPercentase;
+
+use App\Models\BPJSKesehatan;
 
 use \Carbon\Carbon;
 use Validator;
 use DataTables;
 use Excel;
+use \Codedge\Fpdf\Fpdf\Fpdf;
 
 class LaporanController extends Controller
 {
@@ -534,4 +542,229 @@ class LaporanController extends Controller
         // return view('backend.laporan.supir_rit.excel_laporan_supir_rit',$data);
         return Excel::download(new LaporanSupirRitExport($kode_pengerjaan,$baris_akhir), 'Laporan Supir RIT '.Carbon::parse($exp_tgl_awal[0] . '-' . $exp_tgl_awal[1] . '-' . $exp_tgl_awal[2])->isoFormat('D MMMM').' sd '.Carbon::parse($exp_tgl_akhir[0] . '-' . $exp_tgl_akhir[1] . '-' . $exp_tgl_akhir[2])->isoFormat('D MMMM YYYY').'.xlsx');
     }
+
+    public function laporan_thr()
+    {
+        $data['periode_thrs'] = Thr::orderByDesc('tahun')->paginate(8);
+        return view('backend.laporan.thr.index',$data);
+    }
+
+    public function laporan_thr_periode($periode)
+    {
+        $data['periode'] = $periode;
+
+        $thr = Thr::select('periode','cut_off')->where('tahun',$periode)->first();
+
+        $explodeThr = explode(',',$thr->periode);
+
+        $data['list_karyawans'] = KirimGaji::with('biodata_karyawan')
+                                            ->select([
+                                                // 'kirim_slip_gaji.kode_pengerjaan as kode_pengerjaan',
+                                                'biodata_karyawan.nik as nik',
+                                                // 'biodata_karyawan.nama as nama',
+                                                'biodata_karyawan.id_departemen_bagian as id_departemen_bagian',
+                                                // 'nama_karyawan',
+                                                // \DB::select('SELECT "nominal_gaji" FROM kirim_slip_gaji WHERE nik="biodata_karyawan.nik"')
+                                                \DB::raw('SUM(kirim_slip_gaji.nominal_gaji) as nominal_gaji')
+                                            ])
+                                            ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','kirim_slip_gaji.nik')
+                                            // ->whereHas('biodata_karyawan', function($query){
+                                            //     $query->where('status_karyawan','!=','R')->orderBy('id','desc');
+                                            // })
+                                            ->where('biodata_karyawan.status_karyawan','!=','R')
+                                            ->where(function ($query) use($explodeThr) {
+                                                foreach ($explodeThr as $item) {
+                                                        $query->orWhere('kirim_slip_gaji.created_at', 'LIKE', '%'.$item.'%')
+                                                        // ->orderByDesc('kirim_slip_gaji.kode_pengerjaan')
+                                                    ;
+                                                }
+                                            })
+                                            ->where('kirim_slip_gaji.status','terkirim')
+                                            ->orwhere('biodata_karyawan.tanggal_resign','>=',$thr->cut_off)
+                                            ->groupBy('biodata_karyawan.nik','biodata_karyawan.id_departemen_bagian')
+                                            // ->orderBy('biodata_karyawan.nama','asc')
+                                            // ->limit(1)
+                                            ->get();
+
+                                            // dd($data['list_karyawans']);
+        $data['totalBulan'] = count($explodeThr);
+        $data['cut_off'] = Carbon::create($thr->cut_off);
+
+        $data['bpjsKesehatan'] = BPJSKesehatan::select('nominal')->where('status','y')->first();
+
+        return view('backend.laporan.thr.periodeThr',$data);
+
+    }
+
+    public function laporan_thr_slip_gaji($periode)
+    {
+        $pdf = new Fpdf('P', 'mm', 'A4');
+        $pdf->AddPage();
+        $pdf->SetFillColor(153,153,153);
+        $pdf->SetTextColor(255);
+        $pdf->SetDrawColor(0,0,0);
+        $pdf->SetLineWidth(.3);
+        $pdf->SetFont('Arial','B',8);
+        $pdf->SetFillColor(224,235,255);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('Arial','',8);
+
+        $no=0;
+        $pdf->SetFont('Arial','B',8);
+        $pdf->Cell(35,5,'TANGGAL GAJI','LT',0,'C');
+        $pdf->SetFont('Arial','',8);
+
+        $pdf->Output('Slip Gaji THR.pdf', "I");
+        exit;
+    }
+
+    public function laporan_thr_pengerjaan($kode_pengerjaan)
+    {
+        switch ($kode_pengerjaan) {
+            case 'PB':
+                $data['nama_pengerjaan'] = 'Borongan';
+                break;
+
+            case 'PH':
+                $data['nama_pengerjaan'] = 'Harian';
+                break;
+
+            case 'PS':
+                $data['nama_pengerjaan'] = 'Supir RIT';
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+
+        $data['periods'] = Thr::all();
+
+        $data['kode_pengerjaan'] = $kode_pengerjaan;
+
+        return view('backend.laporan.thr.pengerjaan.index',$data);
+    }
+
+    public function laporan_thr_pengerjaan_periode($kode_pengerjaan, $periode)
+    {
+        $data['periode'] = $periode;
+
+        switch ($kode_pengerjaan) {
+            case 'PB':
+                $data['nama_pengerjaan'] = 'Borongan';
+
+                $thr = Thr::select('periode','cut_off')->where('tahun',$periode)->first();
+                // dd($thr);
+                $explodeThr = explode(',',$thr->periode);
+                // dd($explodeThr);
+                $data['list_karyawans'] = KirimGaji::with('karyawan_operator')
+                                                    ->select([
+                                                        'biodata_karyawan.nik as nik',
+                                                        // 'nama_karyawan',
+                                                        \DB::raw('SUM(kirim_slip_gaji.nominal_gaji) as nominal_gaji')
+                                                    ])
+                                                    ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','kirim_slip_gaji.nik')
+                                                    // ->whereHas('karyawan_operator', function($query){
+                                                    //     $query->where('status','Y')->orderByDesc('id');
+                                                    // })
+                                                    // ->whereHas('biodata_karyawan', function($query){
+                                                    //     $query->where('status_karyawan','!=','R')->orderBy('id','desc');
+                                                    // })
+                                                    ->where('biodata_karyawan.status_karyawan','!=','R')
+                                                    ->where('kirim_slip_gaji.kode_pengerjaan','LIKE','%'.$kode_pengerjaan.'%')
+                                                    ->where(function ($query) use($explodeThr, $kode_pengerjaan) {
+                                                        foreach ($explodeThr as $item) {
+                                                                $query->orWhere('kirim_slip_gaji.created_at', 'LIKE', '%'.$item.'%')
+                                                                ->orderByDesc('kirim_slip_gaji.kode_pengerjaan')
+                                                            ;
+                                                        }
+                                                    })
+                                                    ->where('kirim_slip_gaji.status','terkirim')
+                                                    ->orWhere('biodata_karyawan.tanggal_resign','>=',$thr->cut_off)
+                                                    ->groupBy('biodata_karyawan.nik')
+                                                    ->get();
+
+                                                    // dd($data['list_karyawans']);
+                                        
+                break;
+
+            case 'PH':
+                $data['nama_pengerjaan'] = 'Harian';
+
+                $thr = Thr::select('periode','cut_off')->where('tahun',$periode)->first();
+                // dd($thr);
+                $explodeThr = explode(',',$thr->periode);
+                // dd($explodeThr);
+                $data['list_karyawans'] = KirimGaji::with('karyawan_operator_harian')
+                                                    ->select([
+                                                        'biodata_karyawan.nik as nik',
+                                                        // 'nama_karyawan',
+                                                        \DB::raw('SUM(kirim_slip_gaji.nominal_gaji) as nominal_gaji')
+                                                    ])
+                                                    ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','kirim_slip_gaji.nik')
+                                                    // ->whereHas('karyawan_operator_harian', function($query){
+                                                    //     $query->where('status','Y')->orderBy('id','desc');
+                                                    // })
+                                                    ->where('biodata_karyawan.status_karyawan','!=','R')
+                                                    ->where('kirim_slip_gaji.kode_pengerjaan','LIKE','%'.$kode_pengerjaan.'%')
+                                                    ->where(function ($query) use($explodeThr, $kode_pengerjaan) {
+                                                        foreach ($explodeThr as $item) {
+                                                                $query->orWhere('kirim_slip_gaji.created_at', 'LIKE', '%'.$item.'%')
+                                                                ->orderByDesc('kirim_slip_gaji.kode_pengerjaan')
+                                                            ;
+                                                        }
+                                                    })
+                                                    ->where('kirim_slip_gaji.status','terkirim')
+                                                    ->orWhere('biodata_karyawan.tanggal_resign','>=',$thr->cut_off)
+                                                    ->groupBy('biodata_karyawan.nik')
+                                                    ->get();
+                break;
+
+            case 'PS':
+                $data['nama_pengerjaan'] = 'Supir RIT';
+
+                $thr = Thr::select('periode','cut_off')->where('tahun',$periode)->first();
+                // dd($thr);
+                $explodeThr = explode(',',$thr->periode);
+                // dd($explodeThr);
+                $data['list_karyawans'] = KirimGaji::with('karyawan_operator_supir_rit')
+                                                    ->select([
+                                                        'biodata_karyawan.nik as nik',
+                                                        // 'nama_karyawan',
+                                                        \DB::raw('SUM(kirim_slip_gaji.nominal_gaji) as nominal_gaji')
+                                                    ])
+                                                    ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','kirim_slip_gaji.nik')
+                                                    // ->whereHas('karyawan_operator_supir_rit', function($query){
+                                                    //     $query->where('status','y')->orderBy('id','desc');
+                                                    // })
+                                                    ->where('biodata_karyawan.status_karyawan','!=','R')
+                                                    ->where('kirim_slip_gaji.kode_pengerjaan','LIKE','%'.$kode_pengerjaan.'%')
+                                                    ->where(function ($query) use($explodeThr, $kode_pengerjaan) {
+                                                        foreach ($explodeThr as $item) {
+                                                                $query->orWhere('kirim_slip_gaji.created_at', 'LIKE', '%'.$item.'%')
+                                                                ->orderByDesc('kirim_slip_gaji.kode_pengerjaan')
+                                                            ;
+                                                        }
+                                                    })
+                                                    ->where('kirim_slip_gaji.status','terkirim')
+                                                    ->orWhere('biodata_karyawan.tanggal_resign','>=',$thr->cut_off)
+                                                    ->groupBy('biodata_karyawan.nik')
+                                                    ->get();
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+
+        $data['totalBulan'] = count($explodeThr);
+
+        $data['kode_pengerjaan'] = $kode_pengerjaan;
+        $data['cut_off'] = Carbon::create($thr->cut_off);
+
+        $data['bpjsKesehatan'] = BPJSKesehatan::select('nominal')->where('status','y')->first();
+
+        return view('backend.laporan.thr.pengerjaan.periode.index',$data);
+    }
+
 }

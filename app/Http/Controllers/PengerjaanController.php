@@ -15390,14 +15390,795 @@ class PengerjaanController extends Controller
     {
         $new_data_pengerjaans = $this->newDataPengerjaan->where('status','y')->get();
         foreach ($new_data_pengerjaans as $key => $new_data_pengerjaan) {
+            
+            if ($new_data_pengerjaan['kode_pengerjaan'] == 'PB_'.substr($new_data_pengerjaan['kode_pengerjaan'],3,5).sprintf("%04s", substr($new_data_pengerjaan['kode_pengerjaan'],8))) {
+                $explode_tanggal_pengerjaans = explode('#', $new_data_pengerjaan['tanggal']);
+                $exp_tanggals = array_filter($explode_tanggal_pengerjaans);
+                $a = count($exp_tanggals);
+                $exp_tgl_awal = explode('-', $exp_tanggals[1]);
+                $exp_tgl_akhir = explode('-', $exp_tanggals[$a]);
+
+                $pengerjaan_weeklys = $this->pengerjaanWeekly->where('kode_pengerjaan', $new_data_pengerjaan['kode_pengerjaan'])
+                                                            ->get();
+
+                foreach ($pengerjaan_weeklys as $pengerjaan_weekly) {
+                    $total_upah_hasil_kerja = [];
+                    $total_lembur_kerja = [];
+                    $total_upah_gaji_diterima = [];
+
+                    $pengerjaans = $this->pengerjaan->where('operator_karyawan_id', $pengerjaan_weekly->operator_karyawan_id)
+                                                    ->where('kode_pengerjaan', $new_data_pengerjaan['kode_pengerjaan'])
+                                                    ->get();
+
+                    foreach ($pengerjaans as $pengerjaan) {
+                        #Borongan Packing
+                        if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 1) {
+                            for ($i = 1; $i <= 5; $i++) {
+                                ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
+                                ${'umk_borongan_lokal_' . $i} = UMKBoronganLokal::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
+                                if (empty(${'umk_borongan_lokal_' . $i})) {
+                                    ${'jenis_produk_' . $i} = '-';
+                                    ${'hasil_kerja_' . $i} = null;
+                                    ${'data_explode_hasil_kerja_' . $i} = '-';
+                                    ${'lembur_' . $i} = 1;
+                                    ${'total_hasil_' . $i} = 0;
+                                } else {
+                                    ${'jenis_produk_' . $i} = ${'umk_borongan_lokal_' . $i}['jenis_produk'];
+                                    ${'hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1] * ${'umk_borongan_lokal_' . $i}['umk_packing'];
+                                    ${'data_explode_hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1];
+                                    ${'explode_lembur_' . $i} = explode('|', $pengerjaan['lembur']);
+                                    ${'explode_status_lembur_' . $i} = explode('-', ${'explode_lembur_' . $i}[$i]);
+                                    if (${'explode_status_lembur_' . $i}[1] == 'y') {
+                                        ${'lembur_' . $i} = 1.5;
+                                    } else {
+                                        ${'lembur_' . $i} = 1;
+                                    }
+                                }
+                            }
+                        }
+
+                        #Borongan Bandrol
+                        if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 2) {
+                            for ($i = 1; $i <= 5; $i++) {
+                                ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
+                                ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganLokal::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
+                                if (empty(${'umk_borongan_lokal_' . $i})) {
+                                    ${'jenis_produk_' . $i} = '-';
+                                    ${'hasil_kerja_' . $i} = null;
+                                    ${'data_explode_hasil_kerja_' . $i} = '-';
+                                    ${'lembur_' . $i} = 1;
+                                    ${'total_hasil_' . $i} = 0;
+                                } else {
+                                    ${'jenis_produk_' . $i} = ${'umk_borongan_lokal_' . $i}['jenis_produk'];
+                                    ${'hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1] * ${'umk_borongan_lokal_' . $i}['umk_bandrol'];
+                                    ${'data_explode_hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1];
+                                    ${'explode_lembur_' . $i} = explode('|', $pengerjaan['lembur']);
+                                    ${'explode_status_lembur_' . $i} = explode('-', ${'explode_lembur_' . $i}[$i]);
+                                    if (${'explode_status_lembur_' . $i}[1] == 'y') {
+                                        ${'lembur_' . $i} = 1.5;
+                                    } else {
+                                        ${'lembur_' . $i} = 1;
+                                    }
+                                }
+                            }
+                        }
+
+                        #Borongan Inner
+                        if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 3) {
+                            for ($i = 1; $i <= 5; $i++) {
+                                ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
+                                ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganLokal::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
+                                if (empty(${'umk_borongan_lokal_' . $i})) {
+                                    ${'jenis_produk_' . $i} = '-';
+                                    ${'hasil_kerja_' . $i} = null;
+                                    ${'data_explode_hasil_kerja_' . $i} = '-';
+                                    ${'lembur_' . $i} = 1;
+                                    ${'total_hasil_' . $i} = 0;
+                                } else {
+                                    ${'jenis_produk_' . $i} = ${'umk_borongan_lokal_' . $i}['jenis_produk'];
+                                    ${'hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1] * ${'umk_borongan_lokal_' . $i}['umk_inner'];
+                                    ${'data_explode_hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1];
+                                    ${'explode_lembur_' . $i} = explode('|', $pengerjaan['lembur']);
+                                    ${'explode_status_lembur_' . $i} = explode('-', ${'explode_lembur_' . $i}[$i]);
+                                    if (${'explode_status_lembur_' . $i}[1] == 'y') {
+                                        ${'lembur_' . $i} = 1.5;
+                                    } else {
+                                        ${'lembur_' . $i} = 1;
+                                    }
+                                }
+                            }
+                        }
+
+                        #Borongan Outer
+                        if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 4) {
+                            for ($i = 1; $i <= 5; $i++) {
+                                ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
+                                ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganLokal::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
+                                if (empty(${'umk_borongan_lokal_' . $i})) {
+                                    ${'jenis_produk_' . $i} = '-';
+                                    ${'hasil_kerja_' . $i} = null;
+                                    ${'data_explode_hasil_kerja_' . $i} = '-';
+                                    ${'lembur_' . $i} = 1;
+                                    ${'total_hasil_' . $i} = 0;
+                                } else {
+                                    ${'jenis_produk_' . $i} = ${'umk_borongan_lokal_' . $i}['jenis_produk'];
+                                    ${'hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1] * ${'umk_borongan_lokal_' . $i}['umk_outer'];
+                                    ${'data_explode_hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1];
+                                    ${'explode_lembur_' . $i} = explode('|', $pengerjaan['lembur']);
+                                    ${'explode_status_lembur_' . $i} = explode('-', ${'explode_lembur_' . $i}[$i]);
+                                    if (${'explode_status_lembur_' . $i}[1] == 'y') {
+                                        ${'lembur_' . $i} = 1.5;
+                                    } else {
+                                        ${'lembur_' . $i} = 1;
+                                    }
+                                }
+                            }
+                        }
+
+                        #Borongan Stempel Lokal
+                        if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 25) {
+                            for ($i = 1; $i <= 5; $i++) {
+                                ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
+                                ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganStempel::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
+                                if (empty(${'umk_borongan_lokal_' . $i})) {
+                                    ${'jenis_produk_' . $i} = '-';
+                                    ${'hasil_kerja_' . $i} = null;
+                                    ${'data_explode_hasil_kerja_' . $i} = '-';
+                                    ${'lembur_' . $i} = 1;
+                                    ${'total_hasil_' . $i} = 0;
+                                } else {
+                                    ${'jenis_produk_' . $i} = ${'umk_borongan_lokal_' . $i}['jenis_produk'];
+                                    ${'hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1] * ${'umk_borongan_lokal_' . $i}['nominal_umk'];
+                                    ${'data_explode_hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1];
+                                    ${'explode_lembur_' . $i} = explode('|', $pengerjaan['lembur']);
+                                    ${'explode_status_lembur_' . $i} = explode('-', ${'explode_lembur_' . $i}[$i]);
+                                    if (${'explode_status_lembur_' . $i}[1] == 'y') {
+                                        ${'lembur_' . $i} = 1.5;
+                                    } else {
+                                        ${'lembur_' . $i} = 1;
+                                    }
+                                }
+                            }
+                        }
+
+                        #Borongan Ekspor Packing
+                        if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 5) {
+                            for ($i = 1; $i <= 5; $i++) {
+                                ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
+                                ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganEkspor::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
+                                if (empty(${'umk_borongan_lokal_' . $i})) {
+                                    ${'jenis_produk_' . $i} = '-';
+                                    ${'hasil_kerja_' . $i} = null;
+                                    ${'data_explode_hasil_kerja_' . $i} = '-';
+                                    ${'lembur_' . $i} = 1;
+                                    ${'total_hasil_' . $i} = 0;
+                                } else {
+                                    ${'jenis_produk_' . $i} = ${'umk_borongan_lokal_' . $i}['jenis_produk'];
+                                    ${'hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1] * ${'umk_borongan_lokal_' . $i}['umk_packing'];
+                                    ${'data_explode_hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1];
+                                    ${'explode_lembur_' . $i} = explode('|', $pengerjaan['lembur']);
+                                    ${'explode_status_lembur_' . $i} = explode('-', ${'explode_lembur_' . $i}[$i]);
+                                    if (${'explode_status_lembur_' . $i}[1] == 'y') {
+                                        ${'lembur_' . $i} = 1.5;
+                                    } else {
+                                        ${'lembur_' . $i} = 1;
+                                    }
+                                }
+                            }
+                        }
+
+                        #Borongan Ekspor Kemas
+                        if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 6) {
+                            for ($i = 1; $i <= 5; $i++) {
+                                ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
+                                ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganEkspor::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
+                                if (empty(${'umk_borongan_lokal_' . $i})) {
+                                    ${'jenis_produk_' . $i} = '-';
+                                    ${'hasil_kerja_' . $i} = null;
+                                    ${'data_explode_hasil_kerja_' . $i} = '-';
+                                    ${'lembur_' . $i} = 1;
+                                    ${'total_hasil_' . $i} = 0;
+                                } else {
+                                    ${'jenis_produk_' . $i} = ${'umk_borongan_lokal_' . $i}['jenis_produk'];
+                                    ${'hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1] * ${'umk_borongan_lokal_' . $i}['umk_kemas'];
+                                    ${'data_explode_hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1];
+                                    ${'explode_lembur_' . $i} = explode('|', $pengerjaan['lembur']);
+                                    ${'explode_status_lembur_' . $i} = explode('-', ${'explode_lembur_' . $i}[$i]);
+                                    if (${'explode_status_lembur_' . $i}[1] == 'y') {
+                                        ${'lembur_' . $i} = 1.5;
+                                    } else {
+                                        ${'lembur_' . $i} = 1;
+                                    }
+                                }
+                            }
+                        }
+
+                        #Borongan Ekspor Gagang
+                        if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 7) {
+                            for ($i = 1; $i <= 5; $i++) {
+                                ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
+                                ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganEkspor::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
+                                if (empty(${'umk_borongan_lokal_' . $i})) {
+                                    ${'jenis_produk_' . $i} = '-';
+                                    ${'hasil_kerja_' . $i} = null;
+                                    ${'data_explode_hasil_kerja_' . $i} = '-';
+                                    ${'lembur_' . $i} = 1;
+                                    ${'total_hasil_' . $i} = 0;
+                                } else {
+                                    ${'jenis_produk_' . $i} = ${'umk_borongan_lokal_' . $i}['jenis_produk'];
+                                    ${'hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1] * ${'umk_borongan_lokal_' . $i}['umk_pilih_gagang'];
+                                    ${'data_explode_hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1];
+                                    ${'explode_lembur_' . $i} = explode('|', $pengerjaan['lembur']);
+                                    ${'explode_status_lembur_' . $i} = explode('-', ${'explode_lembur_' . $i}[$i]);
+                                    if (${'explode_status_lembur_' . $i}[1] == 'y') {
+                                        ${'lembur_' . $i} = 1.5;
+                                    } else {
+                                        ${'lembur_' . $i} = 1;
+                                    }
+                                }
+                            }
+                        }
+
+                        #Borongan Ambri Isi Etiket
+                        if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 8) {
+                            for ($i = 1; $i <= 5; $i++) {
+                                ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
+                                ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganAmbri::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
+                                if (empty(${'umk_borongan_lokal_' . $i})) {
+                                    ${'jenis_produk_' . $i} = '-';
+                                    ${'hasil_kerja_' . $i} = null;
+                                    ${'data_explode_hasil_kerja_' . $i} = '-';
+                                    ${'lembur_' . $i} = 1;
+                                    ${'total_hasil_' . $i} = 0;
+                                } else {
+                                    ${'jenis_produk_' . $i} = ${'umk_borongan_lokal_' . $i}['jenis_produk'];
+                                    ${'hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1] * ${'umk_borongan_lokal_' . $i}['umk_etiket'];
+                                    ${'data_explode_hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1];
+                                    ${'explode_lembur_' . $i} = explode('|', $pengerjaan['lembur']);
+                                    ${'explode_status_lembur_' . $i} = explode('-', ${'explode_lembur_' . $i}[$i]);
+                                    if (${'explode_status_lembur_' . $i}[1] == 'y') {
+                                        ${'lembur_' . $i} = 1.5;
+                                    } else {
+                                        ${'lembur_' . $i} = 1;
+                                    }
+                                }
+                            }
+                        }
+
+                        #Borongan Ambri Las Tepi
+                        if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 9) {
+                            for ($i = 1; $i <= 5; $i++) {
+                                ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
+                                ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganAmbri::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
+                                if (empty(${'umk_borongan_lokal_' . $i})) {
+                                    ${'jenis_produk_' . $i} = '-';
+                                    ${'hasil_kerja_' . $i} = null;
+                                    ${'data_explode_hasil_kerja_' . $i} = '-';
+                                    ${'lembur_' . $i} = 1;
+                                    ${'total_hasil_' . $i} = 0;
+                                } else {
+                                    ${'jenis_produk_' . $i} = ${'umk_borongan_lokal_' . $i}['jenis_produk'];
+                                    ${'hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1] * ${'umk_borongan_lokal_' . $i}['umk_las_tepi'];
+                                    ${'data_explode_hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1];
+                                    ${'explode_lembur_' . $i} = explode('|', $pengerjaan['lembur']);
+                                    ${'explode_status_lembur_' . $i} = explode('-', ${'explode_lembur_' . $i}[$i]);
+                                    if (${'explode_status_lembur_' . $i}[1] == 'y') {
+                                        ${'lembur_' . $i} = 1.5;
+                                    } else {
+                                        ${'lembur_' . $i} = 1;
+                                    }
+                                }
+                            }
+                        }
+
+                        #Borongan Ambri Isi Ambri
+                        if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 11) {
+                            for ($i = 1; $i <= 5; $i++) {
+                                ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
+                                ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganAmbri::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
+                                if (empty(${'umk_borongan_lokal_' . $i})) {
+                                    ${'jenis_produk_' . $i} = '-';
+                                    ${'hasil_kerja_' . $i} = null;
+                                    ${'data_explode_hasil_kerja_' . $i} = '-';
+                                    ${'lembur_' . $i} = 1;
+                                    ${'total_hasil_' . $i} = 0;
+                                } else {
+                                    ${'jenis_produk_' . $i} = ${'umk_borongan_lokal_' . $i}['jenis_produk'];
+                                    ${'hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1] * ${'umk_borongan_lokal_' . $i}['umk_ambri'];
+                                    ${'data_explode_hasil_kerja_' . $i} = ${'explode_hasil_kerja_' . $i}[1];
+                                    ${'explode_lembur_' . $i} = explode('|', $pengerjaan['lembur']);
+                                    ${'explode_status_lembur_' . $i} = explode('-', ${'explode_lembur_' . $i}[$i]);
+                                    if (${'explode_status_lembur_' . $i}[1] == 'y') {
+                                        ${'lembur_' . $i} = 1.5;
+                                    } else {
+                                        ${'lembur_' . $i} = 1;
+                                    }
+                                }
+                            }
+                        }
+
+
+                        $total_hasil_kerja = round($hasil_kerja_1 * $lembur_1 + $hasil_kerja_2 * $lembur_2 + $hasil_kerja_3 * $lembur_3 + $hasil_kerja_4 * $lembur_4 + $hasil_kerja_5 * $lembur_5) - $pengerjaan['uang_lembur'];
+                        $total_lembur = $pengerjaan['uang_lembur'];
+
+                        array_push($total_upah_hasil_kerja, $total_hasil_kerja);
+                        array_push($total_lembur_kerja, $total_lembur);
+
+                        if ($new_data_pengerjaan['akhir_bulan'] == 'y') {
+                            if (empty($pengerjaan_weekly->tunjangan_kerja)) {
+                                $tunjangan_kerja = 0;
+                            } else {
+                                $tunjangan_kerja = $pengerjaan_weekly->tunjangan_kerja;
+                            }
+                        } else {
+                            $tunjangan_kerja = 0;
+                        }
+
+                        if (empty($pengerjaan_weekly->tunjangan_kehadiran)) {
+                            $tunjangan_kehadiran = 0;
+                        } else {
+                            $tunjangan_kehadiran = $pengerjaan_weekly->tunjangan_kehadiran;
+                        }
+
+                        if (empty($pengerjaan_weekly->uang_makan)) {
+                            $uang_makan = 0;
+                        } else {
+                            $uang_makan = $pengerjaan_weekly->uang_makan;
+                        }
+
+                        if (empty($pengerjaan_weekly->plus_1)) {
+                            $plus_1 = 0;
+                            $ket_plus_1 = null;
+                        } else {
+                            $explode_plus_1 = explode('|', $pengerjaan_weekly->plus_1);
+                            $plus_1 = floatval($explode_plus_1[0]);
+                            $ket_plus_1 = $explode_plus_1[1];
+                        }
+
+                        if (empty($pengerjaan_weekly->plus_2)) {
+                            $plus_2 = 0;
+                            $ket_plus_2 = null;
+                        } else {
+                            $explode_plus_2 = explode('|', $pengerjaan_weekly->plus_2);
+                            $plus_2 = floatval($explode_plus_2[0]);
+                            $ket_plus_2 = $explode_plus_2[1];
+                        }
+
+                        if (empty($pengerjaan_weekly->plus_3)) {
+                            $plus_3 = 0;
+                            $ket_plus_3 = null;
+                        } else {
+                            $explode_plus_3 = explode('|', $pengerjaan_weekly->plus_3);
+                            $plus_3 = floatval($explode_plus_3[0]);
+                            $ket_plus_3 = $explode_plus_3[1];
+                        }
+
+                        if (empty($pengerjaan_weekly->jht)) {
+                            $jht = 0;
+                        } else {
+                            $jht = $pengerjaan_weekly->jht;
+                        }
+
+                        if (empty($pengerjaan_weekly->bpjs_kesehatan)) {
+                            $bpjs_kesehatan = 0;
+                        } else {
+                            $bpjs_kesehatan = $pengerjaan_weekly->bpjs_kesehatan;
+                        }
+
+                        if (empty($pengerjaan_weekly->minus_1)) {
+                            $minus_1 = '0';
+                            $ket_minus_1 = null;
+                        } else {
+                            $explode_minus_1 = explode('|', $pengerjaan_weekly->minus_1);
+                            $minus_1 = floatval($explode_minus_1[0]);
+                            $ket_minus_1 = $explode_minus_1[1];
+                        }
+
+                        if (empty($pengerjaan_weekly->minus_2)) {
+                            $minus_2 = 0;
+                            $ket_minus_2 = null;
+                        } else {
+                            $explode_minus_2 = explode('|', $pengerjaan_weekly->minus_2);
+                            $minus_2 = floatval($explode_minus_2[0]);
+                            $ket_minus_2 = $explode_minus_2[1];
+                        }
+
+                        $total_gaji_diterima = (array_sum($total_upah_hasil_kerja) + array_sum($total_lembur_kerja) + $tunjangan_kerja + $tunjangan_kehadiran + $uang_makan + $plus_1 + $plus_2 + $plus_3) - ($jht + $bpjs_kesehatan + $minus_1 + $minus_2);
+                        $total_upah_gaji_diterima = $total_gaji_diterima;
+                    }
+
+                    $kirim_slip_gaji = \App\Models\KirimGaji::where('kode_pengerjaan',$new_data_pengerjaan['kode_pengerjaan'])
+                                                            ->where('pengerjaan_id',$pengerjaan_weekly->id)
+                                                            ->first();
+                    
+                    if (empty($kirim_slip_gaji)) {
+                        \App\Models\KirimGaji::firstOrCreate(
+                            [
+                                'kode_pengerjaan' => $new_data_pengerjaan['kode_pengerjaan'],
+                                'nik' => $pengerjaan_weekly->operator_karyawan->nik,
+                                'pengerjaan_id' => $pengerjaan_weekly->id,
+                            ],
+                            [
+                                'kode_payrol' => $pengerjaan_weekly->kode_payrol,
+                                'pengerjaan_id' => $pengerjaan_weekly->id,
+                                'nama_karyawan' => $pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama,
+                                'nominal_gaji' => $total_upah_gaji_diterima,
+                                'status' => 'menunggu'
+                            ]
+                        );
+                    }else{
+                        $kirim_slip_gaji->update([
+                            'kode_payrol' => $pengerjaan_weekly->kode_payrol,
+                            'pengerjaan_id' => $pengerjaan_weekly->id,
+                            'nama_karyawan' => $pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama,
+                            'nominal_gaji' => $total_upah_gaji_diterima,
+                            'status' => 'menunggu'
+                        ]);
+                    }
+                    
+                }
+
+            }elseif ($new_data_pengerjaan['kode_pengerjaan'] == 'PH_'.substr($new_data_pengerjaan['kode_pengerjaan'],3,5).sprintf("%04s", substr($new_data_pengerjaan['kode_pengerjaan'],8))) {
+                $explode_tanggal_pengerjaans = explode('#', $new_data_pengerjaan['tanggal']);
+                $exp_tanggals = array_filter($explode_tanggal_pengerjaans);
+                $a = count($exp_tanggals);
+                $exp_tgl_awal = explode('-', $exp_tanggals[1]);
+                $exp_tgl_akhir = explode('-', $exp_tanggals[$a]);
+
+                $pengerjaan_harians = $this->pengerjaanHarian->where('kode_pengerjaan', $new_data_pengerjaan['kode_pengerjaan'])
+                                                            ->get();
+
+                foreach ($pengerjaan_harians as $pengerjaan_harian) {
+                    if (empty($pengerjaan_harian->lembur)) {
+                        $hasil_lembur = 0;
+                        $lembur_1 = 0;
+                        $lembur_2 = 0;
+                    }else{
+                        $exlode_lembur = explode("|",$pengerjaan_harian->lembur);
+                        if (empty($exlode_lembur)) {
+                            $hasil_lembur = 0;
+                            $lembur_1 = 0;
+                            $lembur_2 = 0;
+                        }else{
+                            $hasil_lembur = $exlode_lembur[0];
+                            $lembur_1 = $exlode_lembur[1];
+                            $lembur_2 = $exlode_lembur[2];
+                        }
+                    }
+
+                    $total_jam_lembur = floatval($lembur_1)+floatval($lembur_2);
+
+                    if (empty($pengerjaan_harian->upah_dasar_weekly)) {
+                        $upah_dasar_weekly = 0;
+                    }else{
+                        $upah_dasar_weekly = $pengerjaan_harian->upah_dasar_weekly;
+                    }
+
+                    if($new_data_pengerjaan['akhir_bulan'] == 'y'){
+                        if (empty($pengerjaan_harian->tunjangan_kehadiran)) {
+                            $tunjangan_kehadiran = 0;
+                        }else{
+                            $tunjangan_kehadiran = $pengerjaan_harian->tunjangan_kehadiran;
+                        }
+                    }else{
+                        $tunjangan_kehadiran = 0;
+                    }
+
+                    if ($new_data_pengerjaan['akhir_bulan'] == 'y') {
+                        if (empty($pengerjaan_harian->tunjangan_kerja)) {
+                            $tunjangan_kerja = 0;
+                        }else{
+                            $tunjangan_kerja = $pengerjaan_harian->tunjangan_kerja;
+                        }
+                    }else{
+                        $tunjangan_kerja = 0;
+                    }
+
+                    if (empty($pengerjaan_harian->uang_makan)) {
+                        $uang_makan = 0;
+                    }else{
+                        $uang_makan = $pengerjaan_harian->uang_makan;
+                    }
+
+                    if (empty($pengerjaan_harian->plus_1)) {
+                        $plus_1 = 0;
+                        $ket_plus_1 = "";
+                    }else{
+                        $explode_plus_1 = explode("|",$pengerjaan_harian->plus_1);
+                        $plus_1 = intval($explode_plus_1[0]);
+                        $ket_plus_1 = $explode_plus_1[1];
+                    }
+
+                    if (empty($pengerjaan_harian->plus_2)) {
+                        $plus_2 = 0;
+                        $ket_plus_2 = "";
+                    }else{
+                        $explode_plus_2 = explode("|",$pengerjaan_harian->plus_2);
+                        $plus_2 = intval($explode_plus_2[0]);
+                        $ket_plus_2 = $explode_plus_2[1];
+                    }
+
+                    if (empty($pengerjaan_harian->plus_3)) {
+                        $plus_3 = 0;
+                        $ket_plus_3 = "";
+                    }else{
+                        $explode_plus_3 = explode("|",$pengerjaan_harian->plus_3);
+                        $plus_3 = intval($explode_plus_3[0]);
+                        $ket_plus_3 = $explode_plus_3[1];
+                    }
+
+                    if (empty($pengerjaan_harian->minus_1)) {
+                        $minus_1 = 0;
+                        $ket_minus_1 = "";
+                    }else{
+                        $explode_minus_1 = explode("|",$pengerjaan_harian->minus_1);
+                        if (empty($explode_minus_1[0])) {
+                            $minus_1 = 0;
+                        }else{
+                            $minus_1 = intval($explode_minus_1[0]);
+                        }
+                        $ket_minus_1 = $explode_minus_1[1];
+                    }
+
+                    if (empty($pengerjaan_harian->minus_2)) {
+                        $minus_2 = 0;
+                        $ket_minus_2 = "";
+                    }else{
+                        $explode_minus_2 = explode("|",$pengerjaan_harian->minus_2);
+                        if (empty($explode_minus_2[0])) {
+                            $minus_2 = 0;
+                        }else{
+                            $minus_2 = intval($explode_minus_2[0]);
+                        }
+                        $ket_minus_2 = $explode_minus_2[1];
+                    }
+
+                    if (empty($pengerjaan_harian->jht)) {
+                        $jht = 0;
+                    }else{
+                        $jht = intval($pengerjaan_harian->jht);
+                    }
+
+                    if (empty($pengerjaan_harian->bpjs_kesehatan)) {
+                        $bpjs_kesehatan = 0;
+                    }else{
+                        $bpjs_kesehatan = intval($pengerjaan_harian->bpjs_kesehatan);
+                    }
+
+                    $total_gaji_diterima = ($pengerjaan_harian->upah_dasar_weekly+$hasil_lembur+$tunjangan_kehadiran+$tunjangan_kerja+
+                                            $plus_1+$plus_2+$plus_3+$pengerjaan_harian->uang_makan)-
+                                            ($jht+$bpjs_kesehatan+$minus_1+$minus_2);
+
+                    $kirim_slip_gaji = \App\Models\KirimGaji::where('kode_pengerjaan',$new_data_pengerjaan['kode_pengerjaan'])
+                                                            ->where('pengerjaan_id',$pengerjaan_harian->id)
+                                                            ->first();
+
+                    if (empty($kirim_slip_gaji)) {
+                        \App\Models\KirimGaji::firstOrCreate(
+                            [
+                                'kode_pengerjaan' => $new_data_pengerjaan['kode_pengerjaan'],
+                                'nik' => $pengerjaan_harian->operator_karyawan->nik,
+                                'pengerjaan_id' => $pengerjaan_harian->id,
+                            ],
+                            [
+                                'kode_payrol' => $pengerjaan_harian->kode_payrol,
+                                'pengerjaan_id' => $pengerjaan_harian->id,
+                                'nama_karyawan' => $pengerjaan_harian->operator_karyawan->biodata_karyawan->nama,
+                                'nominal_gaji' => $total_gaji_diterima,
+                                'status' => 'menunggu'
+                            ]
+                        );
+                    }else{
+                        $kirim_slip_gaji->update([
+                            'kode_payrol' => $pengerjaan_harian->kode_payrol,
+                            'pengerjaan_id' => $pengerjaan_harian->id,
+                            'nama_karyawan' => $pengerjaan_harian->operator_karyawan->biodata_karyawan->nama,
+                            'nominal_gaji' => $total_gaji_diterima,
+                            'status' => 'menunggu'
+                        ]);
+                    }
+                }
+            }elseif ($new_data_pengerjaan['kode_pengerjaan'] == 'PS_'.substr($new_data_pengerjaan['kode_pengerjaan'],3,5).sprintf("%04s", substr($new_data_pengerjaan['kode_pengerjaan'],8))) {
+                $explode_tanggal_pengerjaans = explode('#', $new_data_pengerjaan['tanggal']);
+                $exp_tanggals = array_filter($explode_tanggal_pengerjaans);
+                $a = count($exp_tanggals);
+                $exp_tgl_awal = explode('-', $exp_tanggals[1]);
+                $exp_tgl_akhir = explode('-', $exp_tanggals[$a]);
+
+                $pengerjaan_rit_weeklys = $this->pengerjaanRitWeekly->where('kode_pengerjaan', $new_data_pengerjaan['kode_pengerjaan'])
+                                                                    ->get();
+
+                foreach ($pengerjaan_rit_weeklys as $pengerjaan_rit_weekly) {
+                    $upah_dasar = array();
+
+                    for ($i=0;$i<$a;$i++) { 
+                        $pengerjaan_rits = $this->pengerjaanRitHarian->where('kode_pengerjaan',$new_data_pengerjaan['kode_pengerjaan'])
+                                                                    ->where('karyawan_supir_rit_id',$pengerjaan_rit_weekly->karyawan_supir_rit_id)
+                                                                    ->get();
+
+                        if (empty($pengerjaan_rits[$i]->hasil_kerja_1)) {
+                            $tanggal_pengerjaan = 0;
+                            $hasil_kerja_1 = 0;
+                            $hasil_umk_rit = 0;
+                            $tarif_umk = 0;
+                            $dpb = 0;
+                            $jenis_umk = '-';
+                        }else{
+                            $tanggal_pengerjaan = Carbon::create($pengerjaan_rits[$i]->tanggal_pengerjaan)->isoFormat('D MMM');
+                            $explode_hasil_kerja_1 = explode("|",$pengerjaan_rits[$i]->hasil_kerja_1);
+                            $umk_rit = $this->ritUmk->where('id',$explode_hasil_kerja_1[0])->first();
+                            if (empty($umk_rit)) {
+                                $hasil_kerja_1 = 0;
+                                $hasil_umk_rit = 0;
+                                $tarif_umk = 0;
+                                $dpb = 0;
+                                $jenis_umk = '-';
+                            }else{
+                                $hasil_kerja_1 = $umk_rit->tarif*$explode_hasil_kerja_1[1];
+                                $hasil_umk_rit = $umk_rit->kategori_upah;
+                                $tarif_umk = $umk_rit->tarif;
+                                $dpb = $pengerjaan_rits[$i]->dpb/7*$pengerjaan_rits[$i]->upah_dasar;
+                                if (empty($umk_rit->rit_tujuan)) {
+                                    $jenis_umk = '-';
+                                }else{
+                                    $jenis_umk = $umk_rit->rit_tujuan->tujuan.' - '.$umk_rit->rit_kendaraan->jenis_kendaraan;
+                                }
+                                $total_upah_dasar = $hasil_kerja_1+$dpb;
+                                array_push($upah_dasar,$total_upah_dasar);
+                            }
+                        }
+
+                    }
+
+                    $hasil_upah_dasar = array_sum($upah_dasar);
+
+                    if (empty($pengerjaan_rit_weekly->lembur)) {
+                        $lembur_1 = 0;
+                        $lembur_2 = 0;
+                        $hasil_lembur = 0;
+                    }else{
+                        $explode_lembur = explode("|",$pengerjaan_rit_weekly->lembur);
+                        $lembur_1 = $explode_lembur[1];
+                        $lembur_2 = $explode_lembur[2];
+                        $hasil_lembur = $explode_lembur[0];
+                    }
+
+                    $total_jam_lembur = floatval($lembur_1)+floatval($lembur_2);
+
+                    if ($new_data_pengerjaan['akhir_bulan'] == 'y') {
+                        if (empty($pengerjaan_rit_weekly->tunjangan_kehadiran)) {
+                            $tunjangan_kehadiran = 0;
+                        }else{
+                            $tunjangan_kehadiran = $pengerjaan_rit_weekly->tunjangan_kehadiran;
+                        }
+                    }else{
+                        $tunjangan_kehadiran = 0;
+                    }
+
+                    if ($new_data_pengerjaan['akhir_bulan'] == 'y') {
+                        if (empty($pengerjaan_rit_weekly->tunjangan_kerja)) {
+                            $tunjangan_kerja = 0;
+                        }else{
+                            $tunjangan_kerja = $pengerjaan_rit_weekly->tunjangan_kerja;
+                        }
+                    }else{
+                        $tunjangan_kerja = 0;
+                    }
+
+                    if (empty($pengerjaan_rit_weekly->uang_makan)) {
+                        $uang_makan = 0;
+                    }else{
+                        $uang_makan = $pengerjaan_rit_weekly->uang_makan;
+                    }
+
+                    if (empty($pengerjaan_rit_weekly->plus_1)) {
+                        $plus_1 = 0;
+                        $keterangan_plus_1 = '';
+                    }else{
+                        $explode_plus_1 = explode("|",$pengerjaan_rit_weekly->plus_1);
+                        $plus_1 = floatval($explode_plus_1[0]);
+                        $keterangan_plus_1 = $explode_plus_1[1];
+                    }
+
+                    if (empty($pengerjaan_rit_weekly->plus_2)) {
+                        $plus_2 = 0;
+                        $keterangan_plus_2 = '';
+                    }else{
+                        $explode_plus_2 = explode("|",$pengerjaan_rit_weekly->plus_2);
+                        $plus_2 = floatval($explode_plus_2[0]);
+                        $keterangan_plus_2 = $explode_plus_2[1];
+                    }
+
+                    if (empty($pengerjaan_rit_weekly->plus_3)) {
+                        $plus_3 = 0;
+                        $keterangan_plus_3 = '';
+                    }else{
+                        $explode_plus_3 = explode("|",$pengerjaan_rit_weekly->plus_3);
+                        $plus_3 = floatval($explode_plus_3[0]);
+                        $keterangan_plus_3 = $explode_plus_3[1];
+                    }
+
+                    $total_gaji = $hasil_upah_dasar+$plus_1+$plus_2+$plus_3+$uang_makan+$hasil_lembur+$tunjangan_kerja+$tunjangan_kehadiran;
+
+                    if (empty($pengerjaan_rit_weekly->minus_1)) {
+                        $minus_1 = 0;
+                        $keterangan_minus_1 = '';
+                    }else{
+                        $explode_minus_1 = explode("|",$pengerjaan_rit_weekly->minus_1);
+                        $minus_1 = $explode_minus_1[0];
+                        $keterangan_minus_1 = $explode_minus_1[1];
+                    }
+
+                    if (empty($pengerjaan_rit_weekly->minus_2)) {
+                        $minus_2 = 0;
+                        $keterangan_minus_2 = '';
+                    }else{
+                        $explode_minus_2 = explode("|",$pengerjaan_rit_weekly->minus_2);
+                        $minus_2 = $explode_minus_2[0];
+                        $keterangan_minus_2 = $explode_minus_2[1];
+                    }
+
+                    if (empty($pengerjaan_rit_weekly->jht)) {
+                        $jht = 0;
+                    }else{
+                        $jht = $pengerjaan_rit_weekly->jht;
+                    }
+
+                    if (empty($pengerjaan_rit_weekly->bpjs_kesehatan)) {
+                        $bpjs_kesehatan = 0;
+                    }else{
+                        $bpjs_kesehatan = $pengerjaan_rit_weekly->bpjs_kesehatan;
+                    }
+
+                    if (empty($pengerjaan_rit_weekly->pensiun)) {
+                        $pensiun = 0;
+                    }else{
+                        $pensiun = $pengerjaan_rit_weekly->pensiun;
+                    }
+
+                    $total_upah_diterima = $total_gaji-$minus_1-$minus_2-$jht-$bpjs_kesehatan-$pensiun;
+
+                    $kirim_slip_gaji = \App\Models\KirimGaji::where('kode_pengerjaan',$new_data_pengerjaan['kode_pengerjaan'])
+                                                            ->where('pengerjaan_id',$pengerjaan_rit_weekly->id)
+                                                            ->first();
+                    
+                    if (empty($kirim_slip_gaji)) {
+                        \App\Models\KirimGaji::firstOrCreate(
+                            [
+                                'kode_pengerjaan' => $new_data_pengerjaan['kode_pengerjaan'],
+                                'nik' => $pengerjaan_rit_weekly->operator_supir_rit->nik,
+                                'pengerjaan_id' => $pengerjaan_rit_weekly->id,
+                            ],
+                            [
+                                'kode_payrol' => $pengerjaan_rit_weekly->kode_payrol,
+                                'pengerjaan_id' => $pengerjaan_rit_weekly->id,
+                                'nama_karyawan' => $pengerjaan_rit_weekly->operator_supir_rit->biodata_karyawan->nama,
+                                'nominal_gaji' => $total_upah_diterima,
+                                'status' => 'menunggu'
+                            ]
+                        );
+                    }else{
+                        $kirim_slip_gaji->update([
+                            'kode_payrol' => $pengerjaan_rit_weekly->kode_payrol,
+                            'pengerjaan_id' => $pengerjaan_rit_weekly->id,
+                            'nama_karyawan' => $pengerjaan_rit_weekly->operator_supir_rit->biodata_karyawan->nama,
+                            'nominal_gaji' => $total_upah_diterima,
+                            'status' => 'menunggu'
+                        ]);
+                    }
+                }
+            }
+
             $new_data_pengerjaan->update([
                 'status' => 'n'
             ]);
+
+            // dd(substr($new_data_pengerjaan['kode_pengerjaan'],0,3).substr($new_data_pengerjaan['kode_pengerjaan'],3,5).sprintf("%04s", substr($new_data_pengerjaan['kode_pengerjaan'],8)));
         };
         return response()->json([
             'success' => true,
-            'message_title' => 'Close Periode Success',
-            'message_content' => 'Periode ini telah ditutup, silahkan buat periode baru'
+            'message_title' => 'Berhasil',
+            'message_content' => 'Periode Ini Telah Ditutup, Silahkan Buat Periode Baru. Slip Gaji Karyawan Akan Dikirimkan Secara Otomatis Oleh Sistem.'
         ]);
     }
 }
