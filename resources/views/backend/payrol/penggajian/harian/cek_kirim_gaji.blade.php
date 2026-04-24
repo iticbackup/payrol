@@ -70,6 +70,11 @@
                                     <td>{{ 'Rp. '.number_format($check_kirim_gaji->nominal_gaji,0,',','.') }}</td>
                                     <td>
                                         @switch($check_kirim_gaji->status)
+                                            @case('menunggu')
+                                                <span class="badge bg-warning">
+                                                    <i class="mdi mdi-sync"></i> Menunggu Dikirim
+                                                </span>
+                                                @break
                                             @case('terkirim')
                                                 <span class="badge bg-success">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512">

@@ -11373,10 +11373,14 @@ class PayrolController extends Controller
         //                                                     // ->limit($this->sendLimit)
         //                                                     // ->get();
         //                                                     ->paginate($this->sendLimit);
-        $data['pengerjaan_weeklys'] = $this->pengerjaanWeekly->where('kode_pengerjaan',$kode_pengerjaan)
-                                                            ->paginate($this->sendLimit);
+
+        // $data['pengerjaan_weeklys'] = $this->pengerjaanWeekly->where('kode_pengerjaan',$kode_pengerjaan)
+        //                                                     ->paginate($this->sendLimit);
+
+        $data['slip_gaji_borongans'] = $this->kirim_gaji->where('kode_pengerjaan',$kode_pengerjaan)->get();
         // dd($data);
-        return view('backend.payrol.penggajian.borongan.detail_kirim_slip',$data);
+        // return view('backend.payrol.penggajian.borongan.detail_kirim_slip',$data);
+        return view('backend.payrol.penggajian.borongan.detailSlipGaji',$data);
     }
 
     public function borongan_cek_slip_gaji($kode_pengerjaan,$id)
@@ -11611,11 +11615,12 @@ class PayrolController extends Controller
     {
         $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
 
-        $data['pengerjaan_harians'] = $this->pengerjaanHarian->where('kode_pengerjaan',$kode_pengerjaan)
-                                                            // ->limit(1)
-                                                            ->paginate($this->sendLimit);
+        // $data['pengerjaan_harians'] = $this->pengerjaanHarian->where('kode_pengerjaan',$kode_pengerjaan)
+        //                                                     ->paginate($this->sendLimit);
+        $data['slip_gaji_borongans'] = $this->kirim_gaji->where('kode_pengerjaan',$kode_pengerjaan)->get();
         
-        return view('backend.payrol.penggajian.harian.detail_kirim_slip',$data);
+        // return view('backend.payrol.penggajian.harian.detail_kirim_slip',$data);
+        return view('backend.payrol.penggajian.harian.detailSlipGaji',$data);
     }
 
     public function harian_cek_slip_gaji($kode_pengerjaan,$id)
@@ -11788,7 +11793,10 @@ class PayrolController extends Controller
                                                                     // ->get();
                                                                     ->paginate($this->sendLimit);
         // dd($data);
-        return view('backend.payrol.penggajian.supir_rit.detail_kirim_slip',$data);
+        // return view('backend.payrol.penggajian.supir_rit.detail_kirim_slip',$data);
+        $data['slip_gaji_borongans'] = $this->kirim_gaji->where('kode_pengerjaan',$kode_pengerjaan)->get();
+
+        return view('backend.payrol.penggajian.supir_rit.detailSlipGaji',$data);
     }
 
     public function supir_rit_cek_slip_gaji($kode_pengerjaan,$id)

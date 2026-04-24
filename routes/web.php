@@ -279,7 +279,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('{kode_pengerjaan}/slip_gaji/view', [App\Http\Controllers\PayrolController::class, 'borongan_slip_gaji_view'])->name('payrol.borongan.slip_gaji.view');
             Route::get('{kode_pengerjaan}/bank', [App\Http\Controllers\PayrolController::class, 'borongan_bank'])->name('payrol.borongan.bank');
             Route::get('{kode_pengerjaan}/report', [App\Http\Controllers\PayrolController::class, 'borongan_weekly_report'])->name('payrol.borongan.weekly_report');
-            Route::get('{kode_pengerjaan}/detail_kirim_email', [App\Http\Controllers\PayrolController::class, 'borongan_detail_kirim_slip_gaji'])->name('payrol.borongan.borongan_detail_kirim_slip_gaji');
+            Route::get('{kode_pengerjaan}/detail_slip_gaji', [App\Http\Controllers\PayrolController::class, 'borongan_detail_kirim_slip_gaji'])->name('payrol.borongan.borongan_detail_kirim_slip_gaji');
             Route::post('{kode_pengerjaan}/detail_kirim_email/kirim_gaji', [App\Http\Controllers\PayrolController::class, 'borongan_kirim_slip_gaji'])->name('payrol.borongan.borongan_kirim_slip_gaji');
             Route::get('{kode_pengerjaan}/detail_kirim_email/cek_kirim_gaji', [App\Http\Controllers\PayrolController::class, 'borongan_cek_email_slip_gaji'])->name('payrol.borongan.borongan_cek_email_slip_gaji');
             Route::get('{kode_pengerjaan}/detail_kirim_email/{id}', [App\Http\Controllers\PayrolController::class, 'borongan_cek_slip_gaji'])->name('payrol.borongan.borongan_cek_slip_gaji');
@@ -299,7 +299,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('{kode_pengerjaan}/slip_gaji', [App\Http\Controllers\PayrolController::class, 'harian_slip_gaji'])->name('payrol.harian.slip_gaji');
             Route::get('{kode_pengerjaan}/bank', [App\Http\Controllers\PayrolController::class, 'harian_bank'])->name('payrol.harian.bank');
             Route::get('{kode_pengerjaan}/report', [App\Http\Controllers\PayrolController::class, 'harian_weekly_report'])->name('payrol.harian.weekly_report');
-            Route::get('{kode_pengerjaan}/detail_kirim_email', [App\Http\Controllers\PayrolController::class, 'harian_detail_kirim_slip_gaji'])->name('payrol.harian.harian_detail_kirim_slip_gaji');
+            Route::get('{kode_pengerjaan}/detail_slip_gaji', [App\Http\Controllers\PayrolController::class, 'harian_detail_kirim_slip_gaji'])->name('payrol.harian.harian_detail_kirim_slip_gaji');
             Route::post('{kode_pengerjaan}/detail_kirim_email/kirim_gaji', [App\Http\Controllers\PayrolController::class, 'harian_kirim_slip_gaji'])->name('payrol.harian.harian_kirim_slip_gaji');
             Route::get('{kode_pengerjaan}/detail_kirim_email/cek_kirim_gaji', [App\Http\Controllers\PayrolController::class, 'harian_cek_email_slip_gaji'])->name('payrol.harian.harian_cek_email_slip_gaji');
             Route::get('{kode_pengerjaan}/detail_kirim_email/{id}', [App\Http\Controllers\PayrolController::class, 'harian_cek_slip_gaji'])->name('payrol.harian.harian_cek_slip_gaji');
@@ -311,7 +311,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('{kode_pengerjaan}/slip_gaji', [App\Http\Controllers\PayrolController::class, 'supir_rit_slip_gaji'])->name('payrol.supir_rit.slip_gaji');
             Route::get('{kode_pengerjaan}/bank', [App\Http\Controllers\PayrolController::class, 'supir_rit_bank'])->name('payrol.supir_rit.bank');
             Route::get('{kode_pengerjaan}/report', [App\Http\Controllers\PayrolController::class, 'supir_rit_weekly_report'])->name('payrol.supir_rit.weekly_report');
-            Route::get('{kode_pengerjaan}/detail_kirim_email', [App\Http\Controllers\PayrolController::class, 'supir_rit_detail_kirim_slip_gaji'])->name('payrol.supir_rit.supir_rit_detail_kirim_slip_gaji');
+            Route::get('{kode_pengerjaan}/detail_slip_gaji', [App\Http\Controllers\PayrolController::class, 'supir_rit_detail_kirim_slip_gaji'])->name('payrol.supir_rit.supir_rit_detail_kirim_slip_gaji');
             Route::post('{kode_pengerjaan}/detail_kirim_email/kirim_gaji', [App\Http\Controllers\PayrolController::class, 'supir_rit_kirim_slip_gaji'])->name('payrol.supir_rit.supir_rit_kirim_slip_gaji');
             Route::get('{kode_pengerjaan}/detail_kirim_email/cek_kirim_gaji', [App\Http\Controllers\PayrolController::class, 'supir_rit_cek_email_slip_gaji'])->name('payrol.supir_rit.supir_rit_cek_email_slip_gaji');
             Route::get('{kode_pengerjaan}/detail_kirim_email/{id}', [App\Http\Controllers\PayrolController::class, 'supir_rit_cek_slip_gaji'])->name('payrol.supir_rit.supir_rit_cek_slip_gaji');
