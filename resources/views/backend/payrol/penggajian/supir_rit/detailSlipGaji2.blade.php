@@ -66,6 +66,7 @@
                                 <th class="text-center">Jenis Pengerjaan</th>
                                 <th class="text-center">Nominal Gaji</th>
                                 <th class="text-center">Status</th>
+                                <th class="text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -109,6 +110,13 @@
                                                 
                                         @endswitch
                                     </td>
+                                    <td class="text-center">
+                                        <button class="btn btn-primary" onclick="resend_mail(`{{ $new_data_pengerjaan->kode_pengerjaan }}`,{{ $item->id }})">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512">
+                                                <path fill="currentColor" d="m16 464l480-208L16 48v160l320 48l-320 48Z" />
+                                            </svg> Kirim Email Ulang
+                                        </button>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -137,6 +145,62 @@
 
     <script>
         $('#datatables').DataTable();
+
+        function resend_mail(kode_pengerjaan,id)
+        {
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('payrol/supir_rit/') }}"+'/'+kode_pengerjaan+'/detail_kirim_email/'+id+'/kirim_ulang',
+                contentType: false,
+                processData: false,
+                beforeSend: () => {
+                    let timerInterval;
+                    Swal.fire({
+                        title: "Sedang Proses Dikirim!",
+                        // timer: 2000,
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                        }
+                        }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            console.log("I was closed by the timer");
+                        }
+                    });
+                },
+                success: (result) => {
+                    if (result.success != false) {
+                        Swal.fire({
+                            title: result.message_title,
+                            text: result.message_content,
+                            icon: "success"
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Gagal Terkirim',
+                            icon: "error"
+                        });
+                    }
+                    console.log(result);
+                },
+                error: function(request, status, error) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error,
+                        icon: "error"
+                    });
+                }
+            });
+        }
 
         function kirim_email_ulang()
         {
