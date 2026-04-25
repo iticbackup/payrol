@@ -564,7 +564,7 @@
 
         $('#kirim_slip').submit(function(e) {
             e.preventDefault();
-            let formData = new FormData(this);
+
             $.ajax({
                 type: 'POST',
                 url: "{{ route('payrol.borongan.borongan_kirim_slip_gaji',['kode_pengerjaan' => $new_data_pengerjaan->kode_pengerjaan]) }}",
@@ -618,6 +618,65 @@
                     });
                 }
             });
+            
         });
+
+        // $('#kirim_slip').submit(function(e) {
+        //     e.preventDefault();
+        //     let formData = new FormData(this);
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: "{{ route('payrol.borongan.borongan_kirim_slip_gaji',['kode_pengerjaan' => $new_data_pengerjaan->kode_pengerjaan]) }}",
+        //         data: formData,
+        //         contentType: false,
+        //         processData: false,
+        //         beforeSend: () => {
+        //             let timerInterval;
+        //             Swal.fire({
+        //                 title: "Sedang Proses Dikirim!",
+        //                 // timer: 2000,
+        //                 timerProgressBar: true,
+        //                 showConfirmButton: false,
+        //                 didOpen: () => {
+        //                     Swal.showLoading();
+        //                     const timer = Swal.getPopup().querySelector("b");
+        //                     timerInterval = setInterval(() => {
+        //                     timer.textContent = `${Swal.getTimerLeft()}`;
+        //                     }, 100);
+        //                 },
+        //                 willClose: () => {
+        //                     clearInterval(timerInterval);
+        //                 }
+        //                 }).then((result) => {
+        //                 /* Read more about handling dismissals below */
+        //                 if (result.dismiss === Swal.DismissReason.timer) {
+        //                     console.log("I was closed by the timer");
+        //                 }
+        //             });
+        //         },
+        //         success: (result) => {
+        //             if (result.success != false) {
+        //                 Swal.fire({
+        //                     title: result.message_title,
+        //                     text: result.message_content,
+        //                     icon: "success"
+        //                 });
+        //             } else {
+        //                 Swal.fire({
+        //                     title: 'Gagal Terkirim',
+        //                     icon: "error"
+        //                 });
+        //             }
+        //             console.log(result);
+        //         },
+        //         error: function(request, status, error) {
+        //             Swal.fire({
+        //                 title: 'Error',
+        //                 text: error,
+        //                 icon: "error"
+        //             });
+        //         }
+        //     });
+        // });
     </script>
 @endsection
