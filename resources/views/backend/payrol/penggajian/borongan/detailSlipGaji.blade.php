@@ -68,7 +68,9 @@
                                     <td class="text-center">{{ $item->pengerjaan_id }}</td>
                                     <td>{{ $item->nama_karyawan }}</td>
                                     <td class="text-center">{{ $item->biodata_karyawan->email }}</td>
-                                    <td class="text-center">{{ $item->karyawan_operator->jenis_operator_detail->jenis_posisi.' - '.$item->karyawan_operator->jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan }}</td>
+                                    <td class="text-center">
+                                        {{ $item->karyawan_operator->jenis_operator_detail->jenis_posisi.' - '.$item->karyawan_operator->jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan }}
+                                    </td>
                                     <td class="text-center">{{ 'Rp. '.number_format($item->nominal_gaji,0,',','.') }}</td>
                                     <td class="text-center">
                                         @switch($item->status)

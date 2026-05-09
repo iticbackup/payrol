@@ -49,7 +49,7 @@ class KirimSlipGajiBorongan extends Command
         $cek_kirim_slip_gajis = KirimGaji::where('kode_pengerjaan','LIKE','%PB_%')
                                         ->where('status','menunggu')
                                         ->orWhere('status','gagal')
-                                        ->limit(3)
+                                        ->limit(env('COUNT_KIRIM_EMAIL'))
                                         ->orderBy('id','asc')
                                         ->get();
 

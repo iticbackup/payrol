@@ -48,7 +48,7 @@ class KirimSlipGajiHarian extends Command
         $cek_kirim_slip_gajis = KirimGaji::where('kode_pengerjaan','LIKE','%PH_%')
                                         ->where('status','menunggu')
                                         ->orWhere('status','gagal')
-                                        ->limit(3)
+                                        ->limit(env('COUNT_KIRIM_EMAIL'))
                                         ->orderBy('id','asc')
                                         ->get();
 
