@@ -62,6 +62,7 @@
                                 <th class="text-center">No</th>
                                 <th class="text-center">ID</th>
                                 <th class="text-center">Nama Karyawan</th>
+                                <th class="text-center">ID Karyawan Harian</th>
                                 <th class="text-center">Email Karyawan</th>
                                 <th class="text-center">Jenis Pengerjaan</th>
                                 <th class="text-center">Nominal Gaji</th>
@@ -75,12 +76,13 @@
                                     <td class="text-center">{{ $loop->iteration }}</td>
                                     <td class="text-center">{{ $item->pengerjaan_id }}</td>
                                     <td>{{ $item->nama_karyawan }}</td>
+                                    <td class="text-center">{{ $item->karyawan_operator_harian->id }}</td>
                                     <td class="text-center">{{ $item->biodata_karyawan->email }}</td>
                                     <td class="text-center">
                                         @if (empty($item->karyawan_operator_harian->jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan))
                                             -
                                         @else
-                                        {{ $item->karyawan_operator_harian->jenis_operator_detail->jenis_posisi }}
+                                        {{ $item->karyawan_operator_harian->jenis_operator_detail->jenis_posisi.' - '.$item->karyawan_operator_harian->jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan }}
                                         @endif
                                     </td>
                                     <td class="text-center">{{ 'Rp. '.number_format($item->nominal_gaji,0,',','.') }}</td>

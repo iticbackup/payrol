@@ -19,11 +19,11 @@ class JenisOperatorDetail extends Model
 
     public function jenis_operator()
     {
-        return $this->belongsTo(\App\Models\JenisOperator::class, 'jenis_operator_id');
+        return $this->belongsTo(\App\Models\JenisOperator::class, 'jenis_operator_id', 'id');
     }
 
     public function jenis_operator_detail_pekerjaan()
     {
-        return $this->belongsTo(\App\Models\JenisOperatorDetailPengerjaan::class, 'jenis_operator_detail');
+        return $this->belongsTo(\App\Models\JenisOperatorDetailPengerjaan::class, 'jenis_operator_detail','id');
     }
 }

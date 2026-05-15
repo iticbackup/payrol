@@ -470,6 +470,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
 });
 
+Route::prefix('slip')->group(function () {
+    Route::get('{nik}/list', [App\Http\Controllers\SlipGajiController::class, 'listSlipGajiKaryawan']);
+});
 
 // Route::get('testMailBorongan', function(){
 //     $cek_kirim_slip_gajis = \App\Models\KirimGaji::where('kode_pengerjaan','LIKE','%PB_%')

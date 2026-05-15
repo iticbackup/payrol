@@ -66,9 +66,24 @@
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
                                     <td class="text-center">{{ $item->pengerjaan_id }}</td>
-                                    <td>{{ $item->nama_karyawan }}</td>
+                                    <td>{{ $item->nik.' - '.$item->nama_karyawan }}</td>
                                     <td class="text-center">{{ $item->biodata_karyawan->email }}</td>
                                     <td class="text-center">
+                                        {{-- @switch($item->karyawan_operator->jenis_operator_detail_id)
+                                            @case(1)
+                                                {{ $item->karyawan_operator->jenis_operator_detail->jenis_posisi.' - '.$item->karyawan_operator->jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan }}
+                                                @break
+                                            @case(2)
+                                                {{ $item->karyawan_operator->jenis_operator_detail->jenis_posisi.' - '.$item->karyawan_operator->jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan }}
+                                                @break
+                                            @case(3)
+                                                {{ $item->karyawan_operator->jenis_operator_detail->jenis_posisi.' - '.$item->karyawan_operator->jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan }}
+                                                @break
+                                            @case(4)
+                                                {{ $item->karyawan_operator->jenis_operator_detail->jenis_posisi.' - '.$item->karyawan_operator->jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan }}
+                                                @break
+                                            @default
+                                        @endswitch --}}
                                         {{ $item->karyawan_operator->jenis_operator_detail->jenis_posisi.' - '.$item->karyawan_operator->jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan }}
                                     </td>
                                     <td class="text-center">{{ 'Rp. '.number_format($item->nominal_gaji,0,',','.') }}</td>

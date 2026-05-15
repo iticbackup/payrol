@@ -20,7 +20,7 @@ class JenisOperatorDetailPengerjaan extends Model
 
     public function jenis_operator_detail()
     {
-        return $this->belongsTo(\App\Models\JenisOperatorDetail::class, 'jenis_operator_detail_id');
+        return $this->belongsTo(\App\Models\JenisOperatorDetail::class, 'jenis_operator_detail_id','id');
     }
     
     public function operator_karyawan()

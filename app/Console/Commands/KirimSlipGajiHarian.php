@@ -45,7 +45,24 @@ class KirimSlipGajiHarian extends Command
     public function handle()
     {
         // return 0;
-        $cek_kirim_slip_gajis = KirimGaji::where('kode_pengerjaan','LIKE','%PH_%')
+        $jenis_operator = \App\Models\JenisOperator::with('jenisOperatorDetails')
+                                                    ->select('id','kode_operator')
+                                                    ->where('kode_operator','PH')
+                                                    ->first();
+
+        $jenis_operator_detail_id = [];
+
+        foreach ($jenis_operator->jenisOperatorDetails as $key => $value) {
+            $jenis_operator_detail_id[] = [
+                'id' => $value->id
+            ];
+        }
+
+        $cek_kirim_slip_gajis = KirimGaji::whereHas('karyawan_operator_harian', function($query) use($jenis_operator,$jenis_operator_detail_id){
+                                            $query->where('jenis_operator_id',$jenis_operator->id)
+                                                ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id);
+                                        })
+                                        ->where('kode_pengerjaan','LIKE','%PH_%')
                                         ->where('status','menunggu')
                                         ->orWhere('status','gagal')
                                         ->limit(env('COUNT_KIRIM_EMAIL'))

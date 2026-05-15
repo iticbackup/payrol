@@ -16,4 +16,9 @@ class JenisOperator extends Model
         'jenis_operator',
         'status',
     ];
+
+    public function jenisOperatorDetails()
+    {
+        return $this->hasMany(\App\Models\JenisOperatorDetail::class, 'jenis_operator_id','id');
+    }
 }
