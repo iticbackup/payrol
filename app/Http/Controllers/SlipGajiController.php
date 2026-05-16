@@ -15,7 +15,11 @@ class SlipGajiController extends Controller
         foreach ($listFiles as $path) {
             $files = pathinfo($path);
             // $allMedia[] = $files['basename'];
-            $allMedia[] = asset('public/itic/pdf/slip/'.$nik.'/'.$files['basename']);
+            $allMedia[] = [
+                'nik' => $nik,
+                'file' => asset('public/itic/pdf/slip/'.$nik.'/'.$files['basename']),
+                'size' => filesize(public_path('itic/pdf/slip/'.$nik.'/'.$files['basename']))
+            ];
         }
 
         return $allMedia;
