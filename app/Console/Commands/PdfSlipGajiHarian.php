@@ -85,6 +85,8 @@ class PdfSlipGajiHarian extends Command
                                                         ->where('id', $value->pengerjaan_id)
                                                         ->first();
 
+            $data['tanggal'] = Carbon::parse($data['exp_tgl_awal'][0] . '-' . $data['exp_tgl_awal'][1] . '-' . $data['exp_tgl_awal'][2])->isoFormat('D MMMM').' sd '.\Carbon\Carbon::parse($data['exp_tgl_akhir'][0] . '-' . $data['exp_tgl_akhir'][1] . '-' . $data['exp_tgl_akhir'][2])->isoFormat('D MMMM YYYY');
+
             if (empty($data['pengerjaan_harian']->lembur)) {
                 $data['hasil_lembur'] = 0;
                 $data['lembur_1'] = 0;
