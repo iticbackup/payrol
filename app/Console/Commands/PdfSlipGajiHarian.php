@@ -66,6 +66,7 @@ class PdfSlipGajiHarian extends Command
                                         ->where('status','terkirim')
                                         // ->orWhere('status','gagal')
                                         ->orderBy('id','asc')
+                                        // ->limit(5)
                                         ->get();
 
         foreach ($cek_kirim_slip_gajis as $key => $value) {
@@ -212,13 +213,32 @@ class PdfSlipGajiHarian extends Command
             if(!File::isDirectory($path_file)){
                 File::makeDirectory($path_file, 0777, true, true);
             }
+            
+            // if (empty(public_path('itic/pdf/slip/'.$data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->nik.'/'.'Slip Gaji Tanggal '.$data['tanggal'].'.pdf'))) {
+            //     $pdf = Pdf::loadView('email.slipGajiOperatorHarian',$data);
+            //     $pdf->setPaper(array(0,0,560,380));
+            //     $pdf->setEncryption(Carbon::create($data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->tgl_lahir)->format('dmY'),Carbon::create($data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->tgl_lahir)->format('dmY'));
+            //     $pdf->save(public_path('itic/pdf/slip/'.$data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->nik.'/'.'Slip Gaji Tanggal '.$data['tanggal'].'.pdf'));
+            // }
 
-            $pdf = Pdf::loadView('email.slipGajiOperatorHarian',$data);
-            $pdf->setPaper(array(0,0,560,380));
-            $pdf->setEncryption(Carbon::create($data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->tgl_lahir)->format('dmY'),Carbon::create($data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->tgl_lahir)->format('dmY'));
-            $pdf->save(public_path('itic/pdf/slip/'.$data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->nik.'/'.'Slip Gaji Tanggal '.$data['tanggal'].'.pdf'));
+            if (File::exists(public_path('public/itic/pdf/slip/'.$data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->nik.'/'.'Slip Gaji Tanggal '.$data['tanggal'].'.pdf'))) {
+                \Log::error($value->kode_pengerjaan.' '.$value->nama_karyawan.' PDF Sudah Ada');
+            }else{
+                $pdf = Pdf::loadView('email.slipGajiOperatorHarian',$data);
+                $pdf->setPaper(array(0,0,560,380));
+                $pdf->setEncryption(Carbon::create($data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->tgl_lahir)->format('dmY'),Carbon::create($data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->tgl_lahir)->format('dmY'));
+                $pdf->save(public_path('itic/pdf/slip/'.$data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->nik.'/'.'Slip Gaji Tanggal '.$data['tanggal'].'.pdf'));
+                // \Log::error($value->kode_pengerjaan.' '.$value->nama_karyawan.' PDF Tidak Ditemukan');
+            }
+            
+            // if (empty(public_path('public/itic/pdf/slip/'.$data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->nik.'/'.'Slip Gaji Tanggal '.$data['tanggal'].'.pdf'))) {
+            //     \Log::error($value->kode_pengerjaan.' '.$value->nama_karyawan.' PDF Tidak Ditemukan');
+            // }else{
+            //     \Log::info($value->kode_pengerjaan.' '.$value->nama_karyawan.' PDF Sudah Ada');
+            // }
+
         }
 
-        \Log::info($value->kode_pengerjaan.' '.$value->nama_karyawan.' PDF Berhasil Dibuat');
+        // \Log::info($value->kode_pengerjaan.' '.$value->nama_karyawan.' PDF Berhasil Dibuat');
     }
 }
