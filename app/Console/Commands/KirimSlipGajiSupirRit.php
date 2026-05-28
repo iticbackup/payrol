@@ -223,26 +223,42 @@ class KirimSlipGajiSupirRit extends Command
                 $pdf->setPaper(array(0,0,400,500));   
                 $pdf->setEncryption(Carbon::create($pengerjaan_rit_weekly->operator_supir_rit->biodata_karyawan->tgl_lahir)->format('dmY'),Carbon::create($pengerjaan_rit_weekly->operator_supir_rit->biodata_karyawan->tgl_lahir)->format('dmY'));
 
-                Mail::send('email.testingMailSupirRit',$data, function($message) use($data,$pdf,$pengerjaan_rit_weekly){
-                    $message->to(strtolower($pengerjaan_rit_weekly->operator_supir_rit->biodata_karyawan->email))
-                            ->subject('Laporan Slip Gaji '.$pengerjaan_rit_weekly->operator_supir_rit->biodata_karyawan->nama.' '.date('d-m-Y'))
-                            ->attachData($pdf->output(), 'Laporan Slip Gaji '.$pengerjaan_rit_weekly->operator_supir_rit->biodata_karyawan->nama.' '.date('d-m-Y').'.pdf');
-                });
+                try {
+                    Mail::send('email.testingMailSupirRit',$data, function($message) use($data,$pdf,$pengerjaan_rit_weekly){
+                        $message->to(strtolower($pengerjaan_rit_weekly->operator_supir_rit->biodata_karyawan->email))
+                                ->subject('Laporan Slip Gaji '.$pengerjaan_rit_weekly->operator_supir_rit->biodata_karyawan->nama.' '.date('d-m-Y'))
+                                ->attachData($pdf->output(), 'Laporan Slip Gaji '.$pengerjaan_rit_weekly->operator_supir_rit->biodata_karyawan->nama.' '.date('d-m-Y').'.pdf');
+                    });
 
-                if (Mail::failures()) {
-                    $value->update([
-                        'status' => 'gagal'
-                    ]);
-
-                    \Log::error($value->kode_pengerjaan.' '.$value->nama_karyawan.' Gagal Kirim Email');
-
-                }else{
                     $value->update([
                         'status' => 'terkirim'
                     ]);
 
                     \Log::info($value->kode_pengerjaan.' '.$value->nama_karyawan.' Terkirim');
+                    
+                } catch (\Exception $th) {
+                    $value->update([
+                        'status' => 'gagal'
+                    ]);
+
+                    \Log::error($value->kode_pengerjaan.' '.$value->nama_karyawan.' Gagal Kirim Email');
+                    \Log::warning('Gagal mengirim email notifikasi error: ' . $th->getMessage());
                 }
+
+                // if (Mail::failures()) {
+                //     $value->update([
+                //         'status' => 'gagal'
+                //     ]);
+
+                //     \Log::error($value->kode_pengerjaan.' '.$value->nama_karyawan.' Gagal Kirim Email');
+
+                // }else{
+                //     $value->update([
+                //         'status' => 'terkirim'
+                //     ]);
+
+                //     \Log::info($value->kode_pengerjaan.' '.$value->nama_karyawan.' Terkirim');
+                // }
             }else{
                 \Log::error('Supir RIT '.$value->nama_karyawan.' Email Belum Tersedia.');
             }

@@ -78,7 +78,7 @@ class KirimSlipGajiHarian extends Command
                                         ->get();
 
         foreach ($cek_kirim_slip_gajis as $key => $value) {
-            
+
             if (empty($value->karyawan_operator_harian->biodata_karyawan->email)) {
                 \Log::error('Harian '.$value->nama_karyawan.' Email Belum Tersedia.');
             }
@@ -218,23 +218,39 @@ class KirimSlipGajiHarian extends Command
             $pdf->setPaper(array(0,0,560,380));  
             $pdf->setEncryption(Carbon::create($data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->tgl_lahir)->format('dmY'),Carbon::create($data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->tgl_lahir)->format('dmY'));
 
-            Mail::send('email.testingMailHarian',$data, function($message) use($data,$pdf){
-                $message->to(strtolower($data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->email))
-                        ->subject('Laporan Slip Gaji '.$data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y'))
-                        ->attachData($pdf->output(), 'Laporan Slip Gaji '.$data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y').'.pdf');
-            });
+            try {
+                Mail::send('email.testingMailHarian',$data, function($message) use($data,$pdf){
+                    $message->to(strtolower($data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->email))
+                            ->subject('Laporan Slip Gaji '.$data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y'))
+                            ->attachData($pdf->output(), 'Laporan Slip Gaji '.$data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y').'.pdf');
+                });
 
-            if (Mail::failures()) {
-                $value->update([
-                    'status' => 'gagal'
-                ]);
-                \Log::error($value->kode_pengerjaan.' '.$value->nama_karyawan.' Gagal Kirim Email');
-            }else{
                 $value->update([
                     'status' => 'terkirim'
                 ]);
+
                 \Log::info($value->kode_pengerjaan.' '.$value->nama_karyawan.' Terkirim');
+                
+            } catch (\Exception $th) {
+                $value->update([
+                    'status' => 'gagal'
+                ]);
+
+                \Log::error($value->kode_pengerjaan.' '.$value->nama_karyawan.' Gagal Kirim Email');
+                \Log::warning('Gagal mengirim email notifikasi error: ' . $th->getMessage());
             }
+
+            // if (Mail::failures()) {
+            //     $value->update([
+            //         'status' => 'gagal'
+            //     ]);
+            //     \Log::error($value->kode_pengerjaan.' '.$value->nama_karyawan.' Gagal Kirim Email');
+            // }else{
+            //     $value->update([
+            //         'status' => 'terkirim'
+            //     ]);
+            //     \Log::info($value->kode_pengerjaan.' '.$value->nama_karyawan.' Terkirim');
+            // }
         }
     }
 }
