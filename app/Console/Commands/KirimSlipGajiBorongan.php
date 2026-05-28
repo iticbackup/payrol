@@ -404,80 +404,80 @@ class KirimSlipGajiBorongan extends Command
                     array_push($data['total_lembur_kerja'], $total_lembur);
     
                     if ($value->new_data_pengerjaan->akhir_bulan == 'y') {
-                        if (empty($value->tunjangan_kerja)) {
+                        if (empty($pengerjaan_weekly->tunjangan_kerja)) {
                             $data['tunjangan_kerja'] = 0;
                         } else {
-                            $data['tunjangan_kerja'] = $value->tunjangan_kerja;
+                            $data['tunjangan_kerja'] = $pengerjaan_weekly->tunjangan_kerja;
                         }
                     } else {
                         $data['tunjangan_kerja'] = 0;
                     }
     
-                    if (empty($value->tunjangan_kehadiran)) {
+                    if (empty($pengerjaan_weekly->tunjangan_kehadiran)) {
                         $data['tunjangan_kehadiran'] = 0;
                     } else {
-                        $data['tunjangan_kehadiran'] = $value->tunjangan_kehadiran;
+                        $data['tunjangan_kehadiran'] = $pengerjaan_weekly->tunjangan_kehadiran;
                     }
     
-                    if (empty($value->uang_makan)) {
+                    if (empty($pengerjaan_weekly->uang_makan)) {
                         $data['uang_makan'] = 0;
                     } else {
-                        $data['uang_makan'] = $value->uang_makan;
+                        $data['uang_makan'] = $pengerjaan_weekly->uang_makan;
                     }
     
-                    if (empty($value->plus_1)) {
+                    if (empty($pengerjaan_weekly->plus_1)) {
                         $data['plus_1'] = 0;
                         $data['ket_plus_1'] = null;
                     } else {
-                        $explode_plus_1 = explode('|', $value->plus_1);
+                        $explode_plus_1 = explode('|', $pengerjaan_weekly->plus_1);
                         $data['plus_1'] = floatval($explode_plus_1[0]);
                         $data['ket_plus_1'] = $explode_plus_1[1];
                     }
     
-                    if (empty($value->plus_2)) {
+                    if (empty($pengerjaan_weekly->plus_2)) {
                         $data['plus_2'] = 0;
                         $data['ket_plus_2'] = null;
                     } else {
-                        $explode_plus_2 = explode('|', $value->plus_2);
+                        $explode_plus_2 = explode('|', $pengerjaan_weekly->plus_2);
                         $data['plus_2'] = floatval($explode_plus_2[0]);
                         $data['ket_plus_2'] = $explode_plus_2[1];
                     }
     
-                    if (empty($value->plus_3)) {
+                    if (empty($pengerjaan_weekly->plus_3)) {
                         $data['plus_3'] = 0;
                         $data['ket_plus_3'] = null;
                     } else {
-                        $explode_plus_3 = explode('|', $value->plus_3);
+                        $explode_plus_3 = explode('|', $pengerjaan_weekly->plus_3);
                         $data['plus_3'] = floatval($explode_plus_3[0]);
                         $data['ket_plus_3'] = $explode_plus_3[1];
                     }
     
-                    if (empty($value->jht)) {
+                    if (empty($pengerjaan_weekly->jht)) {
                         $data['jht'] = 0;
                     } else {
-                        $data['jht'] = $value->jht;
+                        $data['jht'] = $pengerjaan_weekly->jht;
                     }
     
-                    if (empty($value->bpjs_kesehatan)) {
+                    if (empty($pengerjaan_weekly->bpjs_kesehatan)) {
                         $data['bpjs_kesehatan'] = 0;
                     } else {
-                        $data['bpjs_kesehatan'] = $value->bpjs_kesehatan;
+                        $data['bpjs_kesehatan'] = $pengerjaan_weekly->bpjs_kesehatan;
                     }
     
-                    if (empty($value->minus_1)) {
+                    if (empty($pengerjaan_weekly->minus_1)) {
                         $data['minus_1'] = '0';
                         $data['ket_minus_1'] = null;
                     } else {
-                        $explode_minus_1 = explode('|', $value->minus_1);
+                        $explode_minus_1 = explode('|', $pengerjaan_weekly->minus_1);
                         $data['minus_1'] = floatval($explode_minus_1[0]);
                         $data['ket_minus_1'] = $explode_minus_1[1];
                     }
     
-                    if (empty($value->minus_2)) {
+                    if (empty($pengerjaan_weekly->minus_2)) {
                         $data['minus_2'] = 0;
                         $data['ket_minus_2'] = null;
                     } else {
-                        $explode_minus_2 = explode('|', $value->minus_2);
+                        $explode_minus_2 = explode('|', $pengerjaan_weekly->minus_2);
                         $data['minus_2'] = floatval($explode_minus_2[0]);
                         $data['ket_minus_2'] = $explode_minus_2[1];
                     }

@@ -15698,7 +15698,7 @@ class PengerjaanController extends Controller
                         }
 
 
-                        $total_hasil_kerja = round($hasil_kerja_1 * $lembur_1 + $hasil_kerja_2 * $lembur_2 + $hasil_kerja_3 * $lembur_3 + $hasil_kerja_4 * $lembur_4 + $hasil_kerja_5 * $lembur_5) - $pengerjaan['uang_lembur'];
+                        $total_hasil_kerja = round(($hasil_kerja_1 * $lembur_1) + ($hasil_kerja_2 * $lembur_2) + ($hasil_kerja_3 * $lembur_3) + ($hasil_kerja_4 * $lembur_4) + ($hasil_kerja_5 * $lembur_5)) - $pengerjaan['uang_lembur'];
                         $total_lembur = $pengerjaan['uang_lembur'];
 
                         array_push($total_upah_hasil_kerja, $total_hasil_kerja);
