@@ -90,9 +90,16 @@ class KirimSlipGajiHarian extends Command
             $data['exp_tgl_awal'] = explode('-', $data['exp_tanggals'][1]);
             $data['exp_tgl_akhir'] = explode('-', $data['exp_tanggals'][$data['a']]);
 
-            $data['pengerjaan_harian'] = PengerjaanHarian::where('kode_pengerjaan',$value->kode_pengerjaan)
+            $data['pengerjaan_harian'] = PengerjaanHarian::whereHas('operator_karyawan', function($query) use($value){
+                                                            $query->where('nik',$value->nik)
+                                                                ->where('jenis_operator_id',$value->jenis_operator_id)
+                                                                ->where('jenis_operator_detail_id',$value->jenis_operator_detail_id)
+                                                                ->where('jenis_operator_detail_pekerjaan_id',$value->jenis_operator_detail_pekerjaan_id);
+                                                        })
+                                                        ->where('kode_pengerjaan',$value->kode_pengerjaan)
                                                         ->where('id', $value->pengerjaan_id)
                                                         ->first();
+            // \Log::warning($data['pengerjaan_harian']);
 
             if (empty($data['pengerjaan_harian']->lembur)) {
                 $data['hasil_lembur'] = 0;
@@ -240,17 +247,6 @@ class KirimSlipGajiHarian extends Command
                 \Log::warning('Gagal mengirim email notifikasi error: ' . $th->getMessage());
             }
 
-            // if (Mail::failures()) {
-            //     $value->update([
-            //         'status' => 'gagal'
-            //     ]);
-            //     \Log::error($value->kode_pengerjaan.' '.$value->nama_karyawan.' Gagal Kirim Email');
-            // }else{
-            //     $value->update([
-            //         'status' => 'terkirim'
-            //     ]);
-            //     \Log::info($value->kode_pengerjaan.' '.$value->nama_karyawan.' Terkirim');
-            // }
         }
     }
 }
