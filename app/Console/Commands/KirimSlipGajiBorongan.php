@@ -59,15 +59,23 @@ class KirimSlipGajiBorongan extends Command
             ];
         }
 
-        $cek_kirim_slip_gajis = KirimGaji::whereHas('karyawan_operator', function($query) use($jenis_operator,$jenis_operator_detail_id){
-                                            $query->where('jenis_operator_id',$jenis_operator->id)
-                                                ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id);
-                                        })
-                                        ->where('kode_pengerjaan','LIKE','%PB_%')
+        // $cek_kirim_slip_gajis = KirimGaji::whereHas('karyawan_operator', function($query) use($jenis_operator,$jenis_operator_detail_id){
+        //                                     $query->where('jenis_operator_id',$jenis_operator->id)
+        //                                         ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id);
+        //                                 })
+        //                                 ->where('kode_pengerjaan','LIKE','%PB_%')
+        //                                 ->where('status','menunggu')
+        //                                 ->orWhere('status','gagal')
+        //                                 ->limit(env('COUNT_KIRIM_EMAIL'))
+        //                                 ->orderBy('id','asc')
+        //                                 ->get();
+        $cek_kirim_slip_gajis = KirimGaji::where('kode_pengerjaan','LIKE','%PB_%')
+                                        ->where('jenis_operator_id',$jenis_operator->id)
+                                        ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id)
                                         ->where('status','menunggu')
                                         ->orWhere('status','gagal')
                                         ->limit(env('COUNT_KIRIM_EMAIL'))
-                                        ->orderBy('id','asc')
+                                        // ->orderBy('id','asc')
                                         ->get();
 
         foreach ($cek_kirim_slip_gajis as $key => $value) {
@@ -96,7 +104,7 @@ class KirimSlipGajiBorongan extends Command
     
                 foreach ($data['pengerjaans'] as $key => $pengerjaan) {
                     #Borongan Packing
-                    if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 1) {
+                    if ($pengerjaan->jenis_operator_detail_pekerjaan_id == 1) {
                         for ($i = 1; $i <= 5; $i++) {
                             ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
                             ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganLokal::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
@@ -122,7 +130,7 @@ class KirimSlipGajiBorongan extends Command
                     }
     
                     #Borongan Bandrol
-                    if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 2) {
+                    if ($pengerjaan->jenis_operator_detail_pekerjaan_id == 2) {
                         for ($i = 1; $i <= 5; $i++) {
                             ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
                             ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganLokal::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
@@ -148,7 +156,7 @@ class KirimSlipGajiBorongan extends Command
                     }
     
                     #Borongan Inner
-                    if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 3) {
+                    if ($pengerjaan->jenis_operator_detail_pekerjaan_id == 3) {
                         for ($i = 1; $i <= 5; $i++) {
                             ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
                             ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganLokal::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
@@ -174,7 +182,7 @@ class KirimSlipGajiBorongan extends Command
                     }
     
                     #Borongan Outer
-                    if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 4) {
+                    if ($pengerjaan->jenis_operator_detail_pekerjaan_id == 4) {
                         for ($i = 1; $i <= 5; $i++) {
                             ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
                             ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganLokal::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
@@ -200,7 +208,7 @@ class KirimSlipGajiBorongan extends Command
                     }
     
                     #Borongan Stempel Lokal
-                    if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 25) {
+                    if ($pengerjaan->jenis_operator_detail_pekerjaan_id == 25) {
                         for ($i = 1; $i <= 5; $i++) {
                             ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
                             ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganStempel::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
@@ -226,7 +234,7 @@ class KirimSlipGajiBorongan extends Command
                     }
     
                     #Borongan Ekspor Packing
-                    if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 5) {
+                    if ($pengerjaan->jenis_operator_detail_pekerjaan_id == 5) {
                         for ($i = 1; $i <= 5; $i++) {
                             ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
                             ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganEkspor::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
@@ -252,7 +260,7 @@ class KirimSlipGajiBorongan extends Command
                     }
     
                     #Borongan Ekspor Kemas
-                    if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 6) {
+                    if ($pengerjaan->jenis_operator_detail_pekerjaan_id == 6) {
                         for ($i = 1; $i <= 5; $i++) {
                             ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
                             ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganEkspor::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
@@ -278,7 +286,7 @@ class KirimSlipGajiBorongan extends Command
                     }
     
                     #Borongan Ekspor Gagang
-                    if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 7) {
+                    if ($pengerjaan->jenis_operator_detail_pekerjaan_id == 7) {
                         for ($i = 1; $i <= 5; $i++) {
                             ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
                             ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganEkspor::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
@@ -304,7 +312,7 @@ class KirimSlipGajiBorongan extends Command
                     }
     
                     #Borongan Ambri Isi Etiket
-                    if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 8) {
+                    if ($pengerjaan->jenis_operator_detail_pekerjaan_id == 8) {
                         for ($i = 1; $i <= 5; $i++) {
                             ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
                             ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganAmbri::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
@@ -330,7 +338,7 @@ class KirimSlipGajiBorongan extends Command
                     }
     
                     #Borongan Ambri Las Tepi
-                    if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 9) {
+                    if ($pengerjaan->jenis_operator_detail_pekerjaan_id == 9) {
                         for ($i = 1; $i <= 5; $i++) {
                             ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
                             ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganAmbri::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();
@@ -356,7 +364,7 @@ class KirimSlipGajiBorongan extends Command
                     }
     
                     #Borongan Ambri Isi Ambri
-                    if ($pengerjaan->operator_karyawan->jenis_operator_detail_pekerjaan_id == 11) {
+                    if ($pengerjaan->jenis_operator_detail_pekerjaan_id == 11) {
                         for ($i = 1; $i <= 5; $i++) {
                             ${'explode_hasil_kerja_' . $i} = explode('|', $pengerjaan['hasil_kerja_' . $i]);
                             ${'umk_borongan_lokal_' . $i} = \App\Models\UMKBoronganAmbri::where('id', ${'explode_hasil_kerja_' . $i}[0])->first();

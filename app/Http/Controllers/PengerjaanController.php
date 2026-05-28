@@ -15802,6 +15802,9 @@ class PengerjaanController extends Controller
                                 'kode_payrol' => $pengerjaan_weekly->kode_payrol,
                                 'pengerjaan_id' => $pengerjaan_weekly->id,
                                 'nama_karyawan' => $pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama,
+                                'jenis_operator_id' => $pengerjaan_weekly->operator_karyawan->jenis_operator_id,
+                                'jenis_operator_detail_id' => $pengerjaan_weekly->operator_karyawan->jenis_operator_detail_id,
+                                'jenis_operator_detail_pekerjaan_id' => $pengerjaan_weekly->operator_karyawan->jenis_operator_detail_pekerjaan_id,
                                 'nominal_gaji' => $total_upah_gaji_diterima,
                                 'status' => 'menunggu'
                             ]
@@ -15811,6 +15814,9 @@ class PengerjaanController extends Controller
                             'kode_payrol' => $pengerjaan_weekly->kode_payrol,
                             'pengerjaan_id' => $pengerjaan_weekly->id,
                             'nama_karyawan' => $pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama,
+                            'jenis_operator_id' => $pengerjaan_weekly->operator_karyawan->jenis_operator_id,
+                            'jenis_operator_detail_id' => $pengerjaan_weekly->operator_karyawan->jenis_operator_detail_id,
+                            'jenis_operator_detail_pekerjaan_id' => $pengerjaan_weekly->operator_karyawan->jenis_operator_detail_pekerjaan_id,
                             'nominal_gaji' => $total_upah_gaji_diterima,
                             'status' => 'menunggu'
                         ]);
@@ -15964,6 +15970,9 @@ class PengerjaanController extends Controller
                                 'kode_payrol' => $pengerjaan_harian->kode_payrol,
                                 'pengerjaan_id' => $pengerjaan_harian->id,
                                 'nama_karyawan' => $pengerjaan_harian->operator_karyawan->biodata_karyawan->nama,
+                                'jenis_operator_id' => $pengerjaan_harian->operator_karyawan->jenis_operator_id,
+                                'jenis_operator_detail_id' => $pengerjaan_harian->operator_karyawan->jenis_operator_detail_id,
+                                'jenis_operator_detail_pekerjaan_id' => $pengerjaan_harian->operator_karyawan->jenis_operator_detail_pekerjaan_id,
                                 'nominal_gaji' => $total_gaji_diterima,
                                 'status' => 'menunggu'
                             ]
@@ -15973,6 +15982,9 @@ class PengerjaanController extends Controller
                             'kode_payrol' => $pengerjaan_harian->kode_payrol,
                             'pengerjaan_id' => $pengerjaan_harian->id,
                             'nama_karyawan' => $pengerjaan_harian->operator_karyawan->biodata_karyawan->nama,
+                            'jenis_operator_id' => $pengerjaan_harian->operator_karyawan->jenis_operator_id,
+                            'jenis_operator_detail_id' => $pengerjaan_harian->operator_karyawan->jenis_operator_detail_id,
+                            'jenis_operator_detail_pekerjaan_id' => $pengerjaan_harian->operator_karyawan->jenis_operator_detail_pekerjaan_id,
                             'nominal_gaji' => $total_gaji_diterima,
                             'status' => 'menunggu'
                         ]);

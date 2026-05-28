@@ -11391,11 +11391,15 @@ class PayrolController extends Controller
             ];
         }
                     // dd($jenis_operator_detail_id);
-        $data['slip_gaji_borongans'] = $this->kirim_gaji->whereHas('karyawan_operator', function($query) use($jenis_operator,$jenis_operator_detail_id){
-                                                            $query->where('jenis_operator_id',$jenis_operator->id)
-                                                                ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id);
-                                                        })
-                                                        ->where('kode_pengerjaan',$kode_pengerjaan)
+        // $data['slip_gaji_borongans'] = $this->kirim_gaji->whereHas('karyawan_operator', function($query) use($jenis_operator,$jenis_operator_detail_id){
+        //                                                     $query->where('jenis_operator_id',$jenis_operator->id)
+        //                                                         ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id);
+        //                                                 })
+        //                                                 ->where('kode_pengerjaan',$kode_pengerjaan)
+        //                                                 ->get();
+        $data['slip_gaji_borongans'] = $this->kirim_gaji->where('kode_pengerjaan',$kode_pengerjaan)
+                                                        ->where('jenis_operator_id',$jenis_operator->id)
+                                                        ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id)
                                                         ->get();
         // $data['slip_gaji_borongans'] = $this->kirim_gaji->select([
         //                                                   'operator_karyawan.nik as nik',
@@ -12032,11 +12036,17 @@ class PayrolController extends Controller
             ];
         }
 
-        $data['slip_gaji_borongans'] = $this->kirim_gaji->whereHas('karyawan_operator', function($query) use($jenis_operator,$jenis_operator_detail_id){
-                                                            $query->where('jenis_operator_id',$jenis_operator->id)
-                                                                ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id);
-                                                        })
-                                                        ->where('kode_pengerjaan',$kode_pengerjaan)
+        // dd($jenis_operator);
+
+        // $data['slip_gaji_borongans'] = $this->kirim_gaji->whereHas('karyawan_operator', function($query) use($jenis_operator,$jenis_operator_detail_id){
+        //                                                     $query->where('jenis_operator_id',$jenis_operator->id)
+        //                                                         ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id);
+        //                                                 })
+        //                                                 ->where('kode_pengerjaan',$kode_pengerjaan)
+        //                                                 ->get();
+        $data['slip_gaji_borongans'] = $this->kirim_gaji->where('kode_pengerjaan',$kode_pengerjaan)
+                                                        ->where('jenis_operator_id',$jenis_operator->id)
+                                                        ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id)
                                                         ->get();
         
         // return view('backend.payrol.penggajian.borongan.cek_kirim_gaji',$data);
@@ -12131,11 +12141,15 @@ class PayrolController extends Controller
             ];
         }
 
-        $data['slip_gaji_borongans'] = $this->kirim_gaji->whereHas('karyawan_operator_harian', function($query) use($jenis_operator,$jenis_operator_detail_id){
-                                                            $query->where('jenis_operator_id',$jenis_operator->id)
-                                                                ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id);
-                                                        })
-                                                        ->where('kode_pengerjaan',$kode_pengerjaan)
+        // $data['slip_gaji_borongans'] = $this->kirim_gaji->whereHas('karyawan_operator_harian', function($query) use($jenis_operator,$jenis_operator_detail_id){
+        //                                                     $query->where('jenis_operator_id',$jenis_operator->id)
+        //                                                         ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id);
+        //                                                 })
+        //                                                 ->where('kode_pengerjaan',$kode_pengerjaan)
+        //                                                 ->get();
+        $data['slip_gaji_borongans'] = $this->kirim_gaji->where('kode_pengerjaan',$kode_pengerjaan)
+                                                        ->where('jenis_operator_id',$jenis_operator->id)
+                                                        ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id)
                                                         ->get();
 
                                                         // dd($data['slip_gaji_borongans']);
@@ -12427,11 +12441,15 @@ class PayrolController extends Controller
             ];
         }
 
-        $data['slip_gaji_borongans'] = $this->kirim_gaji->whereHas('karyawan_operator_harian', function($query) use($jenis_operator,$jenis_operator_detail_id){
-                                                            $query->where('jenis_operator_id',$jenis_operator->id)
-                                                                ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id);
-                                                        })
-                                                        ->where('kode_pengerjaan',$kode_pengerjaan)
+        // $data['slip_gaji_borongans'] = $this->kirim_gaji->whereHas('karyawan_operator_harian', function($query) use($jenis_operator,$jenis_operator_detail_id){
+        //                                                     $query->where('jenis_operator_id',$jenis_operator->id)
+        //                                                         ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id);
+        //                                                 })
+        //                                                 ->where('kode_pengerjaan',$kode_pengerjaan)
+        //                                                 ->get();
+        $data['slip_gaji_borongans'] = $this->kirim_gaji->where('kode_pengerjaan',$kode_pengerjaan)
+                                                        ->where('jenis_operator_id',$jenis_operator->id)
+                                                        ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id)
                                                         ->get();
 
         // return view('backend.payrol.penggajian.harian.cek_kirim_gaji',$data);

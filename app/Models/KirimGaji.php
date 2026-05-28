@@ -19,6 +19,9 @@ class KirimGaji extends Model
         'pengerjaan_id',
         'nik',
         'nama_karyawan',
+        'jenis_operator_id',
+        'jenis_operator_detail_id',
+        'jenis_operator_detail_pekerjaan_id',
         'nominal_gaji',
         'status'
     ];
@@ -36,6 +39,21 @@ class KirimGaji extends Model
     public function karyawan_operator_supir_rit()
     {
         return $this->belongsTo(\App\Models\RitKaryawan::class, 'nik', 'nik');
+    }
+
+    public function jenis_operator()
+    {
+        return $this->belongsTo(\App\Models\JenisOperator::class, 'jenis_operator_id','id');
+    }
+
+    public function jenis_operator_detail()
+    {
+        return $this->belongsTo(\App\Models\JenisOperatorDetail::class, 'jenis_operator_detail_id','id');
+    }
+
+    public function jenis_operator_detail_pengerjaan()
+    {
+        return $this->belongsTo(\App\Models\JenisOperatorDetailPengerjaan::class, 'jenis_operator_detail_pekerjaan_id','id');
     }
 
     public function pengerjaan_weekly()

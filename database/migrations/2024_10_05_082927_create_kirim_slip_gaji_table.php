@@ -20,6 +20,9 @@ class CreateKirimSlipGajiTable extends Migration
             $table->integer('pengerjaan_id');
             $table->string('nik');
             $table->string('nama_karyawan');
+            $table->integer('jenis_operator_id')->nullable();
+            $table->integer('jenis_operator_detail_id')->nullable();
+            $table->integer('jenis_operator_detail_pekerjaan_id')->nullable();
             $table->string('nominal_gaji');
             $table->string('status',50);
             $table->timestamps();

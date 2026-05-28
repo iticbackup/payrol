@@ -79,10 +79,10 @@
                                     <td class="text-center">{{ $item->karyawan_operator_harian->id }}</td>
                                     <td class="text-center">{{ $item->biodata_karyawan->email }}</td>
                                     <td class="text-center">
-                                        @if (empty($item->karyawan_operator_harian->jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan))
+                                        @if (empty($item->jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan))
                                             -
                                         @else
-                                        {{ $item->karyawan_operator_harian->jenis_operator_detail->jenis_posisi.' - '.$item->karyawan_operator_harian->jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan }}
+                                        {{ $item->jenis_operator_detail->jenis_posisi.' - '.$item->jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan }}
                                         @endif
                                     </td>
                                     <td class="text-center">{{ 'Rp. '.number_format($item->nominal_gaji,0,',','.') }}</td>

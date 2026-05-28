@@ -58,15 +58,23 @@ class KirimSlipGajiHarian extends Command
             ];
         }
 
-        $cek_kirim_slip_gajis = KirimGaji::whereHas('karyawan_operator_harian', function($query) use($jenis_operator,$jenis_operator_detail_id){
-                                            $query->where('jenis_operator_id',$jenis_operator->id)
-                                                ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id);
-                                        })
-                                        ->where('kode_pengerjaan','LIKE','%PH_%')
+        // $cek_kirim_slip_gajis = KirimGaji::whereHas('karyawan_operator_harian', function($query) use($jenis_operator,$jenis_operator_detail_id){
+        //                                     $query->where('jenis_operator_id',$jenis_operator->id)
+        //                                         ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id);
+        //                                 })
+        //                                 ->where('kode_pengerjaan','LIKE','%PH_%')
+        //                                 ->where('status','menunggu')
+        //                                 ->orWhere('status','gagal')
+        //                                 ->limit(env('COUNT_KIRIM_EMAIL'))
+        //                                 ->orderBy('id','asc')
+        //                                 ->get();
+        $cek_kirim_slip_gajis = KirimGaji::where('kode_pengerjaan','LIKE','%PH_%')
+                                        ->where('jenis_operator_id',$jenis_operator->id)
+                                        ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id)
                                         ->where('status','menunggu')
                                         ->orWhere('status','gagal')
                                         ->limit(env('COUNT_KIRIM_EMAIL'))
-                                        ->orderBy('id','asc')
+                                        // ->orderBy('id','asc')
                                         ->get();
 
         foreach ($cek_kirim_slip_gajis as $key => $value) {
@@ -227,6 +235,7 @@ class KirimSlipGajiHarian extends Command
             // }else{
             //     \Log::error('Harian '.$value->nama_karyawan.' Email Belum Tersedia.');
             // }
+
             if (empty($value->karyawan_operator_harian->biodata_karyawan->email)) {
                 \Log::error('Harian '.$value->nama_karyawan.' Email Belum Tersedia.');
             }
