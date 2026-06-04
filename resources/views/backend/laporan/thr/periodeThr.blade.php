@@ -1,5 +1,5 @@
 @extends('layouts.backend.app')
-@section('title', 'THR - Periode '.$periode)
+@section('title', 'THR - Periode ' . $periode)
 
 @section('css')
     <link href="{{ URL::asset('public/assets/plugins/datatables/dataTables.bootstrap5.min.css') }}" rel="stylesheet"
@@ -34,78 +34,76 @@
                         <div class="fw-bold">Update Masa Kerja Cut Off Pertanggal : {{ $cut_off->format('d-m-Y') }}</div>
                         <div class="fw-bold">Total Record : {{ $list_karyawans->count() }} Data</div>
                     </div>
-                    <div class="mb-3">
-                        <a href="{{ route('laporan.thr.slip_gaji',['periode' => $periode]) }}" class="btn btn-primary">Print Slip Gaji</a>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table" id="datatables">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">No</th>
-                                    <th class="text-center">NIK</th>
-                                    <th class="text-center">Nama Karyawan</th>
-                                    <th class="text-center">Bagian</th>
-                                    <th class="text-center">Status</th>
-                                    <th class="text-center">Masa Kerja</th>
-                                    <th class="text-center">Minimal UMK</th>
-                                    <th class="text-center">Persen %</th>
-                                    <th class="text-center">Total Gaji</th>
-                                    <th class="text-center">Rata-Rata Gaji</th>
-                                    <th class="text-center">THR Diterima</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                    $total_gaji = [];
-                                    $total_rata_gaji = [];
-                                    $total_thr_diterima = [];
-                                @endphp
-                                @foreach ($list_karyawans as $key => $item)
-                                    {{-- Borongan --}}
-                                    @if ($item->id_departemen_bagian >= 12 && $item->id_departemen_bagian <= 17 || $item->id_departemen_bagian == 35)
+                    {{-- <div class="mb-3">
+                        <a href="{{ route('laporan.thr.slip_gaji', ['periode' => $periode]) }}" class="btn btn-primary">Print
+                            Slip Gaji</a>
+                    </div> --}}
+                    <table class="table table-striped" id="datatables">
+                        <thead class="sticky-top">
+                            <tr>
+                                <th class="text-center bg-dark text-white">No</th>
+                                <th class="text-center bg-dark text-white">NIK</th>
+                                <th class="text-center bg-dark text-white">Nama Karyawan</th>
+                                <th class="text-center bg-dark text-white">Bagian</th>
+                                <th class="text-center bg-dark text-white">Status</th>
+                                <th class="text-center bg-dark text-white">Masa Kerja</th>
+                                <th class="text-center bg-dark text-white">Total Gaji {{ $totalBulan }} Bulan</th>
+                                <th class="text-center bg-dark text-white">Rata-Rata Gaji</th>
+                                <th class="text-center bg-dark text-white">Minimal UMK</th>
+                                <th class="text-center bg-dark text-white">Persen %</th>
+                                <th class="text-center bg-dark text-white">THR Diterima</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                                $total_gaji = [];
+                                $total_rata_gaji = [];
+                                $total_minimum_umk = [];
+                                $total_thr_diterima = [];
+                            @endphp
+                            @foreach ($list_karyawans as $key => $item)
+                                {{-- Borongan --}}
+                                @if (($item->id_departemen_bagian >= 12 && $item->id_departemen_bagian <= 17) || $item->id_departemen_bagian == 35)
                                     @php
                                         $awal = new DateTime($item->biodata_karyawan->tanggal_masuk);
                                         $akhir = $cut_off;
-                                        $diff  = $awal->diff($akhir);
+                                        $diff = $awal->diff($akhir);
 
-                                        array_push($total_gaji,$item->nominal_gaji);
-                                        array_push($total_rata_gaji,$item->nominal_gaji/$totalBulan);
+                                        // dd($diff);
 
-                                        if ($item->nominal_gaji/$totalBulan < $bpjsKesehatan->nominal) {
+                                        array_push($total_gaji, $item->nominal_gaji);
+                                        array_push($total_rata_gaji, $item->nominal_gaji / $totalBulan);
+                                        // dd(number_format($item->nominal_gaji/3,2,',','.'));
+
+                                        if ($item->nominal_gaji / $totalBulan < $bpjsKesehatan->nominal) {
                                             $gaji_minimum_umk = $bpjsKesehatan->nominal;
-                                        }else{
-                                            $gaji_minimum_umk = $item->nominal_gaji/$totalBulan;    
+                                        } else {
+                                            $gaji_minimum_umk = $item->nominal_gaji / $totalBulan;
                                         }
 
                                         if ($diff->y >= 20) {
                                             $percentase = 205;
-                                            $hasil_percentase = $gaji_minimum_umk*2.05;
-                                        }
-                                        elseif($diff->y >= 15 && $diff->y < 20) {
+                                            $hasil_percentase = $gaji_minimum_umk * 2.05;
+                                        } elseif ($diff->y >= 15 && $diff->y < 20) {
                                             $percentase = 180;
-                                            $hasil_percentase = $gaji_minimum_umk*1.80;
-                                        }
-                                        elseif($diff->y >= 10 && $diff->y < 15) {
+                                            $hasil_percentase = $gaji_minimum_umk * 1.8;
+                                        } elseif ($diff->y >= 10 && $diff->y < 15) {
                                             $percentase = 155;
-                                            $hasil_percentase = $gaji_minimum_umk*1.55;
-                                        }
-                                        elseif($diff->y >= 5 && $diff->y < 10) {
+                                            $hasil_percentase = $gaji_minimum_umk * 1.55;
+                                        } elseif ($diff->y >= 5 && $diff->y < 10) {
                                             $percentase = 130;
-                                            $hasil_percentase = $gaji_minimum_umk*1.30;
-                                        }
-                                        elseif($diff->y >= 2 && $diff->y < 5) {
+                                            $hasil_percentase = $gaji_minimum_umk * 1.3;
+                                        } elseif ($diff->y >= 2 && $diff->y < 5) {
                                             $percentase = 120;
-                                            $hasil_percentase = $gaji_minimum_umk*1.20;
-                                        }
-                                        elseif($diff->y >= 1 && $diff->y < 2) {
+                                            $hasil_percentase = $gaji_minimum_umk * 1.2;
+                                        } elseif ($diff->y >= 1 && $diff->y < 2) {
                                             $percentase = 100;
-                                            $hasil_percentase = $gaji_minimum_umk*1;
-                                        }
-                                        else{
+                                            $hasil_percentase = $gaji_minimum_umk * 1;
+                                        } else {
                                             if ($diff->m >= 1) {
-                                                $percentase = $diff->m/12;
-                                                $hasil_percentase = $gaji_minimum_umk*$percentase;
-                                            }else{
+                                                $percentase = $diff->m / 12;
+                                                $hasil_percentase = $gaji_minimum_umk * $percentase;
+                                            } else {
                                                 $percentase = 0;
                                                 $hasil_percentase = 0;
                                             }
@@ -113,60 +111,57 @@
 
                                         if ($percentase >= 100) {
                                             $nilai_percentase = $percentase;
-                                        }else{
-                                            $nilai_percentase = number_format($percentase*100,0,',','.');   
+                                        } else {
+                                            $nilai_percentase = number_format($percentase * 100, 0, ',', '.');
                                         }
 
-                                        array_push($total_thr_diterima,$hasil_percentase);
+                                        array_push($total_minimum_umk, $gaji_minimum_umk);
+                                        array_push($total_thr_diterima, $hasil_percentase);
                                     @endphp
 
                                     {{-- harian --}}
-                                    @elseif($item->id_departemen_bagian >= 0 && $item->id_departemen_bagian <= 11 || $item->id_departemen_bagian >= 18 && $item->id_departemen_bagian <= 34)
+                                @elseif(
+                                    ($item->id_departemen_bagian >= 0 && $item->id_departemen_bagian <= 11) ||
+                                        ($item->id_departemen_bagian >= 18 && $item->id_departemen_bagian <= 34))
                                     @php
                                         $awal = new DateTime($item->biodata_karyawan->tanggal_masuk);
                                         $akhir = $cut_off;
-                                        $diff  = $awal->diff($akhir);
+                                        $diff = $awal->diff($akhir);
 
-                                        array_push($total_gaji,$item->nominal_gaji);
-                                        array_push($total_rata_gaji,$item->nominal_gaji/$totalBulan);
+                                        array_push($total_gaji, $item->nominal_gaji);
+                                        array_push($total_rata_gaji, $item->nominal_gaji / $totalBulan);
 
                                         if ($diff->y >= 15) {
-                                            $gaji_minimum_umk = $bpjsKesehatan->nominal+100000;
-                                        }elseif($diff->y >= 10 && $diff->y <= 14) {
-                                            $gaji_minimum_umk = $bpjsKesehatan->nominal+50000;
-                                        }elseif($diff->y < 10) {
+                                            $gaji_minimum_umk = $bpjsKesehatan->nominal + 100000;
+                                        } elseif ($diff->y >= 10 && $diff->y <= 14) {
+                                            $gaji_minimum_umk = $bpjsKesehatan->nominal + 50000;
+                                        } elseif ($diff->y < 10) {
                                             $gaji_minimum_umk = $bpjsKesehatan->nominal;
                                         }
 
                                         if ($diff->y >= 20) {
                                             $percentase = 205;
-                                            $hasil_percentase = $gaji_minimum_umk*2.05;
-                                        }
-                                        elseif($diff->y >= 15 && $diff->y < 20) {
+                                            $hasil_percentase = $gaji_minimum_umk * 2.05;
+                                        } elseif ($diff->y >= 15 && $diff->y < 20) {
                                             $percentase = 180;
-                                            $hasil_percentase = $gaji_minimum_umk*1.80;
-                                        }
-                                        elseif($diff->y >= 10 && $diff->y < 15) {
+                                            $hasil_percentase = $gaji_minimum_umk * 1.8;
+                                        } elseif ($diff->y >= 10 && $diff->y < 15) {
                                             $percentase = 155;
-                                            $hasil_percentase = $gaji_minimum_umk*1.55;
-                                        }
-                                        elseif($diff->y >= 5 && $diff->y < 10) {
+                                            $hasil_percentase = $gaji_minimum_umk * 1.55;
+                                        } elseif ($diff->y >= 5 && $diff->y < 10) {
                                             $percentase = 130;
-                                            $hasil_percentase = $gaji_minimum_umk*1.30;
-                                        }
-                                        elseif($diff->y >= 2 && $diff->y < 5) {
+                                            $hasil_percentase = $gaji_minimum_umk * 1.3;
+                                        } elseif ($diff->y >= 2 && $diff->y < 5) {
                                             $percentase = 120;
-                                            $hasil_percentase = $gaji_minimum_umk*1.20;
-                                        }
-                                        elseif($diff->y >= 1 && $diff->y < 2) {
+                                            $hasil_percentase = $gaji_minimum_umk * 1.2;
+                                        } elseif ($diff->y >= 1 && $diff->y < 2) {
                                             $percentase = 100;
-                                            $hasil_percentase = $gaji_minimum_umk*1;
-                                        }
-                                        else{
+                                            $hasil_percentase = $gaji_minimum_umk * 1;
+                                        } else {
                                             if ($diff->m >= 1) {
-                                                $percentase = $diff->m/12;
-                                                $hasil_percentase = $gaji_minimum_umk*$percentase;
-                                            }else{
+                                                $percentase = $diff->m / 12;
+                                                $hasil_percentase = $gaji_minimum_umk * $percentase;
+                                            } else {
                                                 $percentase = 0;
                                                 $hasil_percentase = 0;
                                             }
@@ -174,57 +169,64 @@
 
                                         if ($percentase >= 100) {
                                             $nilai_percentase = $percentase;
-                                        }else{
-                                            $nilai_percentase = number_format($percentase*100,0,',','.');    
+                                        } else {
+                                            $nilai_percentase = number_format($percentase * 100, 0, ',', '.');
                                         }
 
-                                        array_push($total_thr_diterima,$hasil_percentase);
+                                        array_push($total_thr_diterima, $hasil_percentase);
                                     @endphp
-                                    @endif
-                                    <tr>
-                                        <td class="text-center">{{ $key+1 }}</td>
-                                        <td class="text-center">{{ $item->nik }}</td>
-                                        <td>{{ $item->biodata_karyawan->nama }}</td>
-                                        <td>{{ empty($item->biodata_karyawan->departemen_bagian) ? '-' : $item->biodata_karyawan->departemen_dept.' - '.$item->biodata_karyawan->departemen_bagian }}</td>
-                                        <td class="text-center">
-                                            @if (empty($item->biodata_karyawan->status_karyawan))
-                                                -
-                                            @else
-                                                @switch($item->biodata_karyawan->status_karyawan)
-                                                    @case('A')
-                                                        <span class="badge bg-success">Tetap</span>
-                                                        @break
-                                                    @case('R')
-                                                        <span class="badge bg-danger">Resign</span>
-                                                        @break
-                                                    @case('K')
-                                                        <span class="badge bg-warning">Kontrak</span>
-                                                        @break
-                                                    @default
-                                                        
-                                                @endswitch
-                                            @endif
-                                        </td>
-                                        <td class="text-center">{{ $diff->y.' Tahun '.$diff->m.' Bulan '.$diff->d.' Hari' }}</td>
-                                        <td class="text-end">{{ 'Rp. '.number_format($gaji_minimum_umk,2,',','.') }}</td>
-                                        {{-- <td class="text-center">{{ number_format($percentase,2,',','.') }}%</td> --}}
-                                        <td class="text-center">{{ $nilai_percentase }}%</td>
-                                        <td class="text-end">{{ 'Rp. '.number_format($item->nominal_gaji,2,',','.') }}</td>
-                                        <td class="text-end">{{ 'Rp. '.number_format($item->nominal_gaji/$totalBulan,2,',','.') }}</td>
-                                        <td class="text-end">{{ 'Rp. '.number_format($hasil_percentase,0,',','.') }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                            <tfoot>
+                                @endif
                                 <tr>
-                                    <th colspan="8" class="text-end">Total</th>
-                                    <th class="text-end">{{ 'Rp. '.number_format(array_sum($total_gaji),0,',','.') }}</th>
-                                    <th class="text-end">{{ 'Rp. '.number_format(array_sum($total_rata_gaji),0,',','.') }}</th>
-                                    <th class="text-end">{{ 'Rp. '.number_format(array_sum($total_thr_diterima),0,',','.') }}</th>
+                                    <td class="text-center">{{ $key + 1 }}</td>
+                                    <td class="text-center">{{ $item->nik }}</td>
+                                    <td>{{ $item->biodata_karyawan->nama }}</td>
+                                    {{-- <td>{{ $item->jenis_operator->jenis_operator }}</td> --}}
+                                    <td>{{ empty($item->biodata_karyawan->departemen_bagian) ? '-' : $item->biodata_karyawan->departemen_dept . ' - ' . $item->biodata_karyawan->departemen_bagian }}
+                                    </td>
+                                    <td class="text-center">
+                                        @if (empty($item->biodata_karyawan->status_karyawan))
+                                            -
+                                        @else
+                                            @switch($item->biodata_karyawan->status_karyawan)
+                                                @case('A')
+                                                    <span class="badge bg-success">Tetap</span>
+                                                @break
+
+                                                @case('R')
+                                                    <span class="badge bg-danger">Resign</span>
+                                                @break
+
+                                                @case('K')
+                                                    <span class="badge bg-warning">Kontrak</span>
+                                                @break
+
+                                                @default
+                                            @endswitch
+                                        @endif
+                                    </td>
+                                    <td class="text-center">{{ $diff->y . ' Tahun ' . $diff->m . ' Bulan ' . $diff->d . ' Hari' }}
+                                    </td>
+                                    {{-- <td class="text-end"></td> --}}
+                                    {{-- <td class="text-center">{{ number_format($percentase,2,',','.') }}%</td> --}}
+                                    <td class="text-end">{{ 'Rp. ' . number_format($item->nominal_gaji, 2, ',', '.') }}</td>
+                                    <td class="text-end">{{ 'Rp. ' . number_format($item->nominal_gaji / $totalBulan, 2, ',', '.') }}</td>
+                                    <td class="text-end">{{ 'Rp. ' . number_format($gaji_minimum_umk, 2, ',', '.') }}</td>
+                                    <td class="text-center">{{ $nilai_percentase }}%</td>
+                                    <td class="text-end">{{ 'Rp. ' . number_format($hasil_percentase, 0, ',', '.') }}</td>
                                 </tr>
-                            </tfoot>
-                        </table>
-                    </div>
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="6" class="text-end">Total</th>
+                                <th class="text-end">{{ 'Rp. ' . number_format(array_sum($total_gaji), 2, ',', '.') }}</th>
+                                <th class="text-end">{{ 'Rp. ' . number_format(array_sum($total_rata_gaji), 2, ',', '.') }}</th>
+                                <th class="text-end">{{ 'Rp. ' . number_format(array_sum($total_minimum_umk), 2, ',', '.') }}</th>
+                                <th></th>
+                                <th class="text-end">{{ 'Rp. ' . number_format(array_sum($total_thr_diterima), 2, ',', '.') }}</th>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
             </div>
         </div>
@@ -247,6 +249,6 @@
     <script src="{{ URL::asset('public/assets/js/pages/jquery.datatable.init.js') }}"></script>
 
     <script>
-        $('#datatables').DataTable();
+        // $('#datatables').DataTable();
     </script>
 @endsection

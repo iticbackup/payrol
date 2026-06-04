@@ -553,48 +553,269 @@ class LaporanController extends Controller
     {
         $data['periode'] = $periode;
 
-        $thr = Thr::select('periode','cut_off')->where('tahun',$periode)->first();
+        $thr = Thr::select('periode','cut_off','tahun')->where('tahun',$periode)->first();
 
         $explodeThr = explode(',',$thr->periode);
+        
+        $tigaBulanLalu = Carbon::create($thr->cut_off)->subMonths(3)->startOfMonth();
+        $bulanIni = Carbon::create($thr->cut_off);
 
-        $data['list_karyawans'] = KirimGaji::with('biodata_karyawan')
-                                            ->select([
-                                                // 'kirim_slip_gaji.kode_pengerjaan as kode_pengerjaan',
+        $data['list_karyawans'] = KirimGaji::select([
                                                 'biodata_karyawan.nik as nik',
-                                                // 'biodata_karyawan.nama as nama',
+                                                'biodata_karyawan.nama as nama',
                                                 'biodata_karyawan.id_departemen_bagian as id_departemen_bagian',
-                                                // 'nama_karyawan',
-                                                // \DB::select('SELECT "nominal_gaji" FROM kirim_slip_gaji WHERE nik="biodata_karyawan.nik"')
                                                 \DB::raw('SUM(kirim_slip_gaji.nominal_gaji) as nominal_gaji')
                                             ])
-                                            ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','kirim_slip_gaji.nik')
-                                            // ->whereHas('biodata_karyawan', function($query){
-                                            //     $query->where('status_karyawan','!=','R')->orderBy('id','desc');
-                                            // })
-                                            ->where('biodata_karyawan.status_karyawan','!=','R')
-                                            ->where(function ($query) use($explodeThr) {
-                                                foreach ($explodeThr as $item) {
-                                                        $query->orWhere('kirim_slip_gaji.created_at', 'LIKE', '%'.$item.'%')
-                                                        // ->orderByDesc('kirim_slip_gaji.kode_pengerjaan')
-                                                    ;
-                                                }
-                                            })
+                                            ->join('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','kirim_slip_gaji.nik')   
+                                            // ->where('biodata_karyawan.status_karyawan','!=','R')
+                                            ->whereDate('kirim_slip_gaji.created_at','>=',$tigaBulanLalu)
+                                            ->whereDate('kirim_slip_gaji.created_at','<=',$bulanIni)
+                                            // ->whereBetween('kirim_slip_gaji.created_at',[$tigaBulanLalu,$bulanIni])
                                             ->where('kirim_slip_gaji.status','terkirim')
-                                            ->orwhere('biodata_karyawan.tanggal_resign','>=',$thr->cut_off)
-                                            ->groupBy('biodata_karyawan.nik','biodata_karyawan.id_departemen_bagian')
-                                            // ->orderBy('biodata_karyawan.nama','asc')
-                                            // ->limit(1)
+                                            ->orderBy('biodata_karyawan.nama','asc')
+                                            ->groupBy(
+                                                'biodata_karyawan.nik',
+                                                'biodata_karyawan.nama',
+                                                'biodata_karyawan.id_departemen_bagian'
+                                            )
                                             ->get();
 
-                                            // dd($data['list_karyawans']);
+        //                                     dd($data['list_karyawans']);
+        // dd($tigaBulanLalu, $bulanIni);
+
         $data['totalBulan'] = count($explodeThr);
         $data['cut_off'] = Carbon::create($thr->cut_off);
 
-        $data['bpjsKesehatan'] = BPJSKesehatan::select('nominal')->where('status','y')->first();
+        $data['bpjsKesehatan'] = BPJSKesehatan::select('nominal')->where('tahun',$thr->tahun)->first();
 
         return view('backend.laporan.thr.periodeThr',$data);
 
     }
+
+    // public function laporan_thr_slip_gaji($periode)
+    // {
+    //     $data['periode'] = $periode;
+    //     $thr = Thr::select('periode','cut_off','tahun')->where('tahun',$periode)->first();
+
+    //     $tigaBulanLalu = Carbon::create($thr->cut_off)->subMonths(3)->startOfMonth();
+    //     $bulanIni = Carbon::create($thr->cut_off);
+
+    //     $list_karyawans = KirimGaji::select([
+    //                                             'biodata_karyawan.nik as nik',
+    //                                             'biodata_karyawan.nama as nama',
+    //                                             'biodata_karyawan.id_departemen_bagian as id_departemen_bagian',
+    //                                             \DB::raw('SUM(kirim_slip_gaji.nominal_gaji) as nominal_gaji')
+    //                                         ])
+    //                                         ->join('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','kirim_slip_gaji.nik')   
+    //                                         // ->where('biodata_karyawan.status_karyawan','!=','R')
+    //                                         ->whereDate('kirim_slip_gaji.created_at','>=',$tigaBulanLalu)
+    //                                         ->whereDate('kirim_slip_gaji.created_at','<=',$bulanIni)
+    //                                         // ->whereBetween('kirim_slip_gaji.created_at',[$tigaBulanLalu,$bulanIni])
+    //                                         ->where('kirim_slip_gaji.status','terkirim')
+    //                                         ->orderBy('biodata_karyawan.nama','asc')
+    //                                         ->groupBy(
+    //                                             'biodata_karyawan.nik',
+    //                                             'biodata_karyawan.nama',
+    //                                             'biodata_karyawan.id_departemen_bagian'
+    //                                         )
+    //                                         ->get();
+
+    //     $data['bpjsKesehatan'] = BPJSKesehatan::select('nominal')->where('tahun',$thr->tahun)->first();
+
+    //     $pdf = new Fpdf('P', 'mm', 'A4');
+    //     $pdf->AddPage();
+
+    //     $pdf->SetFillColor(153,153,153);
+    //     $pdf->SetTextColor(255);
+    //     $pdf->SetDrawColor(0,0,0);
+    //     $pdf->SetLineWidth(.3);
+    //     $pdf->SetFont('Arial','B',8);
+    //     $pdf->SetFillColor(224,235,255);
+    //     $pdf->SetTextColor(0);
+    //     $pdf->SetFont('Arial','',8);
+
+    //     $no=0;
+
+    //     // Judul Dokumen Utama
+    //     $pdf->SetFont('Helvetica', 'B', 13);
+    //     $pdf->SetTextColor(44, 62, 80); // Warna teks gelap premium
+    //     $pdf->Cell(0, 6, 'SLIP TUNJANGAN HARI RAYA (THR)', 0, 1, 'C');
+
+    //     $tahun_thr = date('Y');
+    //     $pdf->SetFont('Helvetica', '', 10);
+    //     $pdf->Cell(0, 5, "Tahun Hari Raya: " . $tahun_thr . " Hijriah / " . $tahun_thr . " Masehi", 0, 1, 'C');
+    //     $pdf->Ln(6);
+
+    //     // Lebar masing-masing kolom: 190 / 2 = 95mm (Kita buat 92mm dengan gap tengah 6mm)
+    //     $lebar_kolom = 92;
+    //     $gap = 6;
+
+    //     // --- BAGIAN 1: DATA KARYAWAN & TRANSFER (2 KOLOM BERSANDING) ---
+    //     // Simpan posisi Y awal untuk memulai grid berdampingan
+    //     $y_start_karyawan = $pdf->GetY();
+
+    //     // KOLOM KIRI: Data Karyawan
+    //     $pdf->SetX(10);
+    //     $pdf->SetFillColor(240, 243, 244);
+    //     $pdf->SetFont('Helvetica', 'B', 9);
+    //     $pdf->Cell($lebar_kolom, 6, '  INFORMASI KARYAWAN', 0, 1, 'L', true);
+    //     $pdf->Ln(1);
+        
+    //     $pdf->SetFont('Helvetica', '', 9);
+    //     $pdf->SetX(10); $pdf->Cell(25, 5, 'NIK', 0, 0); $pdf->Cell(3, 5, ':', 0, 0); $pdf->SetFont('Helvetica', 'B', 9); $pdf->Cell(0, 5, '-', 0, 1); $pdf->SetFont('Helvetica', '', 9);
+    //     $pdf->SetX(10); $pdf->Cell(25, 5, 'Nama', 0, 0); $pdf->Cell(3, 5, ':', 0, 0); $pdf->Cell(0, 5, '-', 0, 1);
+    //     $pdf->SetX(10); $pdf->Cell(25, 5, 'Jabatan', 0, 0); $pdf->Cell(3, 5, ':', 0, 0); $pdf->Cell(0, 5, '-', 0, 1);
+    //     $pdf->SetX(10); $pdf->Cell(25, 5, 'Departemen', 0, 0); $pdf->Cell(3, 5, ':', 0, 0); $pdf->Cell(0, 5, '-', 0, 1);
+        
+    //     $y_end_kiri = $pdf->GetY();
+
+    //     // KOLOM KANAN: Data Pembayaran & Masa Kerja
+    //     $pdf->SetY($y_start_karyawan); // Kembalikan koordinat Y ke atas
+    //     $pdf->SetX(10 + $lebar_kolom + $gap); // Geser X ke kolom kanan
+        
+    //     $pdf->SetFillColor(240, 243, 244);
+    //     $pdf->SetFont('Helvetica', 'B', 9);
+    //     $pdf->Cell($lebar_kolom, 6, '  RINCIAN MASA KERJA & TRANSFER', 0, 1, 'L', true);
+    //     $pdf->Ln(1);
+        
+    //     $pdf->SetFont('Helvetica', '', 9);
+    //     $pdf->SetX(10 + $lebar_kolom + $gap); $pdf->Cell(30, 5, 'Tanggal Masuk', 0, 0); $pdf->Cell(3, 5, ':', 0, 0); $pdf->Cell(0, 5, '-', 0, 1);
+    //     $pdf->SetX(10 + $lebar_kolom + $gap); $pdf->Cell(30, 5, 'Masa Kerja', 0, 0); $pdf->Cell(3, 5, ':', 0, 0); $pdf->Cell(0, 5, '-', 0, 1);
+    //     $pdf->SetX(10 + $lebar_kolom + $gap); $pdf->Cell(30, 5, 'Bank Penerima', 0, 0); $pdf->Cell(3, 5, ':', 0, 0); $pdf->Cell(0, 5, '-', 0, 1);
+    //     $pdf->SetX(10 + $lebar_kolom + $gap); $pdf->Cell(30, 5, 'Nomor Rekening', 0, 0); $pdf->Cell(3, 5, ':', 0, 0); $pdf->Cell(0, 5, '-', 0, 1);
+        
+    //     $y_end_kanan = $pdf->GetY();
+
+    //     // Tentukan titik Y paling bawah dari kedua kolom untuk melangkah ke bagian berikutnya
+    //     $y_terendah_karyawan = max($y_end_kiri, $y_end_kanan);
+    //     $pdf->SetY($y_terendah_karyawan + 6);
+        
+    //     // --- BAGIAN 2: RINCIAN KEUANGAN (TABEL PENERIMAAN VS POTONGAN) ---
+    //     $y_start_keuangan = $pdf->GetY();
+        
+    //     // TABEL KIRI: Penerimaan
+    //     $pdf->SetX(10);
+    //     $pdf->SetFillColor(41, 128, 185); // Biru Utama
+    //     $pdf->SetTextColor(255, 255, 255); // Teks Putih
+    //     $pdf->SetFont('Helvetica', 'B', 9);
+    //     $pdf->Cell($lebar_kolom, 6, '  I. PENERIMAAN / GAJI', 1, 1, 'L', true);
+        
+    //     $pdf->SetTextColor(44, 62, 80);
+    //     $pdf->SetFont('Helvetica', '', 9);
+
+    //     // Detail Penerimaan (Garis border menggunakan sel modular)
+    //     $pdf->SetX(10);
+    //     $pdf->Cell(57, 7, ' 1. Tunjangan Hari Raya (THR)', 'L', 0, 'L');
+    //     $pdf->Cell(35, 7, 'Rp ' . number_format(0, 0, ',', '.') . ' ', 'R', 1, 'R');
+        
+    //     $pdf->SetX(10);
+    //     $pdf->Cell(57, 7, ' 2. Tunjangan Khusus (Jika Ada)', 'L', 0, 'L');
+    //     $pdf->Cell(35, 7, 'Rp 0 ', 'R', 1, 'R');
+        
+    //     // Baris penyeimbang kosong agar tinggi kolom seragam
+    //     $pdf->SetX(10);
+    //     $pdf->Cell(57, 7, ' ', 'L', 0, 'L');
+    //     $pdf->Cell(35, 7, ' ', 'R', 1, 'R');
+        
+    //     // Total Penerimaan
+    //     $pdf->SetX(10);
+    //     $pdf->SetFont('Helvetica', 'B', 9);
+    //     $pdf->SetFillColor(245, 247, 248);
+    //     $pdf->Cell(57, 7, ' Total Penerimaan (Bruto)', 'LTB', 0, 'L', true);
+    //     $pdf->Cell(35, 7, 'Rp ' . number_format(0, 0, ',', '.') . ' ', 'RTB', 1, 'R', true);
+        
+    //     $y_end_keuangan_kiri = $pdf->GetY();
+
+    //     // TABEL KANAN: Potongan
+    //     $pdf->SetY($y_start_keuangan); // Kembalikan ke titik atas rincian keuangan
+    //     $pdf->SetX(10 + $lebar_kolom + $gap);
+        
+    //     $pdf->SetFillColor(192, 57, 43); // Merah Tua Soft untuk Potongan
+    //     $pdf->SetTextColor(255, 255, 255);
+    //     $pdf->SetFont('Helvetica', 'B', 9);
+    //     $pdf->Cell($lebar_kolom, 6, '  II. POTONGAN', 1, 1, 'L', true);
+        
+    //     $pdf->SetTextColor(44, 62, 80);
+    //     $pdf->SetFont('Helvetica', '', 9);
+        
+    //     // Detail Potongan
+    //     $pdf->SetX(10 + $lebar_kolom + $gap);
+    //     $pdf->Cell(57, 7, ' 1. Pajak PPh Pasal 21', 'L', 0, 'L');
+    //     $nominal_pajak = 0;
+    //     $teks_pajak = ($nominal_pajak > 0) ? 'Rp ' . number_format($nominal_pajak, 0, ',', '.') . ' ' : 'Rp 0 ';
+    //     $pdf->Cell(35, 7, $teks_pajak, 'R', 1, 'R');
+        
+    //     $pdf->SetX(10 + $lebar_kolom + $gap);
+    //     $pdf->Cell(57, 7, ' 2. Potongan Administrasi', 'L', 0, 'L');
+    //     $pdf->Cell(35, 7, 'Rp 0 ', 'R', 1, 'R');
+        
+    //     // Baris penyeimbang kosong agar tinggi kolom seragam
+    //     $pdf->SetX(10 + $lebar_kolom + $gap);
+    //     $pdf->Cell(57, 7, ' ', 'L', 0, 'L');
+    //     $pdf->Cell(35, 7, ' ', 'R', 1, 'R');
+        
+    //     // Total Potongan
+    //     $pdf->SetX(10 + $lebar_kolom + $gap);
+    //     $pdf->SetFont('Helvetica', 'B', 9);
+    //     $pdf->SetFillColor(245, 247, 248);
+    //     $pdf->Cell(57, 7, ' Total Potongan', 'LTB', 0, 'L', true);
+    //     $pdf->Cell(35, 7, 'Rp ' . number_format($nominal_pajak, 0, ',', '.') . ' ', 'RTB', 1, 'R', true);
+        
+    //     $y_end_keuangan_kanan = $pdf->GetY();
+
+    //     // Integrasi kembali ke aliran halaman utama
+    //     $y_terendah_keuangan = max($y_end_keuangan_kiri, $y_end_keuangan_kanan);
+    //     $pdf->SetY($y_terendah_keuangan + 6);
+        
+    //     // --- BAGIAN 3: TOTAL AKHIR (NETTO) & TERBILANG ---
+    //     $pdf->SetFont('Helvetica', 'B', 10);
+    //     $pdf->SetFillColor(230, 244, 241); // Hijau Toska Lembut (Penerimaan Bersih)
+    //     $pdf->Cell(120, 8, ' TOTAL BERSIH YANG DITERIMA (NETTO)', 1, 0, 'L', true);
+    //     $pdf->Cell(70, 8, 'Rp ' . number_format(0, 0, ',', '.') . ' ', 1, 1, 'R', true);
+        
+    //     // Kalimat Terbilang
+    //     $pdf->Ln(2);
+    //     $pdf->SetFont('Helvetica', 'I', 8.5);
+    //     $pdf->SetTextColor(127, 140, 141);
+    //     $pdf->Cell(0, 6, 'Terbilang: # ' . 0 . ' Rupiah #', 0, 1, 'L');
+    //     $pdf->Ln(8);
+        
+    //     // --- BAGIAN 4: KOLOM TANDA TANGAN (2 KOLOM BERSANDING) ---
+    //     $pdf->SetTextColor(44, 62, 80);
+    //     $pdf->SetFont('Helvetica', '', 9.5);
+        
+    //     // Ambil tanggal cetak lokal Indonesia
+    //     $bulan_indonesia = array(
+    //         1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
+    //         'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    //     );
+    //     $tgl_sekarang = date('d') . ' ' . $bulan_indonesia[(int)date('m')] . ' ' . date('Y');
+        
+    //     // Lokasi Tanggal diletakkan di sisi Kanan
+    //     $pdf->Cell(120, 5, '', 0, 0);
+    //     $pdf->Cell(70, 5, 'Jakarta, ' . $tgl_sekarang, 0, 1, 'C');
+        
+    //     // Baris Judul Penandatangan
+    //     $pdf->Cell(120, 5, 'Penerima Manfaat,', 0, 0, 'C');
+    //     $pdf->Cell(70, 5, 'Mengetahui,', 0, 1, 'C');
+    //     $pdf->Cell(120, 5, '', 0, 0);
+    //     $pdf->Cell(70, 5, 'PT. Global Solusi Teknologi', 0, 1, 'C');
+        
+    //     $pdf->Ln(15); // Jarak kosong tempat tanda tangan / paraf
+        
+    //     // Garis Nama Terang
+    //     $pdf->SetFont('Helvetica', 'BU', 9.5);
+    //     $pdf->Cell(120, 5, 0, 0, 0, 'C');
+    //     $pdf->Cell(70, 5, 'Hendra Wijaya, S.Psi.', 0, 1, 'C');
+        
+    //     $pdf->SetFont('Helvetica', '', 8);
+    //     $pdf->SetTextColor(127, 140, 141);
+    //     $pdf->Cell(120, 4, 'Karyawan', 0, 0, 'C');
+    //     $pdf->Cell(70, 4, 'HR Director', 0, 1, 'C');
+
+    //     $pdf->Output('Slip Gaji THR.pdf', "I");
+    //     exit;
+    // }
 
     public function laporan_thr_slip_gaji($periode)
     {
@@ -609,11 +830,34 @@ class LaporanController extends Controller
         $pdf->SetTextColor(0);
         $pdf->SetFont('Arial','',8);
 
-        $no=0;
-        $pdf->SetFont('Arial','B',8);
-        $pdf->Cell(35,5,'TANGGAL GAJI','LT',0,'C');
-        $pdf->SetFont('Arial','',8);
+        $thr = Thr::select('periode','cut_off','tahun')->where('tahun',$periode)->first();
 
+        $tigaBulanLalu = Carbon::create($thr->cut_off)->subMonths(3)->startOfMonth();
+        $bulanIni = Carbon::create($thr->cut_off);
+
+        $total = KirimGaji::select([
+                            'biodata_karyawan.nik as nik',
+                            'biodata_karyawan.nama as nama',
+                            'biodata_karyawan.id_departemen_bagian as id_departemen_bagian',
+                            \DB::raw('SUM(kirim_slip_gaji.nominal_gaji) as nominal_gaji')
+                        ])
+                        ->join('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','kirim_slip_gaji.nik')
+                        ->whereDate('kirim_slip_gaji.created_at','>=',$tigaBulanLalu)
+                        ->whereDate('kirim_slip_gaji.created_at','<=',$bulanIni)
+                        ->where('kirim_slip_gaji.status','terkirim')
+                        ->groupBy(
+                            'biodata_karyawan.nik',
+                            'biodata_karyawan.nama',
+                            'biodata_karyawan.id_departemen_bagian'
+                        )
+                        ->get();
+
+                        // dd($total->count());
+
+        for ($i=0; $i < $total->count(); $i++) {
+
+        }
+        
         $pdf->Output('Slip Gaji THR.pdf', "I");
         exit;
     }
