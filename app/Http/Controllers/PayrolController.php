@@ -11482,11 +11482,32 @@ class PayrolController extends Controller
 
     public function borongan_kirim_slip_gaji_new($kode_pengerjaan)
     {
+        $jenis_operator = \App\Models\JenisOperator::with('jenisOperatorDetails')
+                                                    ->select('id','kode_operator')
+                                                    ->where('kode_operator','PB')
+                                                    ->first();
+
+        $jenis_operator_detail_id = [];
+
+        foreach ($jenis_operator->jenisOperatorDetails as $key => $value) {
+            $jenis_operator_detail_id[] = [
+                'id' => $value->id
+            ];
+        }
+
+        // $cek_kirim_slip_gajis = $this->kirim_gaji->where('kode_pengerjaan','LIKE','%PB_%')
+        //                                         ->where('status','menunggu')
+        //                                         ->orWhere('status','gagal')
+        //                                         ->limit(5)
+        //                                         ->orderBy('id','asc')
+        //                                         ->get();
         $cek_kirim_slip_gajis = $this->kirim_gaji->where('kode_pengerjaan','LIKE','%PB_%')
+                                                ->where('jenis_operator_id',$jenis_operator->id)
+                                                ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id)
                                                 ->where('status','menunggu')
                                                 ->orWhere('status','gagal')
-                                                ->limit(5)
                                                 ->orderBy('id','asc')
+                                                ->limit(env('COUNT_KIRIM_EMAIL'))
                                                 ->get();
 
         foreach ($cek_kirim_slip_gajis as $key => $value) {
@@ -11498,7 +11519,16 @@ class PayrolController extends Controller
                 $data['exp_tgl_awal'] = explode('-', $data['exp_tanggals'][1]);
                 $data['exp_tgl_akhir'] = explode('-', $data['exp_tanggals'][$data['a']]);
     
-                $pengerjaan_weekly = PengerjaanWeekly::where('kode_pengerjaan', $value->kode_pengerjaan)
+                // $pengerjaan_weekly = PengerjaanWeekly::where('kode_pengerjaan', $value->kode_pengerjaan)
+                //                                     ->where('id', $value->pengerjaan_id)
+                //                                     ->first();
+                $pengerjaan_weekly = PengerjaanWeekly::whereHas('operator_karyawan', function($query) use($value){
+                                                        $query->where('nik',$value->nik)
+                                                            ->where('jenis_operator_id',$value->jenis_operator_id)
+                                                            ->where('jenis_operator_detail_id',$value->jenis_operator_detail_id)
+                                                            ->where('jenis_operator_detail_pekerjaan_id',$value->jenis_operator_detail_pekerjaan_id);
+                                                    })
+                                                    ->where('kode_pengerjaan', $value->kode_pengerjaan)
                                                     ->where('id', $value->pengerjaan_id)
                                                     ->first();
     
@@ -11891,27 +11921,49 @@ class PayrolController extends Controller
                 $pdf = Pdf::loadView('email.slipGajiOperatorBorongan',$data);
                 $pdf->setPaper(array(0,0,560,380));
                 $pdf->setEncryption(Carbon::create($pengerjaan_weekly->operator_karyawan->biodata_karyawan->tgl_lahir)->format('dmY'),Carbon::create($pengerjaan_weekly->operator_karyawan->biodata_karyawan->tgl_lahir)->format('dmY'));
-    
-                Mail::send('email.testingMailBorongan',$data, function($message) use($data,$pdf,$pengerjaan_weekly){
-                    $message->to(strtolower($pengerjaan_weekly->operator_karyawan->biodata_karyawan->email))
-                            ->subject('Laporan Slip Gaji '.$pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y'))
-                            ->attachData($pdf->output(), 'Laporan Slip Gaji '.$pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y').'.pdf');
-                });
-    
-                if (Mail::failures()) {
-                    $value->update([
-                        'status' => 'gagal'
-                    ]);
-    
-                    \Log::error($value->kode_pengerjaan.' '.$value->nama_karyawan.' Gagal Kirim Email');
-    
-                }else{
+
+                try {
+                    Mail::send('email.testingMailBorongan',$data, function($message) use($data,$pdf,$pengerjaan_weekly){
+                        $message->to(strtolower($pengerjaan_weekly->operator_karyawan->biodata_karyawan->email))
+                                ->subject('Laporan Slip Gaji '.$pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y'))
+                                ->attachData($pdf->output(), 'Laporan Slip Gaji '.$pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y').'.pdf');
+                    });
+
                     $value->update([
                         'status' => 'terkirim'
                     ]);
-    
+
                     \Log::info($value->kode_pengerjaan.' '.$value->nama_karyawan.' Terkirim');
+
+                } catch (\Exception $th) {
+                    $value->update([
+                        'status' => 'gagal'
+                    ]);
+
+                    \Log::error($value->kode_pengerjaan.' '.$value->nama_karyawan.' Gagal Kirim Email');
+                    \Log::warning('Gagal mengirim email notifikasi error: ' . $th->getMessage());
                 }
+    
+                // Mail::send('email.testingMailBorongan',$data, function($message) use($data,$pdf,$pengerjaan_weekly){
+                //     $message->to(strtolower($pengerjaan_weekly->operator_karyawan->biodata_karyawan->email))
+                //             ->subject('Laporan Slip Gaji '.$pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y'))
+                //             ->attachData($pdf->output(), 'Laporan Slip Gaji '.$pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y').'.pdf');
+                // });
+    
+                // if (Mail::failures()) {
+                //     $value->update([
+                //         'status' => 'gagal'
+                //     ]);
+    
+                //     \Log::error($value->kode_pengerjaan.' '.$value->nama_karyawan.' Gagal Kirim Email');
+    
+                // }else{
+                //     $value->update([
+                //         'status' => 'terkirim'
+                //     ]);
+    
+                //     \Log::info($value->kode_pengerjaan.' '.$value->nama_karyawan.' Terkirim');
+                // }
                 
             }else{
                 \Log::error('Borongan '.$value->nama_karyawan.' Email Belum Tersedia.');
@@ -11922,7 +11974,7 @@ class PayrolController extends Controller
         return response()->json([
             'success' => true,
             'message_title' => 'Berhasil!',
-            'message_content' => 'Kirim Slip Gaji Borongan Berhasil Terkirim'
+            'message_content' => 'Kirim Slip Gaji Borongan Sedang Proses Pengiriman.'
         ]);
     }
 
@@ -11968,6 +12020,22 @@ class PayrolController extends Controller
                             ->subject('Laporan Slip Gaji '.$pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y'))
                             ->attachData($pdf->output(), 'Laporan Slip Gaji '.$pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y').'.pdf');
                 });
+
+                $this->kirim_gaji->firstOrCreate(
+                    [
+                        'kode_pengerjaan' => $kode_pengerjaan,
+                        'nik' => $pengerjaan_weekly->operator_karyawan->nik,
+                        'pengerjaan_id' => $pengerjaan_weekly->id,
+                    ],
+                    [
+                        'kode_payrol' => $pengerjaan_weekly->kode_payrol,
+                        'pengerjaan_id' => $pengerjaan_weekly->id,
+                        'nama_karyawan' => $pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama,
+                        // 'nik' => $pengerjaan_weekly->operator_karyawan->nik,
+                        'nominal_gaji' => $request['nominal_gaji'][$key],
+                        'status' => 'terkirim'
+                    ]
+                );
             }
 
             if (Mail::failures()) {
@@ -11988,21 +12056,6 @@ class PayrolController extends Controller
                 );
             }
 
-            $this->kirim_gaji->firstOrCreate(
-                [
-                    'kode_pengerjaan' => $kode_pengerjaan,
-                    'nik' => $pengerjaan_weekly->operator_karyawan->nik,
-                    'pengerjaan_id' => $pengerjaan_weekly->id,
-                ],
-                [
-                    'kode_payrol' => $pengerjaan_weekly->kode_payrol,
-                    'pengerjaan_id' => $pengerjaan_weekly->id,
-                    'nama_karyawan' => $pengerjaan_weekly->operator_karyawan->biodata_karyawan->nama,
-                    // 'nik' => $pengerjaan_weekly->operator_karyawan->nik,
-                    'nominal_gaji' => $request['nominal_gaji'][$key],
-                    'status' => 'terkirim'
-                ]
-            );
         }
 
         // if (Mail::failures()) {
@@ -12169,11 +12222,32 @@ class PayrolController extends Controller
 
     public function harian_kirim_slip_gaji_new($kode_pengerjaan)
     {
+        $jenis_operator = \App\Models\JenisOperator::with('jenisOperatorDetails')
+                                                    ->select('id','kode_operator')
+                                                    ->where('kode_operator','PH')
+                                                    ->first();
+
+        $jenis_operator_detail_id = [];
+
+        foreach ($jenis_operator->jenisOperatorDetails as $key => $value) {
+            $jenis_operator_detail_id[] = [
+                'id' => $value->id
+            ];
+        }
+
+        // $cek_kirim_slip_gajis = KirimGaji::where('kode_pengerjaan','LIKE','%PH_%')
+        //                                 ->where('status','menunggu')
+        //                                 ->orWhere('status','gagal')
+        //                                 ->limit(5)
+        //                                 ->orderBy('id','asc')
+        //                                 ->get();
         $cek_kirim_slip_gajis = KirimGaji::where('kode_pengerjaan','LIKE','%PH_%')
+                                        ->where('jenis_operator_id',$jenis_operator->id)
+                                        ->whereIn('jenis_operator_detail_id',$jenis_operator_detail_id)
                                         ->where('status','menunggu')
                                         ->orWhere('status','gagal')
-                                        ->limit(5)
                                         ->orderBy('id','asc')
+                                        ->limit(env('COUNT_KIRIM_EMAIL'))
                                         ->get();
 
         foreach ($cek_kirim_slip_gajis as $key => $value) {
@@ -12188,7 +12262,16 @@ class PayrolController extends Controller
             $data['exp_tgl_awal'] = explode('-', $data['exp_tanggals'][1]);
             $data['exp_tgl_akhir'] = explode('-', $data['exp_tanggals'][$data['a']]);
 
-            $data['pengerjaan_harian'] = PengerjaanHarian::where('kode_pengerjaan',$value->kode_pengerjaan)
+            // $data['pengerjaan_harian'] = PengerjaanHarian::where('kode_pengerjaan',$value->kode_pengerjaan)
+            //                                             ->where('id', $value->pengerjaan_id)
+            //                                             ->first();
+            $data['pengerjaan_harian'] = PengerjaanHarian::whereHas('operator_karyawan', function($query) use($value){
+                                                            $query->where('nik',$value->nik)
+                                                                ->where('jenis_operator_id',$value->jenis_operator_id)
+                                                                ->where('jenis_operator_detail_id',$value->jenis_operator_detail_id)
+                                                                ->where('jenis_operator_detail_pekerjaan_id',$value->jenis_operator_detail_pekerjaan_id);
+                                                        })
+                                                        ->where('kode_pengerjaan',$value->kode_pengerjaan)
                                                         ->where('id', $value->pengerjaan_id)
                                                         ->first();
 
@@ -12316,29 +12399,51 @@ class PayrolController extends Controller
             $pdf->setPaper(array(0,0,560,380));  
             $pdf->setEncryption(Carbon::create($data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->tgl_lahir)->format('dmY'),Carbon::create($data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->tgl_lahir)->format('dmY'));
 
-            Mail::send('email.testingMailHarian',$data, function($message) use($data,$pdf){
-                $message->to(strtolower($data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->email))
-                        ->subject('Laporan Slip Gaji '.$data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y'))
-                        ->attachData($pdf->output(), 'Laporan Slip Gaji '.$data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y').'.pdf');
-            });
+            try {
+                Mail::send('email.testingMailHarian',$data, function($message) use($data,$pdf){
+                    $message->to(strtolower($data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->email))
+                            ->subject('Laporan Slip Gaji '.$data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y'))
+                            ->attachData($pdf->output(), 'Laporan Slip Gaji '.$data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y').'.pdf');
+                });
 
-            if (Mail::failures()) {
-                $value->update([
-                    'status' => 'gagal'
-                ]);
-                \Log::error($value->kode_pengerjaan.' '.$value->nama_karyawan.' Gagal Kirim Email');
-            }else{
                 $value->update([
                     'status' => 'terkirim'
                 ]);
+
                 \Log::info($value->kode_pengerjaan.' '.$value->nama_karyawan.' Terkirim');
+
+            } catch (\Exception $th) {
+                $value->update([
+                    'status' => 'gagal'
+                ]);
+
+                \Log::error($value->kode_pengerjaan.' '.$value->nama_karyawan.' Gagal Kirim Email');
+                \Log::warning('Gagal mengirim email notifikasi error: ' . $th->getMessage());
             }
+
+            // Mail::send('email.testingMailHarian',$data, function($message) use($data,$pdf){
+            //     $message->to(strtolower($data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->email))
+            //             ->subject('Laporan Slip Gaji '.$data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y'))
+            //             ->attachData($pdf->output(), 'Laporan Slip Gaji '.$data['pengerjaan_harian']->operator_karyawan->biodata_karyawan->nama.' '.date('d-m-Y').'.pdf');
+            // });
+
+            // if (Mail::failures()) {
+            //     $value->update([
+            //         'status' => 'gagal'
+            //     ]);
+            //     \Log::error($value->kode_pengerjaan.' '.$value->nama_karyawan.' Gagal Kirim Email');
+            // }else{
+            //     $value->update([
+            //         'status' => 'terkirim'
+            //     ]);
+            //     \Log::info($value->kode_pengerjaan.' '.$value->nama_karyawan.' Terkirim');
+            // }
         }
 
         return response()->json([
             'success' => true,
             'message_title' => 'Berhasil!',
-            'message_content' => 'Kirim Slip Gaji Harian Berhasil Terkirim'
+            'message_content' => 'Kirim Slip Gaji Harian Sedang Proses Pengiriman.'
         ]);
     }
 
