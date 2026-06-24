@@ -10655,7 +10655,7 @@ class PengerjaanController extends Controller
                                                     ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
                                                     ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',12)
                                                     ->where('kode_pengerjaan',$kode_pengerjaan)
-                                                    ->where('operator_harian_karyawan.status','y')
+                                                    // ->where('operator_harian_karyawan.status','y')
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
         // dd($data['pengerjaan_harians']);
@@ -11394,7 +11394,7 @@ class PengerjaanController extends Controller
                                                     ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
                                                     ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',13)
                                                     ->where('kode_pengerjaan',$kode_pengerjaan)
-                                                    ->where('operator_harian_karyawan.status','y')
+                                                    // ->where('operator_harian_karyawan.status','y')
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
         return view('backend.pengerjaan.harian.ppic_tembakau.index',$data);
@@ -11873,7 +11873,7 @@ class PengerjaanController extends Controller
                                                     ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
                                                     ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',14)
                                                     ->where('kode_pengerjaan',$kode_pengerjaan)
-                                                    ->where('operator_harian_karyawan.status','y')
+                                                    // ->where('operator_harian_karyawan.status','y')
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
         return view('backend.pengerjaan.harian.primary_process.index',$data);
@@ -12347,7 +12347,7 @@ class PengerjaanController extends Controller
                                                     ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
                                                     ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',15)
                                                     ->where('kode_pengerjaan',$kode_pengerjaan)
-                                                    ->where('operator_harian_karyawan.status','y')
+                                                    // ->where('operator_harian_karyawan.status','y')
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
         return view('backend.pengerjaan.harian.packing_b.index',$data);
@@ -12814,7 +12814,7 @@ class PengerjaanController extends Controller
                                                     ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
                                                     ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',16)
                                                     ->where('kode_pengerjaan',$kode_pengerjaan)
-                                                    ->where('operator_harian_karyawan.status','y')
+                                                    // ->where('operator_harian_karyawan.status','y')
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
         return view('backend.pengerjaan.harian.ambri.index',$data);
@@ -13281,7 +13281,7 @@ class PengerjaanController extends Controller
                                                     ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
                                                     ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',17)
                                                     ->where('kode_pengerjaan',$kode_pengerjaan)
-                                                    ->where('operator_harian_karyawan.status','y')
+                                                    // ->where('operator_harian_karyawan.status','y')
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
         return view('backend.pengerjaan.harian.umum.index',$data);
@@ -13749,7 +13749,7 @@ class PengerjaanController extends Controller
                                                     ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
                                                     ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',18)
                                                     ->where('kode_pengerjaan',$kode_pengerjaan)
-                                                    ->where('operator_harian_karyawan.status','y')
+                                                    // ->where('operator_harian_karyawan.status','y')
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
         return view('backend.pengerjaan.harian.supir.index',$data);
@@ -14217,7 +14217,7 @@ class PengerjaanController extends Controller
                                                     ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
                                                     ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',19)
                                                     ->where('kode_pengerjaan',$kode_pengerjaan)
-                                                    ->where('operator_harian_karyawan.status','y')
+                                                    // ->where('operator_harian_karyawan.status','y')
                                                     ->orderBy('biodata_karyawan.nama','asc')
                                                     ->get();
         return view('backend.pengerjaan.harian.satpam.index',$data);
@@ -14677,7 +14677,7 @@ class PengerjaanController extends Controller
                                                             ->leftJoin('operator_supir_rit_karyawan','operator_supir_rit_karyawan.id','=','pengerjaan_supir_rit_weekly.karyawan_supir_rit_id')
                                                             ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_supir_rit_karyawan.nik')
                                                             ->where('kode_pengerjaan',$kode_pengerjaan)
-                                                            ->where('operator_supir_rit_karyawan.status','y')
+                                                            // ->where('operator_supir_rit_karyawan.status','y')
                                                             ->orderBy('biodata_karyawan.nama','asc')
                                                             ->get();
                                                             // dd($data['pengerjaan_supir_rits']);
