@@ -54,6 +54,7 @@
                             <tr>
                                 <th class="text-center">No</th>
                                 <th class="text-center">ID</th>
+                                <th class="text-center">ID Karyawan</th>
                                 <th class="text-center">Nama Karyawan</th>
                                 <th class="text-center">Email Karyawan</th>
                                 <th class="text-center">Jenis Pengerjaan</th>
@@ -66,7 +67,8 @@
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
                                     <td class="text-center">{{ $item->pengerjaan_id }}</td>
-                                    <td>{{ $item->nama_karyawan }}</td>
+                                    <td class="text-center">{{ $item->karyawan_operator_harian->id }}</td>
+                                    <td>{{ $item->nik.' - '.$item->nama_karyawan }}</td>
                                     <td class="text-center">{{ $item->biodata_karyawan->email }}</td>
                                     <td class="text-center">
                                         @if (empty($item->jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan))

@@ -106,7 +106,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="menu-label mt-0">THR</li>
+            {{-- <li class="menu-label mt-0">THR</li>
             <li class="{{ Request::is('payrol/thr/periode') ? 'active' : '' }}">
                 <a href="{{ route('laporan.thr') }}" class="{{ Request::is('payrol/thr') ? 'active' : '' }}"><i data-feather="file-text"
                         class="align-self-center menu-icon"></i> THR Periode</a>
@@ -114,7 +114,7 @@
             <li class="{{ Request::is('payrol/thr') ? 'active' : '' }}">
                 <a href="{{ route('laporan.thr') }}" class="{{ Request::is('payrol/thr') ? 'active' : '' }}"><i data-feather="file-text"
                         class="align-self-center menu-icon"></i> Laporan THR</a>
-            </li>
+            </li> --}}
             @if (auth()->user()->roles == 1)
             <li class="menu-label mt-0">Company</li>
             <li class="{{ Request::is('company') ? 'active' : '' }}">

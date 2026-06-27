@@ -48,17 +48,29 @@ class HomeController extends Controller
         $data['total_gaji_karyawan_harian'] = [];
         $data['total_gaji_karyawan_supir_rit'] = [];
         for ($i=$data['start_year']; $i <= $data['end_year'] ; $i++) { 
-            $total_gaji_borongan = $this->kirim_gaji->where('created_at','like','%'.$i.'%')
+            // $total_gaji_borongan = $this->kirim_gaji->where('created_at','like','%'.$i.'%')
+            //                             ->where('kode_pengerjaan','like','%PB%')
+            //                             ->sum('nominal_gaji');
+            $total_gaji_borongan = $this->kirim_gaji->whereYear('created_at',explode('-',$i)[0])
+                                        ->whereMonth('created_at',explode('-',$i)[1])
                                         ->where('kode_pengerjaan','like','%PB%')
                                         ->sum('nominal_gaji');
             $data['total_gaji_karyawan_borongan'][] = $total_gaji_borongan;
 
-            $total_gaji_harian = $this->kirim_gaji->where('created_at','like','%'.$i.'%')
+            // $total_gaji_harian = $this->kirim_gaji->where('created_at','like','%'.$i.'%')
+            //                                     ->where('kode_pengerjaan','like','%PH%')
+            //                                     ->sum('nominal_gaji');
+            $total_gaji_harian = $this->kirim_gaji->whereYear('created_at',explode('-',$i)[0])
+                                                ->whereMonth('created_at',explode('-',$i)[1])
                                                 ->where('kode_pengerjaan','like','%PH%')
                                                 ->sum('nominal_gaji');
             $data['total_gaji_karyawan_harian'][] = $total_gaji_harian;
             
-            $total_gaji_supir_rit = $this->kirim_gaji->where('created_at','like','%'.$i.'%')
+            // $total_gaji_supir_rit = $this->kirim_gaji->where('created_at','like','%'.$i.'%')
+            //                                     ->where('kode_pengerjaan','like','%PS%')
+            //                                     ->sum('nominal_gaji');
+            $total_gaji_supir_rit = $this->kirim_gaji->whereYear('created_at',explode('-',$i)[0])
+                                                ->whereMonth('created_at',explode('-',$i)[1])
                                                 ->where('kode_pengerjaan','like','%PS%')
                                                 ->sum('nominal_gaji');
             $data['total_gaji_karyawan_supir_rit'][] = $total_gaji_supir_rit;

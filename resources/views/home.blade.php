@@ -46,18 +46,7 @@
                 {{-- <button type="button" class="btn-close align-self-center" data-bs-dismiss="alert" aria-label="Close"></button> --}}
             </div>
         </div>
-        {{-- <div class="col-12">
-            <div class="alert custom-alert custom-alert-info icon-custom-alert shadow-sm fade show d-flex justify-content-between" role="alert">  
-                <div class="media">
-                    <i class="mdi mdi-information-outline alert-icon text-info align-self-center font-30 me-3"></i>
-                    <div class="media-body align-self-center">
-                        <h5 class="mb-1 fw-bold mt-0">Fitur Baru!</h5>
-                        <span></span>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-        <div class="col-12 col-lg-6 col-xl-3"> 
+        {{-- <div class="col-12 col-lg-6 col-xl-3"> 
             <div class="card">
                 <div class="card-body">
                     <div class="row align-items-center">
@@ -104,7 +93,7 @@
                     </div>
                 </div>
             </div>                     
-        </div>
+        </div> --}}
         <div class="col-12 col-lg-12 col-xl-12">
             <div class="card">
                 <div class="card-header">
