@@ -60,6 +60,7 @@
                                 <th class="text-center">Jenis Pengerjaan</th>
                                 <th class="text-center">Nominal Gaji</th>
                                 <th class="text-center">Status</th>
+                                <th class="text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -88,6 +89,7 @@
                                         @endswitch --}}
                                         {{ $item->jenis_operator_detail->jenis_posisi.' - '.$item->jenis_operator_detail_pengerjaan->jenis_posisi_pekerjaan }}
                                     </td>
+                                    {{-- @dd($item->pengerjaan_id) --}}
                                     <td class="text-center">{{ 'Rp. '.number_format($item->nominal_gaji,0,',','.') }}</td>
                                     <td class="text-center">
                                         @switch($item->status)
@@ -113,6 +115,9 @@
                                             @default
                                                 
                                         @endswitch
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="{{ route('payrol.borongan.borongan_cek_slip_gaji',['id' => $item->pengerjaan_id, 'kode_pengerjaan' => $new_data_pengerjaan->kode_pengerjaan]) }}" class="btn btn-primary btn-sm" target="_blank"><i class="fas fa-download"></i> Download Slip Gaji</a>
                                     </td>
                                 </tr>
                             @endforeach

@@ -68,6 +68,26 @@
                     </li>
                 </ul>
             </li> --}}
+            <li class="menu-label mt-0">Estimasi</li>
+            <li>
+                <a href="#"><i class="mdi mdi-office-building"></i> Kategori Master Case</a>
+            </li>
+            <li>
+                <a href="{{ route('estimasi.pengerjaan.borongan.index') }}"><i data-feather="file-text" class="align-self-center menu-icon"></i> Estimasi Biaya</a>
+            </li>
+            {{-- <li>
+                <a href="javascript: void(0);"> <i data-feather="file-text"
+                        class="align-self-center menu-icon"></i><span>Estimasi Biaya</span><span
+                        class="menu-arrow"><i class="mdi mdi-chevron-right"></i></span></a>
+                <ul class="nav-second-level" aria-expanded="false">
+                    <li class="nav-item"><a class="nav-link" href="{{ route('estimasi.pengerjaan.borongan.index') }}">
+                        <i class="ti-control-record"></i>Borongan</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#">
+                        <i class="ti-control-record"></i>Ambri</a>
+                    </li>
+                </ul>
+            </li> --}}
             <li class="menu-label mt-0">Payrol</li>
             <li>
                 <a href="javascript: void(0);"> <i data-feather="file-text"

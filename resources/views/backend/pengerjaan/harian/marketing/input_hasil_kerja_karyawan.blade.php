@@ -40,11 +40,18 @@
                                     <div class="card-body">
                                         <table class="table table-bordered">
                                             <tr>
-                                                <td>NIK</td>
+                                                <td>ID</td>
                                                 <td class="text-center">:</td>
                                                 <td>
                                                     <input type="hidden" name="operator_harian_karyawan_id"
                                                         value="{{ $karyawan_harian->id }}">
+                                                    {{ $karyawan_harian->id }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>NIK</td>
+                                                <td class="text-center">:</td>
+                                                <td>
                                                     {{ $karyawan_harian->nik }}
                                                 </td>
                                             </tr>
@@ -101,7 +108,7 @@
                                                     $hasil_plus_1 = 0;
                                                     $keterangan_plus_1 = null;
                                                 }
-                                                
+
                                                 if (!empty($karyawan_harian->plus_2)) {
                                                     $explode_plus_2 = explode('|', $karyawan_harian->plus_2);
                                                     $hasil_plus_2 = $explode_plus_2[0];
@@ -110,7 +117,7 @@
                                                     $hasil_plus_2 = 0;
                                                     $keterangan_plus_2 = null;
                                                 }
-                                                
+
                                                 if (!empty($karyawan_harian->plus_3)) {
                                                     $explode_plus_3 = explode('|', $karyawan_harian->plus_3);
                                                     $hasil_plus_3 = $explode_plus_3[0];
@@ -119,7 +126,7 @@
                                                     $hasil_plus_3 = 0;
                                                     $keterangan_plus_3 = null;
                                                 }
-                                                
+
                                             @endphp
                                             <tr>
                                                 <td style="font-weight: bold">PLUS 1</td>
@@ -206,7 +213,7 @@
                                                 $exp_tgl_awal = explode('-', $exp_tanggal[1]);
                                                 $exp_tgl_akhir = explode('-', $exp_tanggal[$a]);
                                                 $explode_posting = explode('-', $new_data_pengerjaan['date']);
-                                                
+
                                             @endphp
                                             @for ($b = 1; $b <= $a; $b++)
                                                 @php
@@ -216,13 +223,13 @@
                                                     } else {
                                                         $d_date = $exp_per_tanggal[2];
                                                     }
-                                                    
+
                                                     if ($exp_per_tanggal[1] <= 9) {
                                                         $m_date = $exp_per_tanggal[1];
                                                     } else {
                                                         $m_date = $exp_per_tanggal[1];
                                                     }
-                                                    
+
                                                     if ($exp_tgl_awal[2] != $exp_tgl_akhir[2] && $exp_per_tanggal[2] == 1) {
                                                         if ($explode_posting[1] == 12) {
                                                             $y_date = $explode_posting[2] + 1;
@@ -239,7 +246,7 @@
                                                     $tgl_digunakan = $y_date . '-' . $m_date . '-' . $d_date;
                                                     // dd($tgl_digunakan);
                                                     // var_dump($exp_per_tanggal);
-                                                    
+
                                                     //Absen Terlambat Pribadi
                                                     $absensi_terlambat = \App\Models\PresensiInfo::where('scan_date', 'LIKE', "%$tgl_digunakan%")
                                                         ->where('pin', $karyawan_harian->pin)
@@ -266,7 +273,7 @@
                                                     }
                                                     $total_absensi_terlambat = $jam_terlambat + $menit_terlambat;
                                                     // dd($total_absensi_terlambat);
-                                                    
+
                                                     //9 Absen Pulang Awal Pribadi
                                                     $get_pulang_awal_pribadi = \App\Models\PresensiInfo::where('scan_date', 'LIKE', "%$tgl_digunakan%")
                                                         ->where('pin', $karyawan_harian->pin)
@@ -283,37 +290,37 @@
                                                             $split_keterangan_pulang_awal_pribadi = explode('@', $get_pulang_awal_pribadi['keterangan']);
                                                             $penyesuaian_istirahat_pulang_awal_pribadi = explode(':', $split_keterangan_pulang_awal_pribadi[2]);
                                                             $penyesuaian_pulang_awal_pribadi = explode(':', $split_keterangan_pulang_awal_pribadi[3]);
-                                                    
+
                                                             $jam_istirahat_pulang_awal_pribadi = $split_keterangan_pulang_awal_pribadi[2];
                                                             $jam_istirahat_pulang_awal_pribadi = strtotime($jam_istirahat_pulang_awal_pribadi);
-                                                    
+
                                                             $max_pulang_awal_pribadi = strtotime($split_keterangan_pulang_awal_pribadi[3]);
                                                         } else {
                                                             $max_pulang_awal_pribadi = strtotime('17:00');
                                                             $jam_istirahat_awal_pribadi = strtotime('12:00');
                                                         }
-                                                    
+
                                                         $pulang_dijam_istirahat_pulang_awal_pribadi = ($jam_pulang_awal_pribadi - $jam_istirahat_pulang_awal_pribadi) / 60;
-                                                    
+
                                                         if ($jam_pulang_awal_pribadi <= $jam_istirahat_pulang_awal_pribadi || $pulang_dijam_istirahat_pulang_awal_pribadi <= 60) {
                                                             $durasi_pulang_awal_pribadi = ($max_pulang_awal_pribadi - $jam_pulang_awal_pribadi) / 60 - 60;
                                                         } else {
                                                             $durasi_pulang_awal_pribadi = ($max_pulang_awal_pribadi - $jam_pulang_awal_pribadi) / 60;
                                                         }
-                                                    
+
                                                         $jam_plg_awal_pribadi = floor($durasi_pulang_awal_pribadi / 60);
                                                         $menit_plg_awal_pribadi = (($durasi_pulang_awal_pribadi - $jam_plg_awal_pribadi * 60) / 100) * 1.666;
                                                     }
                                                     $total_plg_awal_pribadi = $jam_plg_awal_pribadi + $menit_plg_awal_pribadi;
                                                     // dd($total_plg_awal_pribadi);
-                                                    
+
                                                     //10 Absen Pulang Awal - Sakit
                                                     $get_pulang_awal_sakit = \App\Models\PresensiInfo::where('scan_date', 'LIKE', "%$tgl_digunakan%")
                                                         ->where('pin', $karyawan_harian->pin)
                                                         ->where('status', 10)
                                                         ->orderBy('scan_date', 'desc')
                                                         ->first();
-                                                    
+
                                                     if (empty($get_pulang_awal_sakit)) {
                                                         $jam_plg_awal_sakit = 0;
                                                         $menit_plg_awal_sakit = 0;
@@ -323,32 +330,32 @@
                                                             $split_keterangan_pulang_awal_sakit = explode('@', $get_pulang_awal_sakit['keterangan']);
                                                             $penyesuaian_istirahat_pulang_awal_sakit = explode(':', $split_keterangan_pulang_awal_sakit[2]);
                                                             $penyesuaian_pulang_awal_sakit = explode(':', $split_keterangan_pulang_awal_sakit[3]);
-                                                    
+
                                                             $jam_istirahat_pulang_awal_sakit = $split_keterangan_pulang_awal_sakit[2];
                                                             $jam_istirahat_pulang_awal_sakit = strtotime($jam_istirahat_pulang_awal_sakit);
-                                                    
+
                                                             $max_pulang_awal_sakit = strtotime($split_keterangan_pulang_awal_sakit[3]);
                                                         } else {
                                                             $max_pulang_awal_sakit = strtotime('17:00');
                                                             $jam_istirahat_awal_sakit = strtotime('12:00');
                                                         }
-                                                    
+
                                                         $pulang_dijam_istirahat_pulang_awal_sakit = ($jam_pulang_awal_sakit - $jam_istirahat_pulang_awal_sakit) / 60;
-                                                    
+
                                                         if ($jam_pulang_awal_sakit <= $jam_istirahat_pulang_awal_sakit || $pulang_dijam_istirahat_pulang_awal_sakit <= 60) {
                                                             $durasi_pulang_awal_sakit = ($max_pulang_awal_sakit - $jam_pulang_awal_sakit) / 60 - 60;
                                                         } else {
                                                             $durasi_pulang_awal_sakit = ($max_pulang_awal_sakit - $jam_pulang_awal_sakit) / 60;
                                                         }
-                                                    
+
                                                         $jam_plg_awal_sakit = floor($durasi_pulang_awal_sakit / 60);
                                                         $menit_plg_awal_sakit = (($durasi_pulang_awal_sakit - $jam_plg_awal_sakit * 60) / 100) * 1.666;
                                                     }
                                                     $total_plg_awal_sakit = $jam_plg_awal_sakit + $menit_plg_awal_sakit;
-                                                    
+
                                                     $total_jumlah_plg_awal_pribadi_plg_awal_sakit = $total_plg_awal_pribadi + $total_plg_awal_sakit;
                                                     // dd($total_jumlah_plg_awal_pribadi_plg_awal_sakit);
-                                                    
+
                                                     // Ijin Keluar Masuk
                                                     $get_ikm = \App\Models\KeluarMasuk::where('tanggal_ijin', $tgl_digunakan)
                                                         ->where('nik', $karyawan_harian->nik)
@@ -381,7 +388,7 @@
                                                     }
                                                     $total_ijin_km = $jam_ijin + $menit_ijin;
                                                     // dd($total_ijin_km);
-                                                    
+
                                                     $checklog = \App\Models\FtmAttLog::where('scan_date', 'LIKE', "%$tgl_digunakan%")->where('pin', $karyawan_harian->pin);
                                                     $presensi = \App\Models\PresensiInfo::where('scan_date', 'LIKE', "%$tgl_digunakan%")
                                                         ->where('pin', $karyawan_harian->pin)
@@ -447,7 +454,7 @@
                                                     }
 
                                                     // dd($post_jam_kerja);
-                                                    
+
                                                 @endphp
                                                 <tr>
                                                     <td style="font-weight: bold">
@@ -1231,7 +1238,7 @@
                                                     $hasil_minus_1 = null;
                                                     $keterangan_minus_1 = null;
                                                 }
-                                                
+
                                                 if (!empty($karyawan_harian->minus_2)) {
                                                     $explode_minus_2 = explode('|', $karyawan_harian->minus_2);
                                                     $hasil_minus_2 = $explode_minus_2[0];
@@ -1240,7 +1247,7 @@
                                                     $hasil_minus_2 = null;
                                                     $keterangan_minus_2 = null;
                                                 }
-                                                
+
                                             @endphp
                                             <tr>
                                                 <td style="font-weight: bold">Minus 1</td>

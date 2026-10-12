@@ -60,6 +60,7 @@
                                 <th class="text-center">Jenis Pengerjaan</th>
                                 <th class="text-center">Nominal Gaji</th>
                                 <th class="text-center">Status</th>
+                                <th class="text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -103,6 +104,9 @@
                                             @default
                                                 
                                         @endswitch
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="{{ route('payrol.supir_rit.supir_rit_cek_slip_gaji',['id' => $item->pengerjaan_id, 'kode_pengerjaan' => $new_data_pengerjaan->kode_pengerjaan]) }}" class="btn btn-primary btn-sm" target="_blank"><i class="fas fa-download"></i> Download Slip Gaji</a>
                                     </td>
                                 </tr>
                             @endforeach

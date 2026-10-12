@@ -107,6 +107,7 @@
     </div>
 @endsection
 @section('script')
+{{-- <script src="{{ URL::asset('public/assets/plugins/apex-charts/apexcharts.min.js') }}"></script> --}}
 <script src="{{ URL::asset('public/assets/plugins/apex-charts/apexcharts.min.js') }}"></script>
 <script>
     

@@ -10510,7 +10510,7 @@ class PengerjaanController extends Controller
         // dd($request->all());
         $new_data_pengerjaan = $this->newDataPengerjaan->select('tanggal')->where('kode_pengerjaan',$kode_pengerjaan)->first();
         // dd(count(array_filter(explode('#',$new_data_pengerjaan->tanggal))));
-        for ($i=1; $i <= 25; $i++) {
+        for ($i=1; $i <= 26; $i++) {
             if ($request['checkbox_'.$i]) {
                 $data_checkbox = $request['checkbox_'.$i];
                 // dd($data_checkbox);
@@ -10702,6 +10702,7 @@ class PengerjaanController extends Controller
                                                         ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
                                                         ->rightJoin('pengerjaan_harian','pengerjaan_harian.operator_harian_karyawan_id','=','operator_harian_karyawan.id')
                                                         ->where('operator_harian_karyawan.nik',$nik)
+                                                        ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',12)
                                                         ->where('operator_harian_karyawan.status','y')
                                                         ->where('pengerjaan_harian.kode_pengerjaan',$kode_pengerjaan)
                                                         ->first();
@@ -11440,6 +11441,7 @@ class PengerjaanController extends Controller
                                                         ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
                                                         ->rightJoin('pengerjaan_harian','pengerjaan_harian.operator_harian_karyawan_id','=','operator_harian_karyawan.id')
                                                         ->where('operator_harian_karyawan.nik',$nik)
+                                                        ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',13)
                                                         ->where('operator_harian_karyawan.status','y')
                                                         ->where('pengerjaan_harian.kode_pengerjaan',$kode_pengerjaan)
                                                         ->first();
@@ -11919,6 +11921,7 @@ class PengerjaanController extends Controller
                                                         ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
                                                         ->rightJoin('pengerjaan_harian','pengerjaan_harian.operator_harian_karyawan_id','=','operator_harian_karyawan.id')
                                                         ->where('operator_harian_karyawan.nik',$nik)
+                                                        ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',14)
                                                         ->where('operator_harian_karyawan.status','y')
                                                         ->where('pengerjaan_harian.kode_pengerjaan',$kode_pengerjaan)
                                                         ->first();
@@ -12393,6 +12396,7 @@ class PengerjaanController extends Controller
                                                         ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
                                                         ->rightJoin('pengerjaan_harian','pengerjaan_harian.operator_harian_karyawan_id','=','operator_harian_karyawan.id')
                                                         ->where('operator_harian_karyawan.nik',$nik)
+                                                        ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',15)
                                                         ->where('operator_harian_karyawan.status','y')
                                                         ->where('pengerjaan_harian.kode_pengerjaan',$kode_pengerjaan)
                                                         ->first();
@@ -12860,6 +12864,7 @@ class PengerjaanController extends Controller
                                                         ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
                                                         ->rightJoin('pengerjaan_harian','pengerjaan_harian.operator_harian_karyawan_id','=','operator_harian_karyawan.id')
                                                         ->where('operator_harian_karyawan.nik',$nik)
+                                                        ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',16)
                                                         ->where('operator_harian_karyawan.status','y')
                                                         ->where('pengerjaan_harian.kode_pengerjaan',$kode_pengerjaan)
                                                         ->first();
@@ -13327,6 +13332,7 @@ class PengerjaanController extends Controller
                                                         ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
                                                         ->rightJoin('pengerjaan_harian','pengerjaan_harian.operator_harian_karyawan_id','=','operator_harian_karyawan.id')
                                                         ->where('operator_harian_karyawan.nik',$nik)
+                                                        ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',17)
                                                         ->where('operator_harian_karyawan.status','y')
                                                         ->where('pengerjaan_harian.kode_pengerjaan',$kode_pengerjaan)
                                                         ->first();
@@ -13795,6 +13801,7 @@ class PengerjaanController extends Controller
                                                         ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
                                                         ->rightJoin('pengerjaan_harian','pengerjaan_harian.operator_harian_karyawan_id','=','operator_harian_karyawan.id')
                                                         ->where('operator_harian_karyawan.nik',$nik)
+                                                        ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',18)
                                                         ->where('operator_harian_karyawan.status','y')
                                                         ->where('pengerjaan_harian.kode_pengerjaan',$kode_pengerjaan)
                                                         ->first();
@@ -14651,6 +14658,493 @@ class PengerjaanController extends Controller
         }
     }
 
+    public function hasil_kerja_harian_qc($id, $kode_pengerjaan)
+    {
+        $data['id'] = $id;
+        $data['kode_pengerjaan'] = $kode_pengerjaan;
+        $data['jenis_operator_detail_pekerjaan'] = $this->jenisOperatorDetailPengerjaan->find(26);
+        $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
+        $data['explode_tanggal_pengerjaans'] = explode('#',$data['new_data_pengerjaan']['tanggal']);
+
+        $data['pengerjaan_harians'] = $this->pengerjaanHarian->select([
+                                                        'pengerjaan_harian.id as id',
+                                                        'operator_harian_karyawan.nik as nik',
+                                                        'biodata_karyawan.nama as nama',
+                                                        'pengerjaan_harian.operator_harian_karyawan_id as operator_harian_karyawan_id',
+                                                        'pengerjaan_harian.uang_makan as uang_makan',
+                                                        'pengerjaan_harian.upah_dasar_weekly as upah_dasar_weekly',
+                                                        'pengerjaan_harian.plus_1 as plus_1',
+                                                        'pengerjaan_harian.plus_2 as plus_2',
+                                                        'pengerjaan_harian.plus_3 as plus_3',
+                                                        'pengerjaan_harian.minus_1 as minus_1',
+                                                        'pengerjaan_harian.minus_2 as minus_2',
+                                                        'pengerjaan_harian.jht as jht',
+                                                        'pengerjaan_harian.bpjs_kesehatan as bpjs_kesehatan',
+                                                        'pengerjaan_harian.lembur as lembur',
+                                                        'pengerjaan_harian.hasil_kerja as hasil_kerja',
+                                                        'pengerjaan_harian.tunjangan_kerja as tunjangan_kerja',
+                                                        'pengerjaan_harian.tunjangan_kehadiran as tunjangan_kehadiran',
+                                                        'operator_harian_karyawan.tunjangan_kerja_id as tunjangan_kerja_id',
+                                                    ])
+                                                    ->leftJoin('operator_harian_karyawan','operator_harian_karyawan.id','=','pengerjaan_harian.operator_harian_karyawan_id')
+                                                    ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
+                                                    ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',26)
+                                                    ->where('kode_pengerjaan',$kode_pengerjaan)
+                                                    // ->where('operator_harian_karyawan.status','y')
+                                                    ->orderBy('biodata_karyawan.nama','asc')
+                                                    ->get();
+
+        return view('backend.pengerjaan.harian.qc.index',$data);
+    }
+
+    public function hasil_kerja_harian_qc_tambah_karyawan($id, $kode_pengerjaan)
+    {
+        $data['id'] = $id;
+        $data['kode_pengerjaan'] = $kode_pengerjaan;
+        $data['jenis_operator_detail_pekerjaan'] = $this->jenisOperatorDetailPengerjaan->find(26);
+        $data['karyawan_operator_harians'] = $this->karyawanOperatorHarian->select([
+                                                                        'operator_harian_karyawan.id as id',
+                                                                        'operator_harian_karyawan.nik as nik',
+                                                                        'biodata_karyawan.nama as nama',
+                                                                        ])
+                                                                        ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
+                                                                        ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',26)
+                                                                        ->where('operator_harian_karyawan.status','y')
+                                                                        ->get();
+
+                                                                        // dd($data);
+        return view('backend.pengerjaan.harian.tambah_karyawan',$data);
+    }
+
+    public function hasil_kerja_harian_qc_view($id, $kode_pengerjaan, $nik, $month, $year)
+    {
+        $data['id'] = $id;
+        $data['nik'] = $nik;
+        $data['kode_pengerjaan'] = $kode_pengerjaan;
+        $data['month'] = $month;
+        $data['year']= $year;
+
+        if($id == 4){
+            $kode_jenis_operator_detail = 'H';
+        }
+
+        $data['karyawan_harian'] = $this->karyawanOperatorHarian->select([
+                                                            'operator_harian_karyawan.id as id',
+                                                            'operator_harian_karyawan.nik as nik',
+                                                            'biodata_karyawan.nama as nama',
+                                                            'biodata_karyawan.pin as pin',
+                                                            'biodata_karyawan.tanggal_masuk as tanggal',
+                                                            'operator_harian_karyawan.upah_dasar as upah_dasar',
+                                                            'pengerjaan_harian.upah_dasar_weekly as upah_dasar_weekly',
+                                                            'pengerjaan_harian.hari_kerja as hari_kerja',
+                                                            'pengerjaan_harian.hasil_kerja as hasil_kerja',
+                                                            'pengerjaan_harian.tunjangan_kerja as tunjangan_kerja',
+                                                            'operator_harian_karyawan.tunjangan_kerja_id as tunjangan_kerja_id',
+                                                            'pengerjaan_harian.plus_1 as plus_1',
+                                                            'pengerjaan_harian.plus_2 as plus_2',
+                                                            'pengerjaan_harian.plus_3 as plus_3',
+                                                            'pengerjaan_harian.minus_1 as minus_1',
+                                                            'pengerjaan_harian.minus_2 as minus_2',
+                                                            'pengerjaan_harian.minus_3 as minus_3',
+                                                            'pengerjaan_harian.uang_makan as uang_makan',
+                                                            'pengerjaan_harian.lembur as lembur',
+                                                            'operator_harian_karyawan.jht as jht',
+                                                            'operator_harian_karyawan.bpjs as bpjs',
+                                                            'operator_harian_karyawan.status as status',
+                                                        ])
+                                                        ->with('tunjangan_kerja_nominal')
+                                                        ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','operator_harian_karyawan.nik')
+                                                        ->rightJoin('pengerjaan_harian','pengerjaan_harian.operator_harian_karyawan_id','=','operator_harian_karyawan.id')
+                                                        ->where('operator_harian_karyawan.nik',$nik)
+                                                        ->where('operator_harian_karyawan.jenis_operator_detail_pekerjaan_id',26)
+                                                        ->where('operator_harian_karyawan.status','y')
+                                                        ->where('pengerjaan_harian.kode_pengerjaan',$kode_pengerjaan)
+                                                        ->first();
+
+        $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
+        $data['explode_tanggal_pengerjaans'] = explode('#',$data['new_data_pengerjaan']['tanggal']);
+        // dd($data['explode_tanggal_pengerjaans']);
+
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
+        if (empty($data['karyawan_harian']['plus_1'])) {
+            $plus_1=null;
+            $ket_plus_1=null;
+        }else{
+            $exp_plus1=explode("|",$data['karyawan_harian']['plus_1']);
+            // dd($exp_plus1);
+            $plus_1=$exp_plus1[0];
+            $ket_plus_1=$exp_plus1[1];
+        }
+
+        if (empty($data['karyawan_harian']['plus_2'])) {
+            $plus_2=null;
+            $ket_plus_2=null;
+        }else{
+            $exp_plus2=explode("|",$data['karyawan_harian']['plus_2']);
+            $plus_2=$exp_plus2[0];
+            $ket_plus_2=$exp_plus2[1];
+        }
+
+        if (empty($data['karyawan_harian']['plus_3'])) {
+            $plus_3=null;
+            $ket_plus_3=null;
+        }else{
+            $exp_plus3=explode("|",$data['karyawan_harian']['plus_3']);
+            $plus_3=$exp_plus2[0];
+            $ket_plus_3=$exp_plus2[1];
+        }
+
+        if (empty($data['karyawan_harian']['minus_1'])) {
+            $minus_1=null;
+            $ket_minus_1=null;
+        }else{
+            $exp_minus1=explode("|",$data['karyawan_harian']['minus_1']);
+            $minus_1=$exp_minus1[0];
+            $ket_minus_1=$exp_minus1[1];
+        }
+
+        if (empty($data['karyawan_harian']['minus_2'])) {
+            $minus_2=null;
+            $ket_minus_2=null;
+        }else{
+            $exp_minus2=explode("|",$data['karyawan_harian']['minus_2']);
+            $minus_2=$exp_minus2[0];
+            $ket_minus_2=$exp_minus2[1];
+        }
+
+        $data['jhts'] = $this->bpjsJht->where('status','y')->get();
+        $data['bpjs_kesehatan'] = $this->bpjsKesehatan->select('nominal')->where('status','y')->first();
+
+        $data['pengerjaan_harian_weekly'] = $this->pengerjaanHarian->where('operator_harian_karyawan_id',$data['karyawan_harian']['id'])
+                                                            ->where('kode_payrol',$kode_pengerjaan)
+                                                            ->first();
+        // dd($data['pengerjaan_harian_weekly']);
+        // if(!empty($data['pengerjaan_harian_weekly'])){
+        // }
+        $exp_lembur = explode("@",$data['pengerjaan_harian_weekly']['lembur']);
+        // dd($exp_lembur);
+        if(empty($exp_lembur[0])){
+            $exp_lembur[0]==null;
+        }
+        // if (empty($exp_lembur[0]))$exp_lembur[0]==null;
+        // if (empty($exp_lembur[1]))$exp_lembur[1]==null;
+        // if (empty($exp_lembur[2]))$exp_lembur[2]==null;
+        //Hitung Masa Kerja
+        // $data['karyawan_masa_kerja'] = DB::connection('emp')->table('log_posisi')
+        //                                                     ->select('tanggal')
+        //                                                     ->where('nik',$nik)
+        //                                                     ->first();
+
+        $awal  = new DateTime($data['karyawan_harian']->tanggal);
+        $akhir = new DateTime(); // Waktu sekarang
+        $diff  = $awal->diff($akhir);
+        $data['masa_kerja'] = $diff->y.' Tahun '.$diff->m.' Bulan '.$diff->d.' Hari';
+        $data['masa_kerja_tahun'] = $diff->y;
+        $data['masa_kerja_hari'] = $diff->d;
+
+        // $data['upah_dasar'] = $data['karyawan_harian']['upah_dasar'];
+        // $data['upah_dasar'] = [];
+        $data['upah_dasar_karyawan'] = [];
+        foreach ($data['jhts'] as $key => $jht) {
+            if ($data['masa_kerja_tahun'] > 15) {
+                if ($jht->urutan == 3) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 100000)/$cutOff->tanggal;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] >= 10 && $data['masa_kerja_tahun'] <= 15){
+                if ($jht->urutan == 2) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 50000)/$cutOff->tanggal;
+                }
+            }
+            elseif($data['masa_kerja_tahun'] <= 10 || $data['masa_kerja_hari'] >= 1){
+                if ($jht->urutan == 1) {
+                    $data['upah_dasar_karyawan'] = ($data['bpjs_kesehatan']['nominal'] + 0)/$cutOff->tanggal;
+                    // $data['upah_dasar_karyawan'] = $data['upah_dasar'];
+                }
+            }
+        }
+
+        // dd($data['upah_dasar_karyawan']);
+
+        // dd($data['masa_kerja_tahun']);
+
+        $tgl_current_active = Carbon::now()->format('d');
+        $bln_active = Carbon::now()->format('m');
+        $bln_current_active = $month;
+        $thn_current_active = $year;
+
+        if($month == 1 && $tgl_current_active <10){
+            $thn_prev_active = $year-1;
+            $bulan_kemarin="$thn_prev_active-11-26";
+            $bulan_sekarang="$thn_prev_active-12-26";
+        }elseif($month == 1 && $tgl_current_active>10 or $month == 2 && $tgl_current_active<10 && $bln_active != 3){
+            $thn_prev_active = $year-1;
+            $bulan_kemarin="$thn_prev_active-12-26";
+            $bulan_sekarang="$thn_current_active-01-26";
+        }else{
+            $bln_prev_active = $month-1;
+            $thn_prev_active = $year;
+            $bulan_kemarin="$thn_prev_active-$bln_prev_active-26";
+            $bulan_sekarang="$thn_current_active-$bln_current_active-26";
+        }
+
+        $data['tunjangan_kerjas'] = $this->tunjanganKerja->select('nominal')->where('id',$data['karyawan_harian']['tunjangan_kerja_id'])->first();
+        if(empty($data['tunjangan_kerjas'])){
+            $data['tunjangan_kerja'] = 0;
+        }else{
+            $data['tunjangan_kerja'] = $data['tunjangan_kerjas']['nominal'];
+        }
+
+        //jumlah alpa
+        $data['alpa'] = $this->presensiInfo->where('pin',$data['karyawan_harian']['pin'])
+                                    ->whereBetween('scan_date',[$bulan_kemarin,$bulan_sekarang])
+                                    ->where('status',7)
+                                    ->get();
+        //jumlah diliburkan
+        $data['diliburkan'] = $this->presensiInfo->where('pin',$data['karyawan_harian']['pin'])
+                                    ->whereBetween('scan_date',[$bulan_kemarin,$bulan_sekarang])
+                                    ->where('status',14)
+                                    ->get();
+        //jumlah cuti
+        $data['cuti'] = $this->presensiInfo->where('pin',$data['karyawan_harian']['pin'])
+                                    ->whereBetween('scan_date',[$bulan_kemarin,$bulan_sekarang])
+                                    ->where('status',13)
+                                    ->get();
+        //jumlah sakit
+        $data['sakit'] = $this->presensiInfo->where('pin',$data['karyawan_harian']['pin'])
+                                    ->whereBetween('scan_date',[$bulan_kemarin,$bulan_sekarang])
+                                    ->where('status',4)
+                                    ->get();
+        // dd($data['sakit']);
+        //jumlah ijin full
+        $data['ijin_full'] = $this->presensiInfo->where('pin',$data['karyawan_harian']['pin'])
+                                    ->whereBetween('scan_date',[$bulan_kemarin,$bulan_sekarang])
+                                    ->where('status',6)
+                                    ->get();
+        //jumlah status terlambat
+        $data['terlambats'] = $this->presensiInfo->where('pin',$data['karyawan_harian']['pin'])
+                                    ->whereBetween('scan_date',[$bulan_kemarin,$bulan_sekarang])
+                                    ->where('status',3)
+                                    ->get();
+        $telat_1=0; //terlambat < 5 menit
+        $telat_2=0; //terlambat > 5 menit < 15 menit
+        $telat_3=0; //terlambat > 15 menit < 1 jam
+        $telat_4=0; //terlambat > 1 jam < 3 jam
+        $telat_5=0; //terlambat > 3 jam
+        $data['telat_1'] = $telat_1;
+        $data['telat_2'] = $telat_2;
+        $data['telat_3'] = $telat_3;
+        $data['telat_4'] = $telat_4;
+        $data['telat_5'] = $telat_4;
+        foreach ($data['terlambats'] as $key => $terlambat) {
+            $explode_keterangan_terlambat = explode("@",$terlambat->keterangan);
+            $jam_keterangan_terlambat=strtotime($explode_keterangan_terlambat[1]);
+            $jam_datang_terlambat=strtotime(Carbon::parse($terlambat['scan_date'])->format('H:i'));
+            // $jam_datang_terlambat=strtotime($terlambat['jam_datang_telat']);
+            $menit_telat=(($jam_datang_terlambat-$jam_keterangan_terlambat)/60);
+            // dd($menit_telat);
+            if($menit_telat <= 4){
+                $telat_1=$telat_1+1;
+                $data['telat_1'] = $telat_1;
+            }
+            else if(($menit_telat >= 5) && ($menit_telat <= 15) ){
+                $telat_2=$telat_2+1;
+                $data['telat_2'] = $telat_2;
+            }
+            else if(($menit_telat >= 16) && ($menit_telat <= 60)){
+                $telat_3=$telat_3+1;
+                $data['telat_3'] = $telat_3;
+            }
+            else if(($menit_telat >= 61) && ($menit_telat <= 179)){
+                $telat_4=$telat_4+1;
+                $data['telat_4'] = $telat_4;
+            }else if($menit_telat > 179){
+                $telat_5=$telat_5+1;
+                $data['telat_5'] = $telat_5;
+            }
+            // else{
+            //     $telat_4=$telat_4+1;
+            //     $data['telat_4'] = $telat_4;
+            // }
+        }
+
+        //jumlah status pulang awal
+        $data['pulang_awals'] = $this->presensiInfo->where('pin',$data['karyawan_harian']['pin'])
+                                    ->whereBetween('scan_date',[$bulan_kemarin,$bulan_sekarang])
+                                    ->where(function($query) {
+                                        $query->where('status','=',9)
+                                            ->orWhere('status','=',10);
+                                    })
+                                    // ->where('status',9)
+                                    // ->where('status',10)
+                                    ->get();
+        // dd($data['pulang_awals']);
+        $pulang_1=0; //pulang awal < 4 jam
+		$pulang_2=0; //tpulang awal > 4 jam
+        $data['pulang_1'] = $pulang_1;
+        $data['pulang_2'] = $pulang_2;
+        foreach ($data['pulang_awals'] as $key => $pulang_awal) {
+            $explode_pulang_seharusnya=explode("@",$pulang_awal->keterangan);
+			$jam_pulang_seharusnya=strtotime($explode_pulang_seharusnya[3]);
+			$jam_pulang_awal=strtotime(Carbon::parse($pulang_awal['scan_date'])->format('H:i'));
+			// $jam_pulang_awal=strtotime($pulang_awal->jam_pulang_awal);
+			$menit_sisa_jam_kerja=(($jam_pulang_seharusnya-$jam_pulang_awal)/60);
+			if ($menit_sisa_jam_kerja<=300){
+                $pulang_1=$pulang_1+1;
+                $data['pulang_1'] = $pulang_1;
+            }
+			else{
+                $pulang_2=$pulang_2+1;
+                $data['pulang_2'] = $pulang_2;
+            }
+        }
+
+        // dd($data);
+
+        //jumlah ijin saat jam kerja
+        $data['keluar_masuks'] = $this->keluarMasuk->where('nik',$data['karyawan_harian']['nik'])
+                                    ->whereBetween('tanggal_ijin',[$bulan_kemarin,$bulan_sekarang])
+                                    ->get();
+        // dd($data['keluar_masuks']);
+        $ijin_15=0; //ijin kurang dari 15 menit
+		$ijin_k4=0; //ijin > 15menit < 4 jam
+		$ijin_l4=0; //ijin > 4 jam
+        $data['ijin_15']=$ijin_15;
+        $data['ijin_k4']=$ijin_k4;
+        $data['ijin_l4']=$ijin_l4;
+        foreach ($data['keluar_masuks'] as $key => $keluar_masuk) {
+            $jam_keluar=strtotime($keluar_masuk->jam_keluar);
+			$jam_datang=strtotime($keluar_masuk->jam_datang);
+			$menit_keluar_masuk=(($jam_datang-$jam_keluar)/60);
+			if ($menit_keluar_masuk<=15){
+                $ijin_15=$ijin_15+1;
+                $data['ijin_15']=$ijin_15;
+            }
+			else if (($menit_keluar_masuk>15)&&($menit_keluar_masuk<=239)){
+                $ijin_k4=$ijin_k4+1;
+                $data['ijin_k4']=$ijin_k4;
+            }
+			else {
+                $ijin_l4=$ijin_l4+1;
+                $data['ijin_l4']=$ijin_l4;
+            }
+        }
+
+        //lihat tanggal masuk
+
+        // $data['log_posisi'] = $this->logPosisi->select('tanggal')->where('nik',$nik)->first();
+		$selisih_tanggal_masuk=strtotime($bulan_kemarin)-strtotime($data['karyawan_harian']['tanggal']);
+		if ($selisih_tanggal_masuk>=0)$div_tk=0;else $div_tk=75000;
+
+        $total_potongan_tk=(75000*$data['alpa']->count())+(75000*$data['diliburkan']->count())+(75000*$data['sakit']->count())+(75000*$data['cuti']->count())+(75000*$data['ijin_full']->count())+($data['ijin_15']*25000)+($data['ijin_k4']*40000)+
+        ($data['ijin_l4']*75000)+($data['pulang_1']*40000)+($data['pulang_2']*75000)+($data['telat_1']*15000)+($data['telat_2']*25000)+($data['telat_3']*30000)+($data['telat_4']*40000)+($data['telat_5']*75000)+$div_tk;
+        if ($total_potongan_tk>75000){$total_potongan_tk=75000;}else {}
+
+        // if ($data['pengerjaan_harian_weekly']['tunjangan_kerja'] == 75000) {
+        //     $data['total_potongan_tk']=0;
+        // }
+        // // elseif($data['pengerjaan_harian_weekly']['tunjangan_kerja'] < 75000){
+        // //     $data['total_potongan_tk']=$data['pengerjaan_harian_weekly']['tunjangan_kerja'];
+        // // }
+        // else{
+        //     $data['total_potongan_tk']=$total_potongan_tk;
+        // }
+
+        $data['total_potongan_tk']=$total_potongan_tk;
+
+        return view('backend.pengerjaan.harian.qc.input_hasil_kerja_karyawan',$data);
+    }
+
+    public function hasil_kerja_harian_qc_simpan(Request $request, $id, $kode_pengerjaan, $tanggal)
+    {
+        if($id == 1){
+            $kode_jenis_operator_detail = 'L';
+        }
+        elseif($id == 2){
+            $kode_jenis_operator_detail = 'E';
+        }
+        elseif($id == 3){
+            $kode_jenis_operator_detail = 'A';
+        }
+
+        $input['uang_makan'] = $request->uang_makan;
+
+        $input['plus_1'] = $request->plus_1."|".$request->keterangan_plus_1;
+        $input['plus_2'] = $request->plus_2."|".$request->keterangan_plus_2;
+        $input['plus_3'] = $request->plus_3."|".$request->keterangan_plus_3;
+
+        $input['minus_1'] = $request->minus_1."|".$request->keterangan_minus_1;
+        $input['minus_2'] = $request->minus_2."|".$request->keterangan_minus_2;
+
+        $cutOff = $this->cutOff->select('tanggal')->where('status','Y')->first();
+
+        $hitung_lembur = round((($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_1)*1.5)+(($request->upah_dasar*$cutOff->tanggal/173*$request->lembur_2)*2));
+
+        $input['lembur'] = $hitung_lembur.'|'.$request->lembur_1.'|'.$request->lembur_2;
+
+        $upah_dasar_weekly = 0;
+        $hasil_kerja="";
+
+        for ($i=1; $i <=$request->data_for; $i++) {
+            $var_hasil_kerja="jam_kerja_".$i;
+            $hasil_kerja=$hasil_kerja.$request[$var_hasil_kerja]."|";
+            $upah_dasar_harian=$request[$var_hasil_kerja]*$request->upah_dasar;
+            $upah_dasar_weekly=$upah_dasar_weekly+$upah_dasar_harian;
+            // $upah_dasar_harian=$request[$var_hasil_kerja]*($request->upah_dasar-0.1);
+            // $upah_dasar_weekly=$upah_dasar_weekly+$upah_dasar_harian+0.2;
+        }
+
+        $input['hasil_kerja'] = $hasil_kerja;
+        // $input['upah_dasar_harian'] = round($upah_dasar_harian);
+        $input['upah_dasar_weekly'] = round($upah_dasar_weekly);
+        // $input['upah_dasar_weekly'] = $upah_dasar_weekly;
+
+        if ($request->akhir_bulan == 'n') {
+            $input['tunjangan_kerja'] = 0;
+            $input['tunjangan_kehadiran'] = 0;
+        }else{
+            $input['tunjangan_kerja'] = $request->tunjangan_kerja;
+            $input['tunjangan_kehadiran'] = 75000-$request->pot_tunjangan_kehadiran;
+        }
+        // $input['tunjangan_kehadiran'] = 75000-$request->pot_tunjangan_kehadiran;
+        // $input['tunjangan_kerja'] = $request->tunjangan_kerja;
+
+        if ($request->check_jht == 'on') {
+            $input['jht'] = $request->jht;
+        }else{
+            $input['jht'] = 0;
+        }
+
+        if($request->check_bpjs_kesehatan == 'on'){
+            $input['bpjs_kesehatan'] = $request->bpjs_kesehatan;
+        }else{
+            $input['bpjs_kesehatan'] = 0;
+        }
+
+        $pengerjaan_harian_karyawan = $this->pengerjaanHarian->where('operator_harian_karyawan_id',$request->operator_harian_karyawan_id)
+                                                    ->where('kode_pengerjaan',$kode_pengerjaan)
+                                                    // ->update($input)
+                                                    ->first();
+        // return 'Success';
+        if (!empty($pengerjaan_harian_karyawan)) {
+            $pengerjaan_harian_karyawan->update($input);
+            return response()->json([
+                'success' => true,
+                'message_title' => 'Berhasil',
+                'message_content' => 'Data Berhasil Disimpan'
+            ]);
+        }else{
+            return response()->json([
+                'success' => false,
+                'message_title' => 'Gagal',
+                'message_content' => 'Data Tidak Berhasil Disimpan'
+            ]);
+        }
+
+        // dd($request->all());
+    }
+
     public function hasil_kerja_supir_rit($kode_pengerjaan){
         $data['kode_pengerjaan'] = $kode_pengerjaan;
         $data['new_data_pengerjaan'] = $this->newDataPengerjaan->where('kode_pengerjaan',$kode_pengerjaan)->first();
@@ -15249,7 +15743,7 @@ class PengerjaanController extends Controller
     public function hasil_kerja_supir_rit_tambah_karyawan_simpan(Request $request, $kode_pengerjaan)
     {
         $new_data_pengerjaan = $this->newDataPengerjaan->select('tanggal')->where('kode_pengerjaan',$kode_pengerjaan)->first();
-        
+
         $explode_tanggal = explode('#',$new_data_pengerjaan->tanggal);
         $filter_explode_tanggal = array_filter($explode_tanggal);
         // dd($filter_explode_tanggal);
@@ -15359,7 +15853,8 @@ class PengerjaanController extends Controller
         // return redirect()->route('hasil_kerja.supir_rit',['kode_pengerjaan' => $kode_pengerjaan]);
     }
 
-    public function close_periode(){
+    public function close_periode()
+    {
         $new_data_pengerjaans = $this->newDataPengerjaan->where('status','y')->get();
         foreach ($new_data_pengerjaans as $key => $new_data_pengerjaan) {
             $explode_tanggal_pengerjaans = explode("#",$new_data_pengerjaan->tanggal);
@@ -15390,7 +15885,7 @@ class PengerjaanController extends Controller
     {
         $new_data_pengerjaans = $this->newDataPengerjaan->where('status','y')->get();
         foreach ($new_data_pengerjaans as $key => $new_data_pengerjaan) {
-            
+
             if ($new_data_pengerjaan['kode_pengerjaan'] == 'PB_'.substr($new_data_pengerjaan['kode_pengerjaan'],3,5).sprintf("%04s", substr($new_data_pengerjaan['kode_pengerjaan'],8))) {
                 $explode_tanggal_pengerjaans = explode('#', $new_data_pengerjaan['tanggal']);
                 $exp_tanggals = array_filter($explode_tanggal_pengerjaans);
@@ -15790,7 +16285,7 @@ class PengerjaanController extends Controller
                     $kirim_slip_gaji = \App\Models\KirimGaji::where('kode_pengerjaan',$new_data_pengerjaan['kode_pengerjaan'])
                                                             ->where('pengerjaan_id',$pengerjaan_weekly->id)
                                                             ->first();
-                    
+
                     if (empty($kirim_slip_gaji)) {
                         \App\Models\KirimGaji::firstOrCreate(
                             [
@@ -15821,7 +16316,7 @@ class PengerjaanController extends Controller
                             'status' => 'menunggu'
                         ]);
                     }
-                    
+
                 }
 
             }elseif ($new_data_pengerjaan['kode_pengerjaan'] == 'PH_'.substr($new_data_pengerjaan['kode_pengerjaan'],3,5).sprintf("%04s", substr($new_data_pengerjaan['kode_pengerjaan'],8))) {
@@ -16003,7 +16498,7 @@ class PengerjaanController extends Controller
                 foreach ($pengerjaan_rit_weeklys as $pengerjaan_rit_weekly) {
                     $upah_dasar = array();
 
-                    for ($i=0;$i<$a;$i++) { 
+                    for ($i=0;$i<$a;$i++) {
                         $pengerjaan_rits = $this->pengerjaanRitHarian->where('kode_pengerjaan',$new_data_pengerjaan['kode_pengerjaan'])
                                                                     ->where('karyawan_supir_rit_id',$pengerjaan_rit_weekly->karyawan_supir_rit_id)
                                                                     ->get();
@@ -16153,7 +16648,7 @@ class PengerjaanController extends Controller
                     $kirim_slip_gaji = \App\Models\KirimGaji::where('kode_pengerjaan',$new_data_pengerjaan['kode_pengerjaan'])
                                                             ->where('pengerjaan_id',$pengerjaan_rit_weekly->id)
                                                             ->first();
-                    
+
                     if (empty($kirim_slip_gaji)) {
                         \App\Models\KirimGaji::firstOrCreate(
                             [

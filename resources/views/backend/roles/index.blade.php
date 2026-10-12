@@ -42,7 +42,7 @@
 @endsection
 
 @section('script')
-    {{-- <script src="{{ URL::asset('assets/plugins/select2/select2.min.js') }}"></script> --}}
+    {{-- <script src="{{ URL::asset('public/assets/plugins/select2/select2.min.js') }}"></script> --}}
     <script src="{{ URL::asset('public/assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ URL::asset('public/assets/plugins/datatables/dataTables.bootstrap5.min.js') }}"></script>
     <script src="{{ URL::asset('public/assets/plugins/datatables/dataTables.buttons.min.js') }}"></script>
@@ -60,10 +60,10 @@
     <script src="{{ URL::asset('public/assets/js/iziToast.min.js') }}"></script>
     <script src="{{ URL::asset('public/assets/plugins/sweet-alert2/sweetalert2.min.js') }}"></script>
 
-    {{-- <script src="{{ URL::asset('assets/plugins/huebee/huebee.pkgd.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/timepicker/bootstrap-material-datetimepicker.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js') }}"></script> --}}
+    {{-- <script src="{{ URL::asset('public/assets/plugins/huebee/huebee.pkgd.min.js') }}"></script>
+    <script src="{{ URL::asset('public/assets/plugins/timepicker/bootstrap-material-datetimepicker.js') }}"></script>
+    <script src="{{ URL::asset('public/assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js') }}"></script>
+    <script src="{{ URL::asset('public/assets/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js') }}"></script> --}}
     <script src="{{ URL::asset('public/assets/js/pages/jquery.forms-advanced.js') }}"></script>
     
     <script>

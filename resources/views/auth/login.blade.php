@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login - Payrol ITIC</title>
     @php
-        $assets = asset('public/login/');
+        $assets = asset('public/login_themes/');
+        // $assets = asset('public/login/');
     @endphp
     <link rel="stylesheet" type="text/css" href="{{ $assets }}/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{ $assets }}/css/fontawesome-all.min.css">

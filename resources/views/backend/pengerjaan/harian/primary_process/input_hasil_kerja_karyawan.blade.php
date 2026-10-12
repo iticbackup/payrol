@@ -18,7 +18,7 @@
             @yield('title')
         @endslot
     @endcomponent
-    <?php 
+    <?php
     $akhir_bulan = 'y';
     ?>
     <div class="row">
@@ -38,10 +38,17 @@
                                     <div class="card-body">
                                         <table class="table table-bordered">
                                             <tr>
-                                                <td>NIK</td>
+                                                <td>ID</td>
                                                 <td class="text-center">:</td>
                                                 <td>
                                                     <input type="hidden" name="operator_harian_karyawan_id" value="{{ $karyawan_harian->id }}">
+                                                    {{ $karyawan_harian->id }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>NIK</td>
+                                                <td class="text-center">:</td>
+                                                <td>
                                                     {{ $karyawan_harian->nik }}
                                                 </td>
                                             </tr>
@@ -191,7 +198,7 @@
                                                 $exp_tgl_awal = explode("-",$exp_tanggal[1]);
                                                 $exp_tgl_akhir = explode("-",$exp_tanggal[$a]);
                                                 $explode_posting = explode("-",$new_data_pengerjaan['date']);
-                                                
+
                                             @endphp
                                             @for ($b=1;$b<=$a;$b++)
                                                 @php
@@ -281,7 +288,7 @@
 
                                                         $pulang_dijam_istirahat_pulang_awal_pribadi=($jam_pulang_awal_pribadi-$jam_istirahat_pulang_awal_pribadi)/60;
 
-                                                        if(($jam_pulang_awal_pribadi <= $jam_istirahat_pulang_awal_pribadi)||($pulang_dijam_istirahat_pulang_awal_pribadi<=60))  
+                                                        if(($jam_pulang_awal_pribadi <= $jam_istirahat_pulang_awal_pribadi)||($pulang_dijam_istirahat_pulang_awal_pribadi<=60))
                                                         {
                                                             $durasi_pulang_awal_pribadi = (($max_pulang_awal_pribadi-$jam_pulang_awal_pribadi)/60)-60;
                                                         }else{
@@ -323,7 +330,7 @@
 
                                                         $pulang_dijam_istirahat_pulang_awal_sakit=($jam_pulang_awal_sakit-$jam_istirahat_pulang_awal_sakit)/60;
 
-                                                        if(($jam_pulang_awal_sakit <= $jam_istirahat_pulang_awal_sakit)||($pulang_dijam_istirahat_pulang_awal_sakit<=60))  
+                                                        if(($jam_pulang_awal_sakit <= $jam_istirahat_pulang_awal_sakit)||($pulang_dijam_istirahat_pulang_awal_sakit<=60))
                                                         {
                                                             $durasi_pulang_awal_sakit = (($max_pulang_awal_sakit-$jam_pulang_awal_sakit)/60)-60;
                                                         }else{
@@ -344,13 +351,13 @@
                                                                                     ->first();
                                                     // dd($get_ikm);
                                                     if (empty($get_ikm)) {
-                                                        $jam_ijin=0; 
+                                                        $jam_ijin=0;
                                                         $menit_ijin=0;
                                                     }else{
                                                         $jk_per_nik = strtotime($get_ikm['jam_keluar']);
                                                         $jd_per_nik = strtotime($get_ikm['jam_datang']);
                                                         $ist_awal_per_nik = strtotime($get_ikm['jam_istirahat']);
-                                                        $ist_akhir_per_nik = strtotime($get_ikm['jam_istirahat']);					
+                                                        $ist_akhir_per_nik = strtotime($get_ikm['jam_istirahat']);
                                                         $assembly_istirahat_akhir = explode(":", $get_ikm['jam_istirahat']);
                                                         $ist_akhir_per_nik = strtotime($assembly_istirahat_akhir[0].":59:59");
                                                         if($jk_per_nik >= $ist_awal_per_nik && $jk_per_nik <= $ist_akhir_per_nik) $jk_per_nik = strtotime("13:00:00");
@@ -982,7 +989,7 @@
                                                 <td colspan="2">
                                                     <div class="row">
                                                         <div class="col-sm-2 form-label align-self-center mb-lg-0 text-center">
-                                                            <?php 
+                                                            <?php
                                                                 if($karyawan_harian->jht =='y'){
                                                                     $check_jht = 'checked';
                                                                 }else{
@@ -1039,7 +1046,7 @@
                                                 <td colspan="2">
                                                     <div class="row">
                                                         <div class="col-sm-2 form-label align-self-center mb-lg-0 text-center">
-                                                            <?php 
+                                                            <?php
                                                                 if($karyawan_harian->bpjs =='y'){
                                                                     $check_bpjs_kesehatan = 'checked';
                                                                 }else{

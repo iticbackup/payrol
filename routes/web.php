@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     // return view('welcome');
-    return view('auth/login');
+    // return view('auth/login');
+    return redirect()->route('login');
 });
 
 // Auth::routes();
@@ -223,6 +224,12 @@ Route::group(['middleware' => 'auth'], function () {
                 Route::get('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_satpam_view'])->name('hasil_kerja.satpam.view');
                 Route::post('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_satpam_simpan'])->name('hasil_kerja.satpam.simpan');
             });
+            Route::prefix('qc')->group(function () {
+                Route::get('{id}/{kode_pengerjaan}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_qc'])->name('hasil_kerja.qc');
+                Route::get('{id}/{kode_pengerjaan}/tambah_karyawan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_qc_tambah_karyawan'])->name('hasil_kerja.qc.tambah_karyawan');
+                Route::get('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_qc_view'])->name('hasil_kerja.qc.view');
+                Route::post('{id}/{kode_pengerjaan}/{nik}/{month}/{year}/input_hasil/simpan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_harian_qc_simpan'])->name('hasil_kerja.qc.simpan');
+            });
             Route::prefix('supir_rit')->group(function () {
                 Route::get('{kode_pengerjaan}', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_supir_rit'])->name('hasil_kerja.supir_rit');
                 Route::get('{kode_pengerjaan}/tambah_karyawan', [App\Http\Controllers\PengerjaanController::class, 'hasil_kerja_supir_rit_tambah_karyawan'])->name('hasil_kerja.supir_rit.karyawan');
@@ -237,6 +244,16 @@ Route::group(['middleware' => 'auth'], function () {
 
             });
         });
+    });
+
+    Route::prefix('estimasi_biaya')->group(function () {
+        Route::get('/', [App\Http\Controllers\EstimasiPengerjaanController::class, 'estimasi_pengerjaan_borongan_index'])->name('estimasi.pengerjaan.borongan.index');
+        Route::get('{kode_pengerjaan}/packing', [App\Http\Controllers\EstimasiPengerjaanController::class, 'estimasi_pengerjaan_borongan_packing'])->name('estimasi.pengerjaan.borongan.packing');
+        Route::get('{kode_pengerjaan}/packing/{date}/buat', [App\Http\Controllers\EstimasiPengerjaanController::class, 'estimasi_pengerjaan_borongan_buat_packing'])->name('estimasi.pengerjaan.borongan.packing.buat');
+        Route::post('{kode_pengerjaan}/packing/{date}/simpan', [App\Http\Controllers\EstimasiPengerjaanController::class, 'estimasi_pengerjaan_borongan_simpan_packing'])->name('estimasi.pengerjaan.borongan.packing.simpan');
+        // Route::get('{kode_pengerjaan}/packing/{date}/buat', [App\Http\Controllers\EstimasiPengerjaanController::class, 'estimasi_pengerjaan_borongan_buat_packing'])->name('estimasi.pengerjaan.borongan.packing.buat');
+        // Route::get('{date}/buat', [App\Http\Controllers\EstimasiPengerjaanController::class, 'estimasi_pengerjaan_borongan_buat'])->name('estimasi.pengerjaan.borongan.buat');
+        // Route::post('{date}/simpan', [App\Http\Controllers\EstimasiPengerjaanController::class, 'estimasi_pengerjaan_borongan_simpan'])->name('estimasi.pengerjaan.borongan.simpan');
     });
 
     Route::prefix('laporan')->group(function () {
